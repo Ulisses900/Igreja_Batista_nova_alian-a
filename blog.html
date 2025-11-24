@@ -11,13 +11,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Variáveis de Cores (Dark Mode IBNA) - Copiadas do index.html */
+        /* Variáveis de Cores (Dark Mode IBNA) */
         :root {
-            --primary-bg: #0f172a; 
-            --accent-gold: #d4af37; 
-            --secondary-bg: #1e293b; 
-            --text-light: #e2e8f0; 
-            --text-muted: #94a3b8; 
+            --primary-bg: #0f172a; /* Slate 900 */
+            --accent-gold: #d4af37; /* Gold */
+            --secondary-bg: #1e293b; /* Slate 800 */
+            --text-light: #e2e8f0; /* Slate 200 */
+            --text-muted: #94a3b8; /* Slate 400 */
         }
         
         body {
@@ -25,21 +25,61 @@
             background-color: var(--primary-bg);
             color: var(--text-light);
             line-height: 1.6;
-            min-height: 100vh;
         }
 
         .font-montserrat {
             font-family: 'Montserrat', sans-serif;
         }
-
-        .blog-card {
+        
+        .blog-post-card {
             transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .blog-card:hover {
+        .blog-post-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            border-color: var(--accent-gold);
         }
+
+        /* Classes para o modal */
+        .modal {
+            display: none; /* Escondido por padrão */
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: var(--secondary-bg);
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid var(--accent-gold);
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .close-button {
+            color: var(--text-muted);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--accent-gold);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
@@ -54,17 +94,17 @@
                     <a href="index.html#inicio" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Início</a>
                     <a href="vmv.html" target="_blank" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Quem Somos</a>
                     <a href="index.html#eventos" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Eventos</a>
-                    <a href="blog.html" class="text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium font-bold">Blog</a>
+                    <a href="#" class="text-[color:var(--accent-gold)] border-b-2 border-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Blog</a>
                     <a href="index.html#contato" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Contato</a>
                 </div>
-                                 <a href="calendario.html" target="_blank" class="hidden sm:inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-black bg-[color:var(--accent-gold)] hover:bg-yellow-600 transition duration-150">
-                    <i class="far fa-calendar-alt mr-2"></i> Calendário
-                </a>
+                <a href="calendario.html" class="hidden sm:inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-black bg-[color:var(--accent-gold)] hover:bg-yellow-600 transition duration-150">
+                    <i class="far fa-calendar-alt mr-2"></i> Calendário
+                </a>
                 <div class="sm:hidden">
-                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-[color:var(--text-muted)] hover:text-[color:var(--accent-gold)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[color:var(--accent-gold)]" aria-controls="mobile-menu" aria-expanded="false">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-[color:var(--text-muted)] hover:text-[color:var(--accent-gold)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[color:var(--accent-gold)]" aria-controls="mobile-menu" aria-expanded="false">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -73,79 +113,49 @@
                 <a href="index.html#inicio" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Início</a>
                 <a href="vmv.html" target="_blank" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Quem Somos</a>
                 <a href="index.html#eventos" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Eventos</a>
-                <a href="blog.html" class="text-[color:var(--accent-gold)] bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium font-bold">Blog</a>
+                <a href="#" class="text-[color:var(--accent-gold)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Blog</a>
                 <a href="index.html#contato" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Contato</a>
-                <a href="calendario.html" target="_blank" class="inline-flex items-center w-full justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-black bg-[color:var(--accent-gold)] hover:bg-yellow-600 transition duration-150 mt-4">
-                    <i class="far fa-calendar-alt mr-2"></i> Calendário
-                </a>
+                <a href="calendario.html" class="inline-flex items-center w-full justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-black bg-[color:var(--accent-gold)] hover:bg-yellow-600 transition duration-150 mt-4">
+                    <i class="far fa-calendar-alt mr-2"></i> Ver Calendário
+                </a>
             </div>
         </div>
     </nav>
 
-    <section id="blog-content" class="py-16 md:py-24 bg-[color:var(--primary-bg)]">
-        <div class="container mx-auto px-4">
-            <h1 class="font-montserrat text-5xl font-extrabold text-center mb-4 text-[color:var(--accent-gold)]">
-                Blog da IBNA
+    <header class="py-16 md:py-24 bg-[color:var(--secondary-bg)]">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="font-montserrat text-5xl font-extrabold text-[color:var(--accent-gold)] mb-4">
+                Nosso Blog
             </h1>
-            <p class="text-center text-xl text-[color:var(--text-muted)] mb-12 max-w-3xl mx-auto">
-                Reflexões, estudos e notícias da nossa comunidade de fé.
+            <p class="text-xl text-[color:var(--text-light)] max-w-3xl mx-auto">
+                Estudos Bíblicos, Mensagens Pastorais e Notícias da Comunidade.
             </p>
+        </div>
+    </header>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10" id="posts-container">
-                <div class="blog-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-2xl border-t-4 border-[color:var(--accent-gold)]">
-                    <p class="text-sm text-[color:var(--text-muted)] mb-2">
-                        <i class="far fa-calendar-alt mr-2"></i> 20 de Novembro, 2025
-                    </p>
-                    <h3 class="font-montserrat text-2xl font-bold mb-3">
-                        O Significado Profundo da Graça
-                    </h3>
-                    <p class="text-[color:var(--text-light)] mb-4">
-                        Uma reflexão sobre a soberania de Deus e o amor incondicional que nos foi dado através de Jesus Cristo.
-                    </p>
-                    <a href="#" class="text-[color:var(--accent-gold)] hover:text-yellow-600 font-semibold flex items-center">
-                        Ler Artigo Completo <i class="fas fa-arrow-right ml-2 text-sm"></i>
-                    </a>
+    <section class="py-16 md:py-24 bg-[color:var(--primary-bg)]">
+        <div class="container mx-auto px-4">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="all-blog-posts">
                 </div>
-
-                <div class="blog-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-2xl border-t-4 border-[color:var(--accent-gold)]">
-                    <p class="text-sm text-[color:var(--text-muted)] mb-2">
-                        <i class="far fa-calendar-alt mr-2"></i> 15 de Novembro, 2025
-                    </p>
-                    <h3 class="font-montserrat text-2xl font-bold mb-3">
-                        A Importância da Comunhão
-                    </h3>
-                    <p class="text-[color:var(--text-light)] mb-4">
-                        Por que a vida em comunidade é essencial para o crescimento e sustento da fé cristã.
-                    </p>
-                    <a href="#" class="text-[color:var(--accent-gold)] hover:text-yellow-600 font-semibold flex items-center">
-                        Ler Artigo Completo <i class="fas fa-arrow-right ml-2 text-sm"></i>
-                    </a>
-                </div>
-
-                <div class="blog-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-2xl border-t-4 border-[color:var(--accent-gold)]">
-                    <p class="text-sm text-[color:var(--text-muted)] mb-2">
-                        <i class="far fa-calendar-alt mr-2"></i> 01 de Novembro, 2025
-                    </p>
-                    <h3 class="font-montserrat text-2xl font-bold mb-3">
-                        Série: O Livro de Salmos (Parte I)
-                    </h3>
-                    <p class="text-[color:var(--text-light)] mb-4">
-                        Introdução ao livro de orações de Israel, descobrindo como podemos clamar a Deus.
-                    </p>
-                    <a href="#" class="text-[color:var(--accent-gold)] hover:text-yellow-600 font-semibold flex items-center">
-                        Ler Artigo Completo <i class="fas fa-arrow-right ml-2 text-sm"></i>
-                    </a>
-                </div>
-                
-            </div>
             
             <div class="text-center mt-16">
-                <a href="#" class="inline-block px-8 py-3 text-lg font-semibold rounded-full bg-gray-700 text-white shadow-xl hover:bg-gray-600 transition duration-300 transform hover:scale-105">
-                    Ver Posts Antigos <i class="fas fa-history ml-2"></i>
+                <a href="#" class="inline-block px-8 py-3 text-lg font-semibold rounded-full bg-[color:var(--accent-gold)] text-gray-900 shadow-xl hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
+                    Voltar ao Topo <i class="fas fa-arrow-up ml-2"></i>
                 </a>
             </div>
         </div>
     </section>
+
+    <div id="blog-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeBlogModal()">&times;</span>
+            <h2 id="modal-title" class="font-montserrat text-3xl font-bold mb-2 text-[color:var(--accent-gold)]">Título do Artigo</h2>
+            <p id="modal-date" class="text-sm text-[color:var(--text-muted)] mb-4">Data | Fonte</p>
+            <p id="modal-body" class="text-[color:var(--text-light)] text-lg">Conteúdo do artigo...</p>
+        </div>
+    </div>
+
 
     <footer class="bg-[color:var(--secondary-bg)] text-center py-6 mt-0 border-t border-[color:var(--secondary-bg)] shadow-[0_-5px_15px_rgba(0,0,0,0.1)]">
         <div class="container mx-auto">
@@ -159,10 +169,102 @@
     </footer>
 
     <script>
-        // Script do Menu Mobile para a página do Blog
+        // =======================================================
+        // 1. DADOS CENTRALIZADOS DO BLOG (COPIAR DO index.html)
+        // =======================================================
+        const BLOG_POSTS = [
+            {
+                id: 'graca-transformadora',
+                source: 'IBNA',
+                title: 'O Poder Transformador da Graça',
+                summary: 'A graça de Deus não é apenas um conceito teológico, mas uma força ativa que transforma vidas. Exploramos como a graça nos capacita a viver uma vida de santidade e propósito. Esta mensagem foi pregada no último culto dominical.',
+                icon: 'fas fa-feather-alt',
+                date: '15 de Novembro de 2025'
+            },
+            {
+                id: 'fe-e-obras',
+                source: 'Estudo Bíblico',
+                title: 'Fé e Obras: Uma Conexão Indissolúvel',
+                summary: 'Muitos se perguntam sobre a relação entre fé e obras. Este estudo de Tiago nos mostra que a fé verdadeira sempre resulta em ações. Obras não nos salvam, mas provam que fomos salvos. Uma jornada para entender a vida cristã prática.',
+                icon: 'fas fa-book-open',
+                date: '01 de Dezembro de 2025'
+            },
+            {
+                id: 'encontro-casais',
+                source: 'Comunidade',
+                title: 'Inscrições Abertas para o Encontro de Casais',
+                summary: 'O Ministério de Família anuncia a abertura das inscrições para o próximo Encontro de Casais, que acontecerá em Junho de 2026. Garanta sua vaga! O foco será em comunicação e perdão no casamento.',
+                icon: 'fas fa-hands-heart',
+                date: '10 de Dezembro de 2025'
+            },
+            {
+                id: 'proposito-vida',
+                source: 'Mensagem Pastoral',
+                title: 'Descobrindo o Propósito da Vida',
+                summary: 'Uma reflexão sobre a busca por significado e como a Palavra de Deus nos revela nosso verdadeiro propósito.',
+                icon: 'fas fa-lightbulb',
+                date: '05 de Dezembro de 2025'
+            },
+            {
+                id: 'ministerio-jovem',
+                source: 'Jovens IBNA',
+                title: 'Encontro de Louvor e Adoração Jovem',
+                summary: 'Detalhes sobre o próximo evento do Ministério Jovem, focado em louvor e adoração para a nova geração.',
+                icon: 'fas fa-guitar',
+                date: '20 de Dezembro de 2025'
+            }
+        ];
+
+        // --- FUNÇÕES DO BLOG MODAL (Mantidas) ---
+        function openBlogModal(source, title, body, date) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-date').textContent = date + ' | Fonte: ' + source;
+            document.getElementById('modal-body').textContent = body;
+            document.getElementById('blog-modal').style.display = 'block';
+        }
+
+        function closeBlogModal() {
+            document.getElementById('blog-modal').style.display = 'none';
+        }
+
+        // =======================================================
+        // 2. RENDERIZAÇÃO DINÂMICA DE TODOS OS POSTS
+        // =======================================================
+        function renderAllPosts() {
+            const container = document.getElementById('all-blog-posts');
+            container.innerHTML = ''; 
+
+            // Itera sobre TODOS os posts
+            BLOG_POSTS.forEach(post => {
+                const postHtml = `
+                    <div class="blog-post-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-l-4 border-l-[color:var(--secondary-bg)] hover:border-l-[color:var(--accent-gold)] transition duration-300 cursor-pointer" 
+                         onclick="openBlogModal('${post.source}', '${post.title}', '${post.summary.replace(/'/g, "\\'")}', '${post.date}')">
+                        <i class="${post.icon} text-3xl text-[color:var(--accent-gold)] mb-3"></i>
+                        <h3 class="font-montserrat text-xl font-bold mb-2">${post.title}</h3>
+                        <p class="text-[color:var(--text-muted)] text-sm mb-3">${post.summary.substring(0, 120)}...</p>
+                        <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${post.date}</span>
+                    </div>
+                `;
+                container.innerHTML += postHtml;
+            });
+        }
+
+
+        // --- INICIALIZAÇÃO ---
         document.addEventListener('DOMContentLoaded', () => {
+            renderAllPosts();
+
+            // Listener para o menu mobile
             document.getElementById('mobile-menu-button').addEventListener('click', () => {
                 document.getElementById('mobile-menu').classList.toggle('hidden');
+            });
+            
+            // Fecha o modal do blog ao clicar fora dele
+            window.addEventListener('click', (event) => {
+                const modal = document.getElementById('blog-modal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
             });
         });
     </script>
