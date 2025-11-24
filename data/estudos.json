@@ -1,0 +1,139 @@
+[
+  {
+    "id": "estudo-1-fe-dias-atuais",
+    "titulo": "Fé nos Dias Atuais",
+    "subtitulo": "Vivendo uma fé firme em tempos de incerteza",
+    "textoBase": "Hebreus 11:1",
+    "data": "15 de Novembro de 2025",
+    "autor": "Pastor João Silva",
+    "categoria": "Fé",
+    "conteudo": [
+      {
+        "titulo": "A Fé que Sustenta",
+        "versiculo": "Hebreus 11:1",
+        "textoVersiculo": "Ora, a fé é o firme fundamento das coisas que se esperam e a prova das coisas que se não veem.",
+        "explicacao": "Hebreus 11 foi escrito para cristãos que estavam sofrendo pressão, perseguição e dúvidas. O autor explica que fé não é algo 'sentimental', mas um fundamento sólido, como uma base de casa. Ele afirma que a fé prova aquilo que ainda não vemos porque é baseada no caráter de Deus — não em circunstâncias.",
+        "aplicacao": "Vivemos uma época de ansiedade, medo do futuro e instabilidade. Assim como a igreja do primeiro século, nós precisamos de uma fé que nos mantenha firmes mesmo quando nada parece fazer sentido."
+      },
+      {
+        "titulo": "A Fé Vem da Palavra",
+        "versiculo": "Romanos 10:17",
+        "textoVersiculo": "A fé vem pelo ouvir, e o ouvir pela palavra de Cristo.",
+        "explicacao": "Paulo ensina que fé não nasce da força de vontade. Ela é gerada quando ouvimos e entendemos a Palavra de Deus. Ou seja, quanto mais contato você tem com a Bíblia, mais forte sua fé se torna.",
+        "aplicacao": "Se sua fé está fraca, não é 'falta de espiritualidade': É falta de alimento. Fé é nutrida diariamente."
+      },
+      {
+        "titulo": "Fé em Tempos Difíceis",
+        "versiculo": "Filipenses 4:6",
+        "textoVersiculo": "Não estejais inquietos por coisa alguma; antes as vossas petições sejam em tudo conhecidas diante de Deus...",
+        "explicacao": "Paulo estava preso quando escreveu isso. Mesmo assim, ensinou que a oração pode substituir a preocupação. Não quer dizer que você não terá problemas — mas que na oração você encontra equilíbrio.",
+        "aplicacao": "A fé hoje se manifesta quando, ao invés de se desesperar, você ora primeiro, age depois."
+      },
+      {
+        "titulo": "Exemplo Prático",
+        "citacao": "Billy Graham",
+        "textoCitacao": "A fé é colocar a chave da sua vida nas mãos de Deus, mesmo sem saber para onde Ele vai te conduzir.",
+        "aplicacao": "A fé de hoje é coragem para confiar no amanhã de Deus."
+      }
+    ],
+    "resumo": "Estudo sobre como desenvolver e manter uma fé sólida em meio às incertezas dos tempos atuais, baseado na carta aos Hebreus e outros textos bíblicos.",
+    "tags": ["fé", "incerteza", "oração", "palavra de Deus"]
+  },
+  {
+    "id": "estudo-2-juventude-tentacao",
+    "titulo": "Juventude e Tentação nos Dias Atuais",
+    "subtitulo": "Como permanecer firme em meio a tantas pressões",
+    "textoBase": "1 Timóteo 4:12",
+    "data": "22 de Novembro de 2025",
+    "autor": "Pastor Marcos Oliveira",
+    "categoria": "Juventude",
+    "conteudo": [
+      {
+        "titulo": "O Chamado do Jovem",
+        "versiculo": "1 Timóteo 4:12",
+        "textoVersiculo": "Sê o exemplo dos fiéis...",
+        "explicacao": "Paulo escreve a Timóteo, um jovem líder. Ele diz que juventude não é desculpa para vida espiritual fraca; pelo contrário, o jovem deve ser exemplo em palavra, amor, pureza e fé.",
+        "aplicacao": "A sociedade diz que jovem tem que 'curtir, errar e aprender'. A Bíblia diz que jovem pode ser referência, não vergonha."
+      },
+      {
+        "titulo": "Fugindo das Tentações",
+        "versiculo": "2 Timóteo 2:22",
+        "textoVersiculo": "Foge dos desejos da mocidade...",
+        "explicacao": "Paulo não diz para 'resistir', mas fugir. Algumas tentações — especialmente as sexuais — são vencidas com distância, não com debate interno.",
+        "aplicacao": "O jovem cristão vence quando: evita ambientes de pecado, filtra conteúdos digitais, mantém amizades espirituais."
+      },
+      {
+        "titulo": "Como se Purificar",
+        "versiculo": "Salmo 119:9",
+        "textoVersiculo": "Como purificará o jovem o seu caminho? Observando-o conforme a tua palavra.",
+        "explicacao": "O salmista mostra que o coração humano sem Deus se suja facilmente. Mas a Palavra funciona como um filtro que mantém o jovem limpo diante das pressões.",
+        "aplicacao": "Um jovem sem Bíblia é como um celular sem carga — ele funciona por pouco tempo."
+      },
+      {
+        "titulo": "Escolhendo Boas Influências",
+        "versiculo": "Provérbios 13:20",
+        "textoVersiculo": "O que anda com os sábios será sábio, mas o companheiro dos tolos será destruído.",
+        "explicacao": "Salomão usa aqui uma imagem forte: andar com alguém é caminhar na mesma direção. Ele não diz 'pode ser influenciado' — diz que será. É inevitável: o círculo de amizades molda o futuro.",
+        "aplicacao": "Quem você segue, ouve, copia ou admira determina quem você vai se tornar."
+      },
+      {
+        "titulo": "Exemplo de Daniel",
+        "versiculo": "Daniel 1:8",
+        "explicacao": "Daniel decidiu não se contaminar ainda jovem. Sua firmeza hoje começa nas decisões pequenas.",
+        "aplicacao": "A firmeza espiritual se constrói através de decisões diárias de obediência a Deus."
+      }
+    ],
+    "resumo": "Estudo direcionado aos jovens sobre como permanecer firmes nas promessas de Deus em meio às tentações e pressões do mundo atual.",
+    "tags": ["juventude", "tentação", "pureza", "amizades", "influência"]
+  },
+  {
+    "id": "estudo-3-familia-lar-abencoado",
+    "titulo": "Família: Como Manter um Lar Abençoado",
+    "subtitulo": "Conselhos bíblicos para o casamento e a vida familiar",
+    "textoBase": "Josué 24:15",
+    "data": "29 de Novembro de 2025",
+    "autor": "Pastor Carlos Santos",
+    "categoria": "Família",
+    "conteudo": [
+      {
+        "titulo": "Um Lar que Serve ao Senhor",
+        "versiculo": "Josué 24:15",
+        "explicacao": "Josué, líder de Israel, faz uma declaração pública: mesmo com outras famílias escolhendo outros caminhos, ele e sua casa permaneceriam fiéis a Deus. É um chamado à liderança espiritual intencional.",
+        "aplicacao": "Nenhum casamento ou família se mantém firme por acaso — é sempre uma decisão diária."
+      },
+      {
+        "titulo": "O Papel do Marido",
+        "versiculo": "Efésios 5:25",
+        "textoVersiculo": "Maridos, amai vossas mulheres, como Cristo amou a igreja...",
+        "explicacao": "Paulo não manda o marido ser autoritário, mas sacrificial. Cristo amou a Igreja entregando-se por ela. O marido deve liderar com: proteção, escuta, humildade, espiritualidade ativa.",
+        "aplicacao": "O lar é forte quando o homem é servo, não tirano."
+      },
+      {
+        "titulo": "O Papel da Esposa",
+        "versiculo": "Provérbios 14:1",
+        "textoVersiculo": "A mulher sábia edifica a sua casa...",
+        "explicacao": "A sabedoria aqui não é intelectual — é emocional e espiritual. A mulher sábia constrói paz, enquanto a tola destrói com palavras, atitudes e decisões impulsivas.",
+        "aplicacao": "A esposa exerce influência poderosa no ambiente emocional do lar."
+      },
+      {
+        "titulo": "O Papel dos Pais",
+        "versiculo": "Deuteronômio 6:6-7",
+        "explicacao": "Deus instrui os pais a ensinarem a Palavra 'andando, deitando e levantando'. Ou seja, o ensino deve ser contínuo e natural, não apenas em culto.",
+        "aplicacao": "Filhos não aprendem só ouvindo — aprendem observando."
+      },
+      {
+        "titulo": "Práticas para Fortalecer o Lar",
+        "praticas": [
+          "Culto doméstico semanal",
+          "Orar juntos",
+          "Conversar antes de discutir",
+          "Perdoar rápido",
+          "Priorizar tempo com a família"
+        ],
+        "aplicacao": "Famílias fortes são construídas através de práticas espirituais consistentes e relacionamentos saudáveis."
+      }
+    ],
+    "resumo": "Estudo completo sobre os princípios bíblicos para construir e manter um lar abençoado, com papéis definidos e práticas espirituais para a família.",
+    "tags": ["família", "casamento", "lar", "pais", "educação", "relacionamento"]
+  }
+]
