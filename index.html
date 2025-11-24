@@ -133,8 +133,8 @@
                     <a href="#blog" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Blog</a>
                     <a href="#contato" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Contato</a>
                 </div>
-                <a href="eventos.html" class="hidden sm:inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-black bg-[color:var(--accent-gold)] hover:bg-yellow-600 transition duration-150">
-                    <i class="far fa-calendar-alt mr-2"></i> Eventos
+                <a href="calendario.html" class="hidden sm:inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-black bg-[color:var(--accent-gold)] hover:bg-yellow-600 transition duration-150">
+                    <i class="far fa-calendar-alt mr-2"></i> Calendário
                 </a>
                 <div class="sm:hidden">
                     <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-[color:var(--text-muted)] hover:text-[color:var(--accent-gold)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[color:var(--accent-gold)]" aria-controls="mobile-menu" aria-expanded="false">
@@ -151,8 +151,8 @@
                 <a href="#eventos" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Eventos</a>
                 <a href="#blog" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Blog</a>
                 <a href="#contato" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Contato</a>
-                <a href="eventos.html" class="inline-flex items-center w-full justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-black bg-[color:var(--accent-gold)] hover:bg-yellow-600 transition duration-150 mt-4">
-                    <i class="far fa-calendar-alt mr-2"></i> Eventos
+                <a href="calendario.html" class="inline-flex items-center w-full justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-black bg-[color:var(--accent-gold)] hover:bg-yellow-600 transition duration-150 mt-4">
+                    <i class="far fa-calendar-alt mr-2"></i> Ver Calendário
                 </a>
             </div>
         </div>
@@ -209,7 +209,7 @@
                 Próximos Eventos
             </h2>
             <p class="text-center text-lg text-[color:var(--text-muted)] mb-10 max-w-3xl mx-auto">
-                Confira os eventos mais próximos! O calendário completo está disponível na página de Eventos.
+                Confira os eventos mais próximos! O calendário completo está disponível na página de Calendário.
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="events-container">
@@ -254,8 +254,8 @@
             </div>
 
             <div class="text-center mt-12">
-                <a href="eventos.html" class="inline-block px-8 py-3 text-lg font-semibold rounded-full bg-[color:var(--accent-gold)] text-gray-900 shadow-xl hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
-                    Ver Eventos Completos <i class="fas fa-arrow-right ml-2"></i>
+                <a href="calendario.html" class="inline-block px-8 py-3 text-lg font-semibold rounded-full bg-[color:var(--accent-gold)] text-gray-900 shadow-xl hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
+                    Ver Calendário Completo <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
         </div>
@@ -267,29 +267,29 @@
                 Últimas Notícias e Blog
             </h2>
             <p class="text-center text-lg text-[color:var(--text-muted)] mb-10 max-w-3xl mx-auto">
-                Leia nossas mensagens mais recentes, estudos bíblicos e novidades da comunidade.
+                Aguarde para mais informações, em breve novidades! Nossa área de blog será atualizada com estudos e mensagens.
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="interactive-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" onclick="openBlogModal('IBNA', 'O Poder Transformador da Graça', 'A graça de Deus não é apenas um conceito teológico, mas uma força ativa que transforma vidas. Exploramos como a graça nos capacita a viver uma vida de santidade e propósito. Esta mensagem foi pregada no último culto dominical.', '15 de Novembro de 2025')">
-                    <i class="fas fa-feather-alt text-3xl text-[color:var(--accent-gold)] mb-3"></i>
-                    <h3 class="font-montserrat text-xl font-bold mb-2">O Poder Transformador da Graça</h3>
-                    <p class="text-[color:var(--text-muted)] text-sm mb-3">Uma reflexão profunda sobre o amor imerecido de Deus.</p>
-                    <span class="text-xs text-[color:var(--accent-gold)] font-semibold">15 de Novembro de 2025</span>
+                <div class="interactive-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" onclick="openBlogModal('IBNA', 'Aguarde para mais informações', 'Em breve, publicaremos as primeiras notícias e estudos bíblicos do nosso blog. Fique atento às nossas notificações push para ser o primeiro a saber!', 'Em breve...')">
+                    <i class="fas fa-search text-3xl text-[color:var(--accent-gold)] mb-3"></i>
+                    <h3 class="font-montserrat text-xl font-bold mb-2">Em Breve: Novidades no Blog!</h3>
+                    <p class="text-[color:var(--text-muted)] text-sm mb-3">Estudos, notícias e mensagens em um só lugar.</p>
+                    <span class="text-xs text-[color:var(--accent-gold)] font-semibold">Aguardando Publicação</span>
                 </div>
                 
-                <div class="interactive-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" onclick="openBlogModal('Estudo Bíblico', 'Fé e Obras: Uma Conexão Indissolúvel', 'Muitos se perguntam sobre a relação entre fé e obras. Este estudo de Tiago nos mostra que a fé verdadeira sempre resulta em ações. Obras não nos salvam, mas provam que fomos salvos. Uma jornada para entender a vida cristã prática.', '01 de Dezembro de 2025')">
-                    <i class="fas fa-book-open text-3xl text-[color:var(--accent-gold)] mb-3"></i>
-                    <h3 class="font-montserrat text-xl font-bold mb-2">Fé e Obras: Uma Conexão Indissolúvel</h3>
-                    <p class="text-[color:var(--text-muted)] text-sm mb-3">Estudo sobre Tiago e a importância da prática da Palavra.</p>
-                    <span class="text-xs text-[color:var(--accent-gold)] font-semibold">01 de Dezembro de 2025</span>
+                <div class="interactive-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" onclick="openBlogModal('IBNA', 'Aguarde para mais informações', 'Em breve, publicaremos as primeiras notícias e estudos bíblicos do nosso blog. Fique atento às nossas notificações push para ser o primeiro a saber!', 'Em breve...')">
+                    <i class="fas fa-search text-3xl text-[color:var(--accent-gold)] mb-3"></i>
+                    <h3 class="font-montserrat text-xl font-bold mb-2">Próximo Estudo Bíblico</h3>
+                    <p class="text-[color:var(--text-muted)] text-sm mb-3">Aprofunde-se na Palavra de Deus conosco.</p>
+                    <span class="text-xs text-[color:var(--accent-gold)] font-semibold">Aguardando Publicação</span>
                 </div>
 
-                <div class="interactive-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" onclick="openBlogModal('Comunidade', 'Inscrições Abertas para o Encontro de Casais', 'O Ministério de Família anuncia a abertura das inscrições para o próximo Encontro de Casais, que acontecerá em Junho de 2026. Garanta sua vaga! O foco será em comunicação e perdão no casamento.', '10 de Novembro de 2025')">
-                    <i class="fas fa-hands-heart text-3xl text-[color:var(--accent-gold)] mb-3"></i>
-                    <h3 class="font-montserrat text-xl font-bold mb-2">Encontro de Casais 2026</h3>
-                    <p class="text-[color:var(--text-muted)] text-sm mb-3">Detalhes sobre o Encontro de Casais anual de Junho.</p>
-                    <span class="text-xs text-[color:var(--accent-gold)] font-semibold">10 de Novembro de 2025</span>
+                <div class="interactive-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" onclick="openBlogModal('IBNA', 'Aguarde para mais informações', 'Em breve, publicaremos as primeiras notícias e estudos bíblicos do nosso blog. Fique atento às nossas notificações push para ser o primeiro a saber!', 'Em breve...')">
+                    <i class="fas fa-search text-3xl text-[color:var(--accent-gold)] mb-3"></i>
+                    <h3 class="font-montserrat text-xl font-bold mb-2">Novidades da Comunidade</h3>
+                    <p class="text-[color:var(--text-muted)] text-sm mb-3">Fique por dentro das últimas notícias da igreja.</p>
+                    <span class="text-xs text-[color:var(--accent-gold)] font-semibold">Aguardando Publicação</span>
                 </div>
             </div>
 
