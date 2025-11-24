@@ -1,0 +1,259 @@
+<!-- Arquivo: calendario.html (Atualizado com botão de voltar) -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário Anual - IBNA</title>
+    <!-- Carregamento do Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Ícones do Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Variáveis de Cores (Dark Mode IBNA) */
+        :root {
+            --primary-bg: #0f172a; /* Slate 900 */
+            --accent-gold: #d4af37; /* Gold */
+            --secondary-bg: #1e293b; /* Slate 800 */
+            --text-light: #e2e8f0; /* Slate 200 */
+            --text-muted: #94a3b8; /* Slate 400 */
+            --accent-red: #ef4444; /* Red 500 (Mês da Família/Crianças) */
+            --accent-green: #10b981; /* Emerald 500 (Mês de Missões) */
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Estilização dos cartões de evento */
+        .event-card {
+            border-left-width: 4px;
+            border-style: solid;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .event-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilo fixo para o botão de voltar */
+        .back-button-container {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Botão de Voltar Fixo no Topo -->
+    <div class="back-button-container p-4 bg-[color:var(--primary-bg)] border-b border-[color:var(--secondary-bg)]">
+        <!-- O link aponta para index.html (página principal) -->
+        <a href="index.html" class="inline-flex items-center px-4 py-2 bg-[color:var(--accent-gold)] text-black font-semibold rounded-full shadow-lg hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Voltar para a Página Principal
+        </a>
+    </div>
+
+    <main class="container mx-auto p-4 md:p-8">
+        <h1 class="font-montserrat text-4xl md:text-5xl font-extrabold text-center mb-10 pt-4 text-[color:var(--accent-gold)]">
+            Calendário Anual 2026
+        </h1>
+        <p class="text-center text-lg text-[color:var(--text-muted)] mb-12">
+            Datas importantes e eventos específicos da Igreja Batista Nova Aliança.
+        </p>
+
+        <!-- Meses do Calendário -->
+        <div class="space-y-8">
+
+            <!-- JANEIRO -->
+            <div id="janeiro" class="bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl">
+                <h3 class="font-montserrat text-2xl font-bold text-[color:var(--text-light)] mb-4 border-b border-[color:var(--text-muted)] pb-2">Janeiro</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">17 - Louvorzão</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: A definir | Local: Academia da Saúde</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[color:var(--text-muted)] italic text-sm">Demais datas a definir.</p>
+            </div>
+
+            <!-- FEVEREIRO -->
+            <div id="fevereiro" class="bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl">
+                <h3 class="font-montserrat text-2xl font-bold text-[color:var(--text-light)] mb-4 border-b border-[color:var(--text-muted)] pb-2">Fevereiro</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">14 - Louvorzão</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: A definir | Local: Área externa igreja</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[color:var(--text-muted)] italic text-sm">Demais datas a definir.</p>
+            </div>
+
+            <!-- MARÇO -->
+            <div id="marco" class="bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl">
+                <h3 class="font-montserrat text-2xl font-bold text-[color:var(--text-light)] mb-4 border-b border-[color:var(--text-muted)] pb-2">Março</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">05 - Culto da Ressureição</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: 07:00 (Manhã)</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[color:var(--text-muted)] italic text-sm">Demais datas a definir.</p>
+            </div>
+
+            <!-- ABRIL -->
+            <div id="abril" class="bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl">
+                <h3 class="font-montserrat text-2xl font-bold text-[color:var(--text-light)] mb-4 border-b border-[color:var(--text-muted)] pb-2">Abril</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">25 - Aniversário do Cântico de Sião</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: 19:30</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[color:var(--text-muted)] italic text-sm">Demais datas a definir.</p>
+            </div>
+
+            <!-- MAIO - MÊS DA FAMÍLIA -->
+            <div id="maio" class="bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl">
+                <h3 class="font-montserrat text-2xl font-bold text-[color:var(--text-light)] mb-4 border-b border-[color:var(--accent-red)] pb-2">Maio <span class="text-lg text-[color:var(--accent-red)]">- Mês da Família</span></h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">10 (Domingo) - Culto Dominical / Dia das Mães</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: 19:00</p>
+                    </div>
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">30 e 31 - Aniversário da Igreja</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: 19:00</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JUNHO -->
+            <div id="junho" class="bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl">
+                <h3 class="font-montserrat text-2xl font-bold text-[color:var(--text-light)] mb-4 border-b border-[color:var(--text-muted)] pb-2">Junho</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">07 (Domingo) - Dia do Homem Batista em 2026</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: A definir</p>
+                    </div>
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">14 - Culto Dominical / Dia do Pastor (2º domingo)</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: A definir</p>
+                    </div>
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">20 (Sábado) - Encontro de Casais</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: 19:30 | Local: A Definir</p>
+                    </div>
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">27 (Sábado) - Feira Típica</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: 09:00 (Manhã) | Local: Área externa Igreja</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JULHO - MÊS DE MISSÕES ESTADUAIS -->
+            <div id="julho" class="bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl">
+                <h3 class="font-montserrat text-2xl font-bold text-[color:var(--text-light)] mb-4 border-b border-[color:var(--accent-green)] pb-2">Julho <span class="text-lg text-[color:var(--accent-green)]">- Missões Estaduais</span></h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">12 (Segundo domingo) - Dia do Missionário Batista</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: A definir</p>
+                    </div>
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">25 - EBF (Escola Bíblica de Férias)</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: A definir</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[color:var(--text-muted)] italic text-sm">Demais datas a definir.</p>
+            </div>
+
+            <!-- AGOSTO - MÊS DA JUVENTUDE E ADOLESCENTES -->
+            <div id="agosto" class="bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl">
+                <h3 class="font-montserrat text-2xl font-bold text-[color:var(--text-light)] mb-4 border-b border-[color:var(--accent-red)] pb-2">Agosto <span class="text-lg text-[color:var(--accent-red)]">- Juventude e Adolescentes</span></h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">09 (Domingo) - Culto Dominical / Dia dos Pais</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: A definir</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[color:var(--text-muted)] italic text-sm">Demais datas a definir.</p>
+            </div>
+
+            <!-- SETEMBRO - MÊS DE MISSÕES NACIONAIS -->
+            <div id="setembro" class="bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl">
+                <h3 class="font-montserrat text-2xl font-bold text-[color:var(--text-light)] mb-4 border-b border-[color:var(--accent-green)] pb-2">Setembro <span class="text-lg text-[color:var(--accent-green)]">- Missões Nacionais</span></h3>
+                <p class="text-[color:var(--text-muted)] italic">Datas a Definir.</p>
+            </div>
+
+            <!-- OUTUBRO - MÊS DAS CRIANÇAS -->
+            <div id="outubro" class="bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl">
+                <h3 class="font-montserrat text-2xl font-bold text-[color:var(--text-light)] mb-4 border-b border-[color:var(--accent-red)] pb-2">Outubro <span class="text-lg text-[color:var(--accent-red)]">- Mês das Crianças</span></h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">10 (Sábado) - Culto das Crianças (ou 17/10)</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: A definir</p>
+                    </div>
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">31 - Aniversário do LAEL</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: 19:30</p>
+                    </div>
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">31 - Dia da Reforma Protestante</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: A definir</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NOVEMBRO -->
+            <div id="novembro" class="bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl">
+                <h3 class="font-montserrat text-2xl font-bold text-[color:var(--text-light)] mb-4 border-b border-[color:var(--text-muted)] pb-2">Novembro</h3>
+                <p class="text-[color:var(--text-muted)] italic">Datas a serem definidas.</p>
+            </div>
+
+            <!-- DEZEMBRO -->
+            <div id="dezembro" class="bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl">
+                <h3 class="font-montserrat text-2xl font-bold text-[color:var(--text-light)] mb-4 border-b border-[color:var(--text-muted)] pb-2">Dezembro</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">13 (Segundo domingo) - Dia da Bíblia</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: A definir</p>
+                    </div>
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">19 - Passeio para Confraternização</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: 07:00</p>
+                    </div>
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">25 - Culto Natalino</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: 19:00</p>
+                    </div>
+                    <div class="event-card p-4 rounded-lg bg-[color:var(--primary-bg)] border-[color:var(--accent-gold)]">
+                        <p class="text-lg font-semibold">31 - Culto de Gratidão (Ano Novo)</p>
+                        <p class="text-sm text-[color:var(--text-muted)]">Horário: 22:00</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <footer class="text-center py-6 mt-12 border-t border-[color:var(--secondary-bg)] text-[color:var(--text-muted)]">
+        <p>Igreja Batista Nova Aliança - Calendário 2026</p>
+    </footer>
+
+</body>
+</html>
