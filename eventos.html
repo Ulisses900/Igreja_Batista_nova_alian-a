@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos e Calendário | IBNA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Variáveis de Cores (Dark Mode IBNA) */
+        :root {
+            --primary-bg: #0f172a; /* Slate 900 */
+            --accent-gold: #d4af37; /* Gold */
+            --secondary-bg: #1e293b; /* Slate 800 */
+            --text-light: #e2e8f0; /* Slate 200 */
+            --text-muted: #94a3b8; /* Slate 400 */
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .event-month-title {
+            border-left: 4px solid var(--accent-gold);
+            padding-left: 1rem;
+        }
+
+        .event-card-full {
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-bottom: 2px solid var(--primary-bg);
+        }
+
+        .event-card-full:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            border-bottom-color: var(--accent-gold);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sticky top-0 z-40 bg-[color:var(--primary-bg)] shadow-lg">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <a href="index.html" class="font-montserrat text-2xl font-black text-[color:var(--accent-gold)]">IBNA</a>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                    <a href="index.html#inicio" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Início</a>
+                    <a href="vmv.html" target="_blank" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Quem Somos</a>
+                    <a href="#eventos-lista" class="text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Eventos</a>
+                    <a href="blog.html" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Blog</a>
+                    <a href="index.html#contato" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Contato</a>
+                </div>
+                <a href="#eventos-lista" class="hidden sm:inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-black bg-[color:var(--accent-gold)] hover:bg-yellow-600 transition duration-150">
+                    <i class="far fa-calendar-alt mr-2"></i> Calendário
+                </a>
+                </div>
+        </div>
+    </nav>
+
+    <header class="py-16 bg-[color:var(--secondary-bg)] border-b border-[color:var(--accent-gold)]">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="font-montserrat text-5xl font-extrabold text-[color:var(--accent-gold)] mb-3">
+                <i class="fas fa-calendar-check mr-3"></i> Agenda Completa da Igreja
+            </h1>
+            <p class="text-xl text-[color:var(--text-muted)] max-w-3xl mx-auto">
+                Confira a programação de cultos e eventos especiais para o fim de ano e todo o ano de 2026.
+            </p>
+        </div>
+    </header>
+
+    <section id="eventos-lista" class="py-16 md:py-24">
+        <div class="container mx-auto px-4 max-w-5xl">
+
+            <div class="mb-12">
+                <h2 class="font-montserrat text-3xl font-bold event-month-title text-[color:var(--text-light)] mb-8">
+                    Dezembro 2025
+                </h2>
+                <div class="space-y-4">
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4">
+                        <i class="fas fa-user-friends text-4xl text-[color:var(--accent-gold)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">13 de Dezembro | 07:00h</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Confraternização da Igreja</h3>
+                            <p>Momento especial de comunhão e encerramento das atividades. Traga sua família!</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: **Forte Orange**</p>
+                        </div>
+                    </div>
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4">
+                        <i class="fas fa-gift text-4xl text-[color:var(--accent-gold)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">25 de Dezembro | 19:00h</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Culto Natalino</h3>
+                            <p>Celebração do nascimento de nosso Senhor Jesus Cristo.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: Templo Principal</p>
+                        </div>
+                    </div>
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4">
+                        <i class="fas fa-star text-4xl text-[color:var(--accent-gold)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">31 de Dezembro | 22:00h</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Culto de Gratidão – Ano Novo</h3>
+                            <p>Celebração especial de virada do ano, entregando o novo ciclo nas mãos de Deus.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: Templo Principal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-[color:var(--secondary-bg)] my-12">
+
+            <div class="mb-12">
+                <h2 class="font-montserrat text-3xl font-bold event-month-title text-[color:var(--text-light)] mb-8">
+                    Janeiro 2026
+                </h2>
+                <div class="space-y-4">
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4">
+                        <i class="fas fa-music text-4xl text-[color:var(--accent-gold)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">17 de Janeiro | 19:30h</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Louvorzão</h3>
+                            <p>Noite especial de adoração e louvor com a participação de todos os ministérios.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: Salão Principal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-montserrat text-3xl font-bold event-month-title text-[color:var(--text-light)] mb-8">
+                    Fevereiro 2026
+                </h2>
+                <div class="space-y-4">
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4">
+                        <i class="fas fa-music text-4xl text-[color:var(--accent-gold)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">14 de Fevereiro | 19:30h</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Louvorzão</h3>
+                            <p>Noite especial de adoração e louvor com a participação de todos os ministérios.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: Salão Principal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-12">
+                <h2 class="font-montserrat text-3xl font-bold event-month-title text-[color:var(--text-light)] mb-8">
+                    Março 2026
+                </h2>
+                <div class="space-y-4">
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4">
+                        <i class="fas fa-cross text-4xl text-[color:var(--accent-gold)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">05 de Março | 07:00h</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Culto da Ressurreição</h3>
+                            <p>Culto especial e festivo celebrando a ressurreição de Cristo.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: Templo Principal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-montserrat text-3xl font-bold event-month-title text-[color:var(--text-light)] mb-8">
+                    Abril 2026
+                </h2>
+                <div class="space-y-4">
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4">
+                        <i class="fas fa-music text-4xl text-[color:var(--accent-gold)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">25 de Abril | 19:30h</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Aniversário do Cântico de Sião</h3>
+                            <p>Evento especial do grupo de louvor Cântico de Sião.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: Salão Principal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-montserrat text-3xl font-bold event-month-title text-[color:var(--text-light)] mb-8">
+                    Maio 2026
+                </h2>
+                <div class="space-y-4">
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4">
+                        <i class="fas fa-heart text-4xl text-[color:var(--accent-gold)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">10 de Maio | 19:00h</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Culto do Dia das Mães</h3>
+                            <p>Culto especial em homenagem e celebração das mães da igreja.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: Templo Principal</p>
+                        </div>
+                    </div>
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4">
+                        <i class="fas fa-church text-4xl text-[color:var(--accent-gold)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">30 de Maio | 19:00h</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Aniversário da Igreja (Parte 1)</h3>
+                            <p>Início das festividades de aniversário da IBNA.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: Templo Principal</p>
+                        </div>
+                    </div>
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4">
+                        <i class="fas fa-church text-4xl text-[color:var(--accent-gold)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">31 de Maio | 19:00h</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Aniversário da Igreja (Parte 2)</h3>
+                            <p>Continuação da celebração, com convidado especial e adoração.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: Templo Principal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-montserrat text-3xl font-bold event-month-title text-[color:var(--text-light)] mb-8">
+                    Junho 2026
+                </h2>
+                <div class="space-y-4">
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4">
+                        <i class="fas fa-heart text-4xl text-[color:var(--accent-gold)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">20 de Junho | 19:30h</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Encontro de Casais</h3>
+                            <p>Um momento de edificação e comunhão para os casais da igreja.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: Salão Social</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-montserrat text-3xl font-bold event-month-title text-[color:var(--text-light)] mb-8">
+                    Julho 2026
+                </h2>
+                <div class="space-y-4">
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4">
+                        <i class="fas fa-children text-4xl text-[color:var(--accent-gold)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">25 de Julho | 19:00h</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">EBF – Escola Bíblica de Férias</h3>
+                            <p>Programação especial de férias com ensino bíblico e brincadeiras para as crianças.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: Salão Infantil</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-montserrat text-3xl font-bold event-month-title text-[color:var(--text-light)] mb-8">
+                    Agosto 2026
+                </h2>
+                <div class="space-y-4">
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4 opacity-70">
+                        <i class="fas fa-calendar text-4xl text-[color:var(--text-muted)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">Data e Hora a Definir</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Evento Mensal</h3>
+                            <p>Programação e detalhes serão divulgados em breve.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: A definir</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-12">
+                <h2 class="font-montserrat text-3xl font-bold event-month-title text-[color:var(--text-light)] mb-8">
+                    Setembro 2026
+                </h2>
+                <div class="space-y-4">
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4 opacity-70">
+                        <i class="fas fa-calendar text-4xl text-[color:var(--text-muted)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">Data e Hora a Definir</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Evento Mensal</h3>
+                            <p>Programação e detalhes serão divulgados em breve.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: A definir</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-montserrat text-3xl font-bold event-month-title text-[color:var(--text-light)] mb-8">
+                    Outubro 2026
+                </h2>
+                <div class="space-y-4">
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4">
+                        <i class="fas fa-child text-4xl text-[color:var(--accent-gold)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">10 de Outubro | 19:00h</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Culto das Crianças</h3>
+                            <p>Celebração especial das crianças com teatro, louvor e brincadeiras.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: Templo Principal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-montserrat text-3xl font-bold event-month-title text-[color:var(--text-light)] mb-8">
+                    Novembro 2026
+                </h2>
+                <div class="space-y-4">
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4 opacity-70">
+                        <i class="fas fa-calendar text-4xl text-[color:var(--text-muted)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">Data e Hora a Definir</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Evento Mensal</h3>
+                            <p>Programação e detalhes serão divulgados em breve.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: A definir</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="font-montserrat text-3xl font-bold event-month-title text-[color:var(--text-light)] mb-8">
+                    Dezembro 2026
+                </h2>
+                <div class="space-y-4">
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4">
+                        <i class="fas fa-gift text-4xl text-[color:var(--accent-gold)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">25 de Dezembro | 19:00h</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Culto Natalino</h3>
+                            <p>Celebração especial de Natal.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: Templo Principal</p>
+                        </div>
+                    </div>
+                    <div class="event-card-full bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg flex items-start space-x-4">
+                        <i class="fas fa-star text-4xl text-[color:var(--accent-gold)] mt-1"></i>
+                        <div>
+                            <p class="text-xs text-[color:var(--text-muted)]">31 de Dezembro | 22:00h</p>
+                            <h3 class="font-montserrat text-2xl font-bold mb-1">Culto de Gratidão – Ano Novo</h3>
+                            <p>Culto especial de virada do ano.</p>
+                            <p class="text-sm mt-2 text-[color:var(--text-muted)]"><i class="fas fa-map-marker-alt mr-1"></i> Local: Templo Principal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="bg-[color:var(--secondary-bg)] text-center py-6 mt-0 border-t border-[color:var(--secondary-bg)] shadow-[0_-5px_15px_rgba(0,0,0,0.1)]">
+        <div class="container mx-auto">
+            <p class="text-sm text-[color:var(--accent-gold)] font-semibold font-montserrat mb-1">
+                IGREJA BATISTA NOVA ALIANÇA
+            </p>
+            <p class="text-xs text-[color:var(--text-muted)]">
+                Desenvolvido com Fé e Tecnologia | &copy; 2026
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
