@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visão, Missão e Valores | Nova Aliança</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-bg: #0f172a;
+            --accent-gold: #d4af37;
+            --secondary-bg: #1e293b;
+            --text-light: #e2e8f0;
+            --text-muted: #94a3b8;
+        }
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-light);
+        }
+        .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-[color:var(--secondary-bg)] shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center space-x-2">
+                    <img src="https://placehold.co/40x40/d4af37/0f172a?text=NA" alt="Logo" class="rounded-full">
+                    <span class="font-montserrat text-xl font-bold text-[color:var(--accent-gold)]">Nova Aliança</span>
+                </a>
+                
+                <!-- Links Desktop -->
+                <div class="hidden sm:flex space-x-8">
+                    <a href="index.html" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)]">Início</a>
+                    <a href="calendario.html" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)]">Calendário</a>
+                    <a href="vmv.html" class="text-[color:var(--accent-gold)] border-b-2 border-[color:var(--accent-gold)]">Nossa Essência</a>
+                    <a href="index.html#contato" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)]">Contato</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="py-20 px-6 max-w-6xl mx-auto">
+
+        <h1 class="text-center font-montserrat text-5xl font-extrabold text-[color:var(--accent-gold)] mb-12">
+            Nossa Essência
+        </h1>
+
+        <!-- Botão voltar -->
+        <div class="mb-10 text-center">
+            <a href="index.html" class="bg-[color:var(--accent-gold)] text-[color:var(--primary-bg)] px-6 py-3 rounded-full font-bold shadow-lg hover:bg-yellow-600 transition inline-block">
+                <i class="fas fa-arrow-left mr-2"></i> Voltar ao Início
+            </a>
+        </div>
+
+        <!-- VMV -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+
+            <div class="bg-[color:var(--secondary-bg)] p-6 rounded-lg shadow-xl hover:shadow-[0_0_20px_0_rgba(212,175,55,0.3)] transition">
+                <div class="mb-4 text-4xl text-[color:var(--accent-gold)]">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h3 class="font-montserrat text-2xl font-bold text-[color:var(--accent-gold)] mb-3">Visão</h3>
+                <p class="text-[color:var(--text-light)]">Ser uma igreja relevante e acolhedora, que transforma vidas e impacta a comunidade de Itamaracá através do Evangelho de Jesus Cristo.</p>
+            </div>
+
+            <div class="bg-[color:var(--secondary-bg)] p-6 rounded-lg shadow-xl hover:shadow-[0_0_20px_0_rgba(212,175,55,0.3)] transition">
+                <div class="mb-4 text-4xl text-[color:var(--accent-gold)]">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <h3 class="font-montserrat text-2xl font-bold text-[color:var(--accent-gold)] mb-3">Missão</h3>
+                <p class="text-[color:var(--text-light)]">Fazer discípulos de todas as nações, ensinando-os a guardar tudo o que Cristo ordenou, e celebrando o amor de Deus em comunhão.</p>
+            </div>
+
+            <div class="bg-[color:var(--secondary-bg)] p-6 rounded-lg shadow-xl hover:shadow-[0_0_20px_0_rgba(212,175,55,0.3)] transition">
+                <div class="mb-4 text-4xl text-[color:var(--accent-gold)]">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3 class="font-montserrat text-2xl font-bold text-[color:var(--accent-gold)] mb-3">Valores</h3>
+                <p class="text-[color:var(--text-light)]">Comunhão, Adoração Genuína, Ensino Fiel, Serviço ao Próximo e Compromisso Missionário.</p>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[color:var(--secondary-bg)] py-8 text-center text-[color:var(--text-muted)]">
+        <p>&copy; 2026 Igreja Batista Nova Aliança. Todos os direitos reservados.</p>
+    </footer>
+
+</body>
+</html>
