@@ -267,31 +267,11 @@
                 Últimas Notícias e Blog
             </h2>
             <p class="text-center text-lg text-[color:var(--text-muted)] mb-10 max-w-3xl mx-auto">
-                Aguarde para mais informações, em breve novidades! Nossa área de blog será atualizada com estudos e mensagens.
+                Leia nossas mensagens mais recentes, estudos bíblicos e novidades da comunidade.
             </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="interactive-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" onclick="openBlogModal('IBNA', 'Aguarde para mais informações', 'Em breve, publicaremos as primeiras notícias e estudos bíblicos do nosso blog. Fique atento às nossas notificações push para ser o primeiro a saber!', 'Em breve...')">
-                    <i class="fas fa-search text-3xl text-[color:var(--accent-gold)] mb-3"></i>
-                    <h3 class="font-montserrat text-xl font-bold mb-2">Em Breve: Novidades no Blog!</h3>
-                    <p class="text-[color:var(--text-muted)] text-sm mb-3">Estudos, notícias e mensagens em um só lugar.</p>
-                    <span class="text-xs text-[color:var(--accent-gold)] font-semibold">Aguardando Publicação</span>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="featured-blog-posts">
                 </div>
-                
-                <div class="interactive-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" onclick="openBlogModal('IBNA', 'Aguarde para mais informações', 'Em breve, publicaremos as primeiras notícias e estudos bíblicos do nosso blog. Fique atento às nossas notificações push para ser o primeiro a saber!', 'Em breve...')">
-                    <i class="fas fa-search text-3xl text-[color:var(--accent-gold)] mb-3"></i>
-                    <h3 class="font-montserrat text-xl font-bold mb-2">Próximo Estudo Bíblico</h3>
-                    <p class="text-[color:var(--text-muted)] text-sm mb-3">Aprofunde-se na Palavra de Deus conosco.</p>
-                    <span class="text-xs text-[color:var(--accent-gold)] font-semibold">Aguardando Publicação</span>
-                </div>
-
-                <div class="interactive-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" onclick="openBlogModal('IBNA', 'Aguarde para mais informações', 'Em breve, publicaremos as primeiras notícias e estudos bíblicos do nosso blog. Fique atento às nossas notificações push para ser o primeiro a saber!', 'Em breve...')">
-                    <i class="fas fa-search text-3xl text-[color:var(--accent-gold)] mb-3"></i>
-                    <h3 class="font-montserrat text-xl font-bold mb-2">Novidades da Comunidade</h3>
-                    <p class="text-[color:var(--text-muted)] text-sm mb-3">Fique por dentro das últimas notícias da igreja.</p>
-                    <span class="text-xs text-[color:var(--accent-gold)] font-semibold">Aguardando Publicação</span>
-                </div>
-            </div>
 
             <div class="text-center mt-12">
                 <a href="blog.html" class="inline-block px-8 py-3 text-lg font-semibold rounded-full bg-[color:var(--accent-gold)] text-gray-900 shadow-xl hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
@@ -338,6 +318,54 @@
     <script>
         let countdownInterval;
         
+        // =======================================================
+        // 1. DADOS CENTRALIZADOS DO BLOG (A ser copiado para blog.html)
+        // =======================================================
+        const BLOG_POSTS = [
+            {
+                id: 'graca-transformadora',
+                source: 'IBNA',
+                title: 'O Poder Transformador da Graça',
+                summary: 'A graça de Deus não é apenas um conceito teológico, mas uma força ativa que transforma vidas. Exploramos como a graça nos capacita a viver uma vida de santidade e propósito. Esta mensagem foi pregada no último culto dominical.',
+                icon: 'fas fa-feather-alt',
+                date: '15 de Novembro de 2025'
+            },
+            {
+                id: 'fe-e-obras',
+                source: 'Estudo Bíblico',
+                title: 'Fé e Obras: Uma Conexão Indissolúvel',
+                summary: 'Muitos se perguntam sobre a relação entre fé e obras. Este estudo de Tiago nos mostra que a fé verdadeira sempre resulta em ações. Obras não nos salvam, mas provam que fomos salvos. Uma jornada para entender a vida cristã prática.',
+                icon: 'fas fa-book-open',
+                date: '01 de Dezembro de 2025'
+            },
+            {
+                id: 'encontro-casais',
+                source: 'Comunidade',
+                title: 'Inscrições Abertas para o Encontro de Casais',
+                summary: 'O Ministério de Família anuncia a abertura das inscrições para o próximo Encontro de Casais, que acontecerá em Junho de 2026. Garanta sua vaga! O foco será em comunicação e perdão no casamento.',
+                icon: 'fas fa-hands-heart',
+                date: '10 de Dezembro de 2025'
+            },
+            {
+                id: 'proposito-vida',
+                source: 'Mensagem Pastoral',
+                title: 'Descobrindo o Propósito da Vida',
+                summary: 'Uma reflexão sobre a busca por significado e como a Palavra de Deus nos revela nosso verdadeiro propósito.',
+                icon: 'fas fa-lightbulb',
+                date: '05 de Dezembro de 2025'
+            },
+            {
+                id: 'ministerio-jovem',
+                source: 'Jovens IBNA',
+                title: 'Encontro de Louvor e Adoração Jovem',
+                summary: 'Detalhes sobre o próximo evento do Ministério Jovem, focado em louvor e adoração para a nova geração.',
+                icon: 'fas fa-guitar',
+                date: '20 de Dezembro de 2025'
+            }
+            // Adicione mais posts aqui. O index.html exibirá apenas os 3 primeiros.
+        ];
+
+
         // --- FUNÇÕES DO BLOG MODAL (Mantidas) ---
         function openBlogModal(source, title, body, date) {
             document.getElementById('modal-title').textContent = title;
@@ -349,6 +377,32 @@
         function closeBlogModal() {
             document.getElementById('blog-modal').style.display = 'none';
         }
+        
+        // =======================================================
+        // 2. RENDERIZAÇÃO DINÂMICA
+        // =======================================================
+
+        function renderFeaturedPosts() {
+            const container = document.getElementById('featured-blog-posts');
+            container.innerHTML = ''; // Limpa o conteúdo existente
+
+            // Pega apenas os 3 primeiros posts
+            const featuredPosts = BLOG_POSTS.slice(0, 3); 
+
+            featuredPosts.forEach(post => {
+                const postHtml = `
+                    <div class="interactive-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" 
+                         onclick="openBlogModal('${post.source}', '${post.title}', '${post.summary.replace(/'/g, "\\'")}', '${post.date}')">
+                        <i class="${post.icon} text-3xl text-[color:var(--accent-gold)] mb-3"></i>
+                        <h3 class="font-montserrat text-xl font-bold mb-2">${post.title}</h3>
+                        <p class="text-[color:var(--text-muted)] text-sm mb-3">${post.summary.substring(0, 80)}...</p>
+                        <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${post.date}</span>
+                    </div>
+                `;
+                container.innerHTML += postHtml;
+            });
+        }
+
 
         // --- SISTEMA DE CONTAGEM REGRESSIVA SEMANAL (Mantido) ---
         
@@ -474,6 +528,9 @@
         // --- INICIALIZAÇÃO ---
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DOM carregado, iniciando aplicação...");
+            
+            // Renderiza os posts do blog
+            renderFeaturedPosts();
             
             // Inicia o contador semanal 
             startCountdown();
