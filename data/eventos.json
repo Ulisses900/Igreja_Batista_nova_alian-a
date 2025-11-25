@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "data": "2026-01-17",
+        "hora": "19:30",
+        "titulo": "Louvorzão",
+        "descricao": "Noite especial de adoração e louvor",
+        "local": "Salão Principal",
+        "icone": "fas fa-music"
+    },
+    {
+        "id": 2,
+        "data": "2026-02-05",
+        "hora": "20:00",
+        "titulo": "Culto de Oração",
+        "descricao": "Momento especial de oração e intercessão",
+        "local": "Salão Principal",
+        "icone": "fas fa-praying-hands"
+    }
+]
