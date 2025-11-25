@@ -1,137 +1,111 @@
 // ==========================================================
-// 1. CONFIGURAÇÕES CRÍTICAS (ATUALIZADAS)
+// CONFIGURAÇÕES E IMPORTAÇÕES
 // ==========================================================
-// Sua CHAVE PÚBLICA VAPID.
-const VAPID_PUBLIC_KEY = 'BPln7ph5L0061tGzpskhYNK1jX6h6j8GXIhO1Jlxq2DncedsEn6vhNB4q-pDdKBg7CEgjXiqmd21kJkuC_u9hz8';
 
-// URL do seu Google Apps Script (Web App) - ENDPOINT DE INSCRIÇÃO
 const APPS_SCRIPT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbw93LOXmAc7YsQZT0NBV6o6y4_uq7JqMq1mdxZjFEy5o37VNVCEICHzvZc_21efZao/exec';
-
-// ID único para identificar o navegador na Planilha (para este exemplo)
-const BROWSER_ID = Date.now().toString(); 
-
-let notificationServiceWorker;
+const BROWSER_ID = 'ibna-' + Date.now();
 
 // ==========================================================
-// 2. REGISTRO DO SERVICE WORKER
+// FUNÇÃO PRINCIPAL DE INSCRIÇÃO COM FIREBASE
 // ==========================================================
 
-function registerNotificationServiceWorker () {
-    return new Promise((resolve, reject) => {
-        if (!('serviceWorker' in navigator)) {
-            return resolve();
-        }
-
-        return window.navigator.serviceWorker.register(
-            `/notification-service-worker.js`,
-            { scope: "./" }
-        ).then((registration) => {
-            const sw = registration.installing ||
-                registration.waiting ||
-                registration.active;
-
-            if (registration.active) {
-                notificationServiceWorker = registration;
-                resolve();
-                return;
-            }
-
-            sw.addEventListener('statechange', (ev) => {
-                if (ev.target.state === 'activated') {
-                    notificationServiceWorker = registration;
-                    resolve();
-                }
-            });
-        }).catch(reject);
-    });
-}
-
-// ==========================================================
-// 3. REGISTRO DA PUSH NOTIFICATION
-// ==========================================================
-
-async function registerPushManager() {
-    await registerNotificationServiceWorker();
-
-    if (!notificationServiceWorker) {
-        alert('Desculpe, não foi possível registrar o Service Worker.');
-        return;
+async function subscribeWithFirebase() {
+  try {
+    console.log('Iniciando inscrição com Firebase...');
+    
+    // Importar funções do Firebase (ajuste o caminho conforme sua estrutura)
+    const { requestNotificationPermission } = await import('./firebase-messaging.js');
+    
+    // Solicitar permissão e obter token
+    const token = await requestNotificationPermission();
+    
+    if (token) {
+      alert('🎉 Inscrito com sucesso! Você receberá notificações da IBNA.');
+      
+      // Salvar no localStorage para referência futura
+      localStorage.setItem('fcmToken', token);
+      localStorage.setItem('browserId', BROWSER_ID);
+      
+      console.log('Inscrição concluída - Token:', token);
+    } else {
+      alert('❌ Não foi possível completar a inscrição. Por favor, permita as notificações.');
     }
+    
+  } catch (error) {
+    console.error('Erro na inscrição Firebase:', error);
+    alert('❌ Erro ao tentar se inscrever: ' + error.message);
+  }
+}
 
-    try {
-        const result = await window.Notification.requestPermission();
+// ==========================================================
+// VERIFICAR INSCRIÇÃO EXISTENTE
+// ==========================================================
 
-        if (result !== 'granted') {
-            alert(`Permissão negada: ${result}`);
-            return;
-        }
-
-        // 1. Gera a subscrição push usando a Chave Pública VAPID
-        const subscription = await notificationServiceWorker
-            .pushManager
-            .subscribe({
-                applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
-                userVisibleOnly: true
-            });
-
-        // 2. Envia a subscrição para o Apps Script - CÓDIGO CORRIGIDO
-        const response = await fetch(APPS_SCRIPT_ENDPOINT, {
-            method: 'POST',
-            mode: 'no-cors', // ← ADICIONE ESTA LINHA
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                browserId: BROWSER_ID,
-                pushSubscription: subscription
-            })
-        });
-
-        // Com 'no-cors' não podemos ver a resposta, mas a requisição é enviada
-        console.log('Inscrição enviada para o servidor');
-        alert('Inscrição realizada com sucesso! Você receberá notificações recorrentes.');
-
-    } catch (ex) {
-        console.error('Erro detalhado:', ex);
-        alert(`Erro ao tentar se inscrever: ${ex.message}`);
+function checkExistingSubscription() {
+  const token = localStorage.getItem('fcmToken');
+  const browserId = localStorage.getItem('browserId');
+  
+  if (token && browserId) {
+    console.log('Inscrição existente encontrada:', { browserId, token: token.substring(0, 20) + '...' });
+    
+    // Mostrar status para o usuário
+    const statusElement = document.getElementById('subscriptionStatus');
+    if (statusElement) {
+      statusElement.innerHTML = '✅ Você está inscrito para receber notificações';
+      statusElement.style.color = 'green';
     }
+    
+    return true;
+  }
+  
+  return false;
 }
 
 // ==========================================================
-// FUNÇÃO AUXILIAR ESSENCIAL (ADICIONE ESTA FUNÇÃO)
+// INICIALIZAÇÃO
 // ==========================================================
 
-function urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-        .replace(/-/g, '+')
-        .replace(/_/g, '/');
-
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-}
-
-// ==========================================================
-// 4. INICIALIZAÇÃO E EVENTOS
-// ==========================================================
-
-// Se houver um elemento para mostrar o ID do navegador
-const browserIdElement = document.querySelector('#browserId');
-if (browserIdElement) {
-    browserIdElement.innerHTML = BROWSER_ID;
-}
-
-registerNotificationServiceWorker().catch(console.error);
-
-// Configura o botão de subscrição
-document.querySelector('#subscribe').addEventListener('click', () => {
-    registerPushManager();
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('IBNA - Sistema de Notificações inicializando...');
+  
+  // Verificar se já está inscrito
+  checkExistingSubscription();
+  
+  // Configurar botão de inscrição
+  const subscribeButton = document.getElementById('subscribe');
+  if (subscribeButton) {
+    subscribeButton.addEventListener('click', subscribeWithFirebase);
+    subscribeButton.innerHTML = '🔔 Receber Notificações';
+  }
+  
+  // Botão para testar notificação local (apenas desenvolvimento)
+  const testButton = document.getElementById('testNotification');
+  if (testButton) {
+    testButton.addEventListener('click', testLocalNotification);
+    testButton.style.display = 'block';
+  }
 });
 
-// A lógica de teste local (#notifyAll) foi removida, 
-// pois o envio será feito exclusivamente pelo Apps Script.
+// ==========================================================
+// FUNÇÃO DE TESTE LOCAL (APENAS DESENVOLVIMENTO)
+// ==========================================================
+
+function testLocalNotification() {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    const notification = new Notification('🔔 IBNA - Teste', {
+      body: 'Esta é uma notificação de teste do sistema!',
+      icon: '/icon-192x192.png',
+      badge: '/badge-72x72.png',
+      tag: 'test'
+    });
+    
+    notification.onclick = function() {
+      window.focus();
+      notification.close();
+    };
+    
+    alert('Notificação de teste enviada!');
+  } else {
+    alert('Primeiro você precisa permitir notificações.');
+  }
+}
