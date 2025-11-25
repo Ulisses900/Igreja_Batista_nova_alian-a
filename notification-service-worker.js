@@ -1,28 +1,58 @@
-self.addEventListener("push", async (event) => {
-    // Tenta analisar o payload (carga útil) da notificação
-    let data = {};
-    try {
-        data = await event.data.json();
-    } catch (e) {
-        console.error("Erro ao analisar dados da notificação push:", e);
-        data = { title: "Nova Notificação", body: "Você tem uma nova mensagem." };
-    }
+// notification-service-worker.js
+importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
 
-    const title = data.title || "Nova Notificação";
-    const body = data.body || "Você tem uma nova mensagem.";
-    const icon = data.icon || 'https://umpordez.com/assets/images/logo.png'; // Use um ícone padrão se não for fornecido
-
-    // Exibe a notificação ao usuário
-    self.registration.showNotification(
-        title,
-        { body, icon: icon }
-    );
+// Configuração do Firebase no Service Worker
+firebase.initializeApp({
+  apiKey: "AIzaSyAK3QItAHsUAwHBI0eI7LUDnnD3X25Zz6A",
+  authDomain: "ibna-b5f3d.firebaseapp.com",
+  projectId: "ibna-b5f3d",
+  storageBucket: "ibna-b5f3d.firebasestorage.app",
+  messagingSenderId: "238089075652",
+  appId: "1:238089075652:web:3b0c4d38937f62c01cc291",
+  measurementId: "G-MN2WRJC6X1"
 });
 
-// Opcional, mas recomendado: Lidar com o clique na notificação
-self.addEventListener('notificationclick', (event) => {
-    event.notification.close();
+const messaging = firebase.messaging();
 
-    // Se houver um URL (link) nos dados, abre a janela
-    // event.waitUntil(clients.openWindow('URL_PARA_ABRIR_AO_CLICAR'));
+// Background message handler (quando o app está fechado)
+messaging.onBackgroundMessage(function(payload) {
+  console.log('[firebase-messaging-sw.js] Received background message:', payload);
+
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: payload.notification.icon || '/icon-192x192.png',
+    image: payload.notification.image,
+    badge: '/badge-72x72.png',
+    data: payload.data || {}
+  };
+
+  return self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
+// Click handler para notificações
+self.addEventListener('notificationclick', function(event) {
+  console.log('Notification click received.', event);
+  
+  event.notification.close();
+
+  const urlToOpen = event.notification.data.url || 'https://igrejabatistanovaalianca.netlify.app';
+
+  event.waitUntil(
+    clients.matchAll({type: 'window'}).then(function(windowClients) {
+      // Verificar se já existe uma janela/tab aberta
+      for (let i = 0; i < windowClients.length; i++) {
+        const client = windowClients[i];
+        if (client.url === urlToOpen && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      
+      // Se não encontrou, abrir nova janela
+      if (clients.openWindow) {
+        return clients.openWindow(urlToOpen);
+      }
+    })
+  );
 });
