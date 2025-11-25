@@ -243,11 +243,14 @@
                 </div>
             </div>
 
-            <div class="mt-10">
+            <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
                 <a href="#contato" class="inline-block px-8 py-3 text-lg font-semibold rounded-full bg-[color:var(--accent-gold)] text-gray-900 shadow-xl hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
                     Visite-nos
                 </a>
-            </div>
+                <button id="subscribe" class="inline-block px-8 py-3 text-lg font-semibold rounded-full bg-blue-600 text-white shadow-xl hover:bg-blue-700 transition duration-300 transform hover:scale-105">
+                    <i class="fas fa-bell mr-3"></i> Receber Notificações Diárias
+                </button>
+			</div>
         </div>
     </section>
 
@@ -275,7 +278,6 @@
         </div>
     </section>
 
-    <!-- NOVA SEÇÃO: PROGRAMAÇÃO SEMANAL -->
     <section id="programacao-semanal" class="py-16 md:py-20 bg-[color:var(--primary-bg)]">
         <div class="container mx-auto px-4">
             <h2 class="font-montserrat text-4xl font-extrabold text-center mb-4 text-[color:var(--accent-gold)]">
@@ -286,7 +288,6 @@
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="weekly-schedule-container">
-                <!-- Segunda-feira -->
                 <div class="schedule-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg">
                     <div class="flex justify-between items-start mb-4">
                         <span class="schedule-day">SEGUNDA</span>
@@ -302,7 +303,6 @@
                     </div>
                 </div>
 
-                <!-- Quarta-feira -->
                 <div class="schedule-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg">
                     <div class="flex justify-between items-start mb-4">
                         <span class="schedule-day">QUARTA</span>
@@ -318,7 +318,6 @@
                     </div>
                 </div>
 
-                <!-- Quinta-feira -->
                 <div class="schedule-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg">
                     <div class="flex justify-between items-start mb-4">
                         <span class="schedule-day">QUINTA</span>
@@ -334,7 +333,6 @@
                     </div>
                 </div>
 
-                <!-- Domingo -->
                 <div class="schedule-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg">
                     <div class="flex justify-between items-start mb-4">
                         <span class="schedule-day">DOMINGO</span>
@@ -417,7 +415,7 @@
 
     <div id="blog-modal" class="modal">
         <div class="modal-content">
-            <span class="close-button" onclick="closeBlogModal()">&times;</span>
+            <span class="close-button" onclick="closeBlogModal()">×</span>
             <h2 id="modal-title" class="font-montserrat text-3xl font-bold mb-2 text-[color:var(--accent-gold)]">Título do Artigo</h2>
             <p id="modal-date" class="text-sm text-[color:var(--text-muted)] mb-4">Data | Fonte</p>
             <p id="modal-body" class="text-[color:var(--text-light)] text-lg">Conteúdo do artigo...</p>
@@ -430,7 +428,7 @@
                 IGREJA BATISTA NOVA ALIANÇA
             </p>
             <p class="text-xs text-[color:var(--text-muted)]">
-                Desenvolvido com Fé e Tecnologia | &copy; 2026
+                Desenvolvido com Fé e Tecnologia | © 2026
             </p>
         </div>
     </footer>
@@ -587,7 +585,7 @@
                 
                 html += `
                     <div class="interactive-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" 
-                         onclick="openBlogModal('${item.tipo.charAt(0).toUpperCase() + item.tipo.slice(1)}', '${item.titulo.replace(/'/g, "\\'")}', '${(item.conteudo || 'Conteúdo não disponível').toString().replace(/'/g, "\\'")}', '${item.data}')">
+                        onclick="openBlogModal('${item.tipo.charAt(0).toUpperCase() + item.tipo.slice(1)}', '${item.titulo.replace(/'/g, "\\'")}', '${(item.conteudo || 'Conteúdo não disponível').toString().replace(/'/g, "\\'")}', '${item.data}')">
                         <i class="${item.icone} text-3xl text-[color:var(--accent-gold)] mb-3"></i>
                         <h3 class="font-montserrat text-xl font-bold mb-2">${item.titulo}</h3>
                         <p class="text-[color:var(--text-muted)] text-sm mb-3">${resumo}</p>
@@ -597,34 +595,6 @@
             });
             
             container.innerHTML = html;
-        }
-
-        // --- FUNÇÕES DE NOTIFICAÇÃO PUSH ---
-        function requestNotificationPermission() {
-            if ('Notification' in window) {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        console.log('Permissão de notificação concedida. Registrando Service Worker...');
-                        registerServiceWorker();
-                    } else if (permission === 'denied') {
-                        console.log('Permissão de notificação negada.');
-                    }
-                });
-            } else {
-                console.log('Seu navegador não suporta notificações.');
-            }
-        }
-
-        function registerServiceWorker() {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./service-worker.js')
-                .then(registration => {
-                    console.log('Service Worker registrado com sucesso:', registration.scope);
-                })
-                .catch(error => {
-                    console.error('Falha no registro do Service Worker:', error);
-                });
-            }
         }
 
         // --- FUNÇÕES DO BLOG MODAL ---
@@ -642,165 +612,131 @@
         // --- SISTEMA DE CONTAGEM REGRESSIVA SEMANAL ---
         
         const WEEKLY_SERVICES = [
-            {
-                day: 3, // Quarta-feira
-                hour: 19,
-                minute: 30,
-                title: "Culto de Oração",
-                subtitle: "Quarta-feira",
-                icon: "fas fa-pray"
-            },
-            {
-                day: 4, // Quinta-feira
-                hour: 19,
-                minute: 30,
-                title: "Escola Bíblica (EB)",
-                subtitle: "Quinta-feira",
-                icon: "fas fa-bible"
-            },
-            {
-                day: 0, // Domingo
-                hour: 19,
-                minute: 0,
-                title: "Culto Dominical",
-                subtitle: "Domingo à noite",
-                icon: "fas fa-hands-praying"
-            }
+            // 0: Domingo (19:00)
+            { day: 0, hour: 19, minute: 0, title: 'Culto da Família', subtitle: 'Celebração e Palavra' }, 
+            // 1: Segunda (19:30)
+            { day: 1, hour: 19, minute: 30, title: 'Culto das Mulheres', subtitle: 'Comunhão e Edificação' }, 
+            // 3: Quarta (19:30)
+            { day: 3, hour: 19, minute: 30, title: 'Culto de Oração e Doutrina', subtitle: 'Fortalecendo as Raízes' },
+            // 4: Quinta (19:30)
+            { day: 4, hour: 19, minute: 30, title: 'EB - Escola Bíblica', subtitle: 'Aprender para Viver' }
+            // Os dias 2 (Terça) e 5 (Sexta) não têm culto noturno.
         ];
 
-        function getNextService() {
-            const now = new Date();
-            const currentDay = now.getDay();
-            const currentTime = now.getHours() * 60 + now.getMinutes();
-            
-            let nextService = null;
-            let minDaysDiff = 7; 
-            
-            for (const service of WEEKLY_SERVICES) {
-                let daysDiff = service.day - currentDay;
-                
-                if (daysDiff === 0) {
-                    const serviceTime = service.hour * 60 + service.minute;
-                    if (serviceTime <= currentTime) {
-                        daysDiff += 7;
-                    }
-                } else if (daysDiff < 0) {
-                    daysDiff += 7;
-                }
-                
-                if (daysDiff < minDaysDiff || 
-                    (daysDiff === minDaysDiff && service.hour * 60 + service.minute < (nextService?.hour * 60 + nextService?.minute || Infinity))) {
-                    minDaysDiff = daysDiff;
-                    nextService = { ...service, daysDiff };
-                }
-            }
-            
-            return nextService;
-        }
-
-        function calculateNextServiceDateTime(service) {
-            const now = new Date();
-            const nextServiceDate = new Date(now);
-            
-            nextServiceDate.setDate(now.getDate() + service.daysDiff);
-            nextServiceDate.setHours(service.hour, service.minute, 0, 0);
-            
-            return nextServiceDate;
-        }
-
         function startCountdown() {
-            if (countdownInterval) {
-                clearInterval(countdownInterval);
+            clearInterval(countdownInterval); // Limpa qualquer timer anterior
+
+            const timerElement = document.getElementById('countdown-timer');
+            const titleElement = document.getElementById('countdown-title');
+            const subtitleElement = document.getElementById('countdown-subtitle');
+            const infoElement = document.getElementById('next-service-info');
+
+            const now = new Date();
+            let nextService = null;
+            let targetTime = null;
+
+            // 1. Procurar o próximo culto a partir de agora
+            for (let i = 0; i < 7; i++) {
+                const dayIndex = (now.getDay() + i) % 7;
+                
+                // Filtra os cultos do dia atual (se ainda não passaram) ou dos próximos dias
+                const servicesTodayOrFuture = WEEKLY_SERVICES.filter(service => {
+                    if (service.day === dayIndex) {
+                        const serviceDate = new Date(now);
+                        serviceDate.setDate(now.getDate() + i);
+                        serviceDate.setHours(service.hour, service.minute, 0, 0);
+
+                        // Se for hoje, tem que ser no futuro
+                        if (i === 0) {
+                            return serviceDate.getTime() > now.getTime();
+                        }
+                        // Se for futuro, qualquer horário
+                        return true;
+                    }
+                    return false;
+                }).sort((a, b) => {
+                    // Ordena por hora para o dia
+                    return a.hour * 60 + a.minute - (b.hour * 60 + b.minute);
+                });
+
+                if (servicesTodayOrFuture.length > 0) {
+                    nextService = servicesTodayOrFuture[0];
+
+                    targetTime = new Date(now);
+                    targetTime.setDate(now.getDate() + i);
+                    targetTime.setHours(nextService.hour, nextService.minute, 0, 0);
+                    break; 
+                }
             }
 
-            const nextService = getNextService();
-            
             if (!nextService) {
-                document.getElementById('countdown-title').textContent = "Programação semanal indisponível";
-                return;
+                // Caso não encontre (deve ser o de Domingo de manhã), tenta o próximo Domingo.
+                const nextSundayService = WEEKLY_SERVICES.find(s => s.day === 0);
+                if (nextSundayService) {
+                    nextService = nextSundayService;
+                    targetTime = new Date(now);
+                    targetTime.setDate(now.getDate() + (7 - now.getDay())); // Vai para o próximo domingo
+                    targetTime.setHours(nextService.hour, nextService.minute, 0, 0);
+                } else {
+                    timerElement.innerHTML = `<p class="text-xl text-red-500">Programação da semana não carregada.</p>`;
+                    return;
+                }
             }
 
-            const targetDateTime = calculateNextServiceDateTime(nextService);
-            
-            document.getElementById('countdown-title').textContent = `Próximo: ${nextService.title}`;
-            document.getElementById('countdown-subtitle').textContent = nextService.subtitle;
-            
-            const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
-            const timeString = `${nextService.hour.toString().padStart(2, '0')}:${nextService.minute.toString().padStart(2, '0')}`;
-            document.getElementById('next-service-info').textContent = 
-                `${targetDateTime.toLocaleDateString('pt-BR', dateOptions)} às ${timeString}`;
+            // Formata o nome do dia da semana
+            const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+            const formattedDay = nextService.day === now.getDay() ? 'HOJE' : dayNames[nextService.day];
+            const dateInfo = targetTime.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' });
 
-            countdownInterval = setInterval(function() {
+            titleElement.textContent = `Próximo Culto: ${nextService.title}`;
+            subtitleElement.textContent = nextService.subtitle;
+            infoElement.innerHTML = `<i class="far fa-calendar-alt mr-1"></i> ${formattedDay}, ${dateInfo} às ${nextService.hour.toString().padStart(2, '0')}:${nextService.minute.toString().padStart(2, '0')}h`;
+
+            // 2. Função de atualização do contador
+            const updateCountdown = () => {
                 const now = new Date().getTime();
-                let distance = targetDateTime.getTime() - now;
+                const distance = targetTime.getTime() - now;
 
                 if (distance < 0) {
-                    clearInterval(countdownInterval);
-                    document.getElementById('countdown-title').textContent = "O culto está acontecendo agora!";
-                    document.getElementById('countdown-subtitle').textContent = "Participe conosco";
-                    document.getElementById('days').textContent = "00";
-                    document.getElementById('hours').textContent = "00";
-                    document.getElementById('minutes').textContent = "00";
-                    document.getElementById('seconds').textContent = "00";
-                    
-                    setTimeout(startCountdown, 60000);
+                    // Já passou, reinicia a contagem para o próximo
+                    startCountdown();
                     return;
                 }
 
+                // Cálculo das unidades de tempo
                 const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
+                // Atualiza o DOM
                 document.getElementById('days').textContent = days.toString().padStart(2, '0');
                 document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
                 document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
                 document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-            }, 1000);
+            };
+
+            // 3. Inicializa e define o intervalo
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
         }
 
-        // --- INICIALIZAÇÃO ---
+        // --- FUNÇÕES DE INICIALIZAÇÃO ---
+
         document.addEventListener('DOMContentLoaded', () => {
-            console.log("DOM carregado, iniciando aplicação...");
-            
-            // Inicia o contador semanal 
-            startCountdown();
-            
-            // Carrega conteúdo dinâmico
             loadEventsPreview();
             loadBlogPreview();
-            
-            // Tenta pedir permissão de notificação
-            requestNotificationPermission(); 
+            startCountdown();
+        });
 
-            // Listener para o menu mobile
-            document.getElementById('mobile-menu-button').addEventListener('click', () => {
-                document.getElementById('mobile-menu').classList.toggle('hidden');
-            });
-
-            // Smooth scrolling para navegação
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                        document.getElementById('mobile-menu').classList.add('hidden');
-                    }
-                });
-            });
-            
-            // Fecha o modal do blog ao clicar fora dele
-            window.addEventListener('click', (event) => {
-                const modal = document.getElementById('blog-modal');
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
+        // Toggle do menu mobile
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
         });
     </script>
-</body>
 
+    <script src="app.js"></script>
+
+</body>
 </html>
