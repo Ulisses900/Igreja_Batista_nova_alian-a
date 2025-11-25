@@ -64,6 +64,8 @@
             width: 90%;
             max-width: 800px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         .close-button {
@@ -93,6 +95,24 @@
             padding: 1rem;
             border-radius: 8px;
             margin: 1rem 0;
+        }
+
+        .modal-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--text-muted);
+        }
+
+        .modal-section:last-child {
+            border-bottom: none;
+        }
+
+        .modal-section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            color: var(--accent-gold);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
         }
 
     </style>
@@ -279,7 +299,51 @@
             container.innerHTML = `<div class="error">${message}</div>`;
         }
 
-        // Função para renderizar estudos bíblicos (VERSÃO CORRIGIDA COM DATASET)
+        // Função para converter array de conteúdo em string (PARA ESTUDOS BÍBLICOS)
+        function processarConteudoEstudo(conteudo) {
+            if (!conteudo) return "Conteúdo não disponível";
+            
+            // Se for array, converte para string formatada
+            if (Array.isArray(conteudo)) {
+                return conteudo.map(item => {
+                    let textoFormatado = '';
+                    if (item.titulo) textoFormatado += `**${item.titulo}**\n\n`;
+                    if (item.texto) textoFormatado += `${item.texto}\n\n`;
+                    if (item.versiculo) textoFormatado += `*${item.versiculo}*\n\n`;
+                    if (item.explicacao) textoFormatado += `${item.explicacao}\n\n`;
+                    if (item.aplicacao) textoFormatado += `${item.aplicacao}\n\n`;
+                    return textoFormatado;
+                }).join('\n');
+            }
+            
+            // Se já for string, retorna como está
+            return conteudo;
+        }
+
+        // Função para criar resumo do conteúdo
+        function criarResumo(conteudo, maxLength = 120) {
+            if (!conteudo) return "Conteúdo não disponível";
+            
+            let textoResumo = '';
+            
+            // Se for array, pega o primeiro item para o resumo
+            if (Array.isArray(conteudo)) {
+                if (conteudo.length > 0 && conteudo[0].texto) {
+                    textoResumo = conteudo[0].texto;
+                } else if (conteudo.length > 0 && conteudo[0].explicacao) {
+                    textoResumo = conteudo[0].explicacao;
+                } else {
+                    textoResumo = "Estudo bíblico disponível";
+                }
+            } else {
+                // Se for string, usa diretamente
+                textoResumo = conteudo;
+            }
+            
+            return textoResumo.substring(0, maxLength) + (textoResumo.length > maxLength ? '...' : '');
+        }
+
+        // Função para renderizar estudos bíblicos (VERSÃO CORRIGIDA PARA ARRAY)
         function renderEstudos(estudos) {
             const container = document.getElementById('estudos-content');
             
@@ -290,17 +354,15 @@
             
             let html = '';
             estudos.forEach(estudo => {
-                const conteudo = estudo.conteudo || "Conteúdo não disponível";
                 const titulo = estudo.titulo || "Título não disponível";
                 const data = estudo.data || "Data não informada";
-                
-                // Resumo para o card
-                const resumoConteudo = conteudo.substring(0, 120) + (conteudo.length > 120 ? '...' : '');
+                const conteudoProcessado = processarConteudoEstudo(estudo.conteudo);
+                const resumoConteudo = criarResumo(estudo.conteudo);
 
                 html += `
                     <div class="blog-post-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-l-4 border-l-[color:var(--accent-gold)] cursor-pointer" 
                          data-title="${titulo.replace(/"/g, '&quot;')}"
-                         data-content="${conteudo.replace(/"/g, '&quot;')}"
+                         data-content="${conteudoProcessado.replace(/"/g, '&quot;')}"
                          data-date="${data}"
                          onclick="openBlogModalFromDataset(this, 'Estudo Bíblico')">
                         <i class="fas fa-book-open text-3xl text-[color:var(--accent-gold)] mb-3"></i>
@@ -314,7 +376,7 @@
             container.innerHTML = html;
         }
 
-        // Função para renderizar notícias (VERSÃO CORRIGIDA COM DATASET)
+        // Função para renderizar notícias
         function renderNoticias(noticias) {
             const container = document.getElementById('noticias-content');
             
@@ -349,7 +411,7 @@
             container.innerHTML = html;
         }
 
-        // Função para renderizar mensagem (VERSÃO CORRIGIDA COM DATASET)
+        // Função para renderizar mensagem
         function renderMensagem(mensagem) {
             const container = document.getElementById('mensagem-content');
             
@@ -382,7 +444,7 @@
             container.innerHTML = html;
         }
 
-        // Função para renderizar eventos (VERSÃO CORRIGIDA COM DATASET)
+        // Função para renderizar eventos
         function renderEventos(eventos) {
             const container = document.getElementById('eventos-content');
             
@@ -417,7 +479,7 @@
             container.innerHTML = html;
         }
 
-        // Função para renderizar avisos (VERSÃO CORRIGIDA COM DATASET)
+        // Função para renderizar avisos
         function renderAvisos(avisos) {
             const container = document.getElementById('avisos-content');
             
@@ -476,7 +538,7 @@
             }
         }
 
-        // --- FUNÇÕES DO BLOG MODAL (VERSÃO CORRIGIDA COM DATASET) ---
+        // --- FUNÇÕES DO BLOG MODAL ---
         function openBlogModalFromDataset(element, source) {
             const title = element.dataset.title;
             const content = element.dataset.content;
@@ -489,6 +551,8 @@
             const formattedContent = content
                 .replace(/&quot;/g, '"')
                 .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **texto** para <strong>
+                .replace(/\*(.*?)\*/g, '<em>$1</em>') // *texto* para <em>
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;');
             
