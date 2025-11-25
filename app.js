@@ -70,13 +70,14 @@ async function registerPushManager() {
         const subscription = await notificationServiceWorker
             .pushManager
             .subscribe({
-                applicationServerKey: VAPID_PUBLIC_KEY,
+                applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
                 userVisibleOnly: true
             });
 
-        // 2. Envia a subscrição para o Apps Script (doPost) usando o URL completo
-        await fetch(APPS_SCRIPT_ENDPOINT, {
+        // 2. Envia a subscrição para o Apps Script - CÓDIGO CORRIGIDO
+        const response = await fetch(APPS_SCRIPT_ENDPOINT, {
             method: 'POST',
+            mode: 'no-cors', // ← ADICIONE ESTA LINHA
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -86,10 +87,33 @@ async function registerPushManager() {
             })
         });
 
+        // Com 'no-cors' não podemos ver a resposta, mas a requisição é enviada
+        console.log('Inscrição enviada para o servidor');
         alert('Inscrição realizada com sucesso! Você receberá notificações recorrentes.');
+
     } catch (ex) {
+        console.error('Erro detalhado:', ex);
         alert(`Erro ao tentar se inscrever: ${ex.message}`);
     }
+}
+
+// ==========================================================
+// FUNÇÃO AUXILIAR ESSENCIAL (ADICIONE ESTA FUNÇÃO)
+// ==========================================================
+
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
 }
 
 // ==========================================================
