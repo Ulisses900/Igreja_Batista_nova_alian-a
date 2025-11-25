@@ -1,0 +1,41 @@
+# EVENTOS 2026 - IBNA
+# Formato: ID|AAAA-MM-DD|HH:MM|Título|Descrição|Local|Ícone
+
+# JANEIRO
+1|2026-01-17|19:30|Louvorzão|Noite especial de adoração e louvor|Salão Principal|fas fa-music
+
+# FEVEREIRO
+1|2026-02-14|19:30|Louvorzão|Noite especial de adoração e louvor|Salão Principal|fas fa-music
+
+# MARÇO
+1|2026-03-05|07:00|Culto da Ressurreição|Culto especial celebrando a ressurreição de Cristo|Templo Principal|fas fa-cross
+
+# ABRIL
+1|2026-04-25|19:30|Aniversário do Cântico de Sião|Evento especial do grupo Cântico de Sião (Isaias)|Salão Principal|fas fa-music
+
+# MAIO
+1|2026-05-10|19:00|Culto do Dia das Mães|Culto especial em homenagem às mães|Templo Principal|fas fa-heart
+2|2026-05-30|19:00|Aniversário da Igreja|Início da celebração do aniversário da Igreja|Templo Principal|fas fa-church
+3|2026-05-31|19:00|Aniversário da Igreja (Parte 2)|Continuação da celebração do aniversário da Igreja|Templo Principal|fas fa-church
+
+# JUNHO
+1|2026-06-20|19:30|Encontro de Casais|Encontro especial para casais|Salão Social|fas fa-heart
+
+# JULHO
+1|2026-07-25|19:00|EBF – Escola Bíblica de Férias|Programação especial para crianças|Salão Infantil|fas fa-children
+
+# AGOSTO
+1|2026-08-00|00:00|A definir|A definir|A definir|fas fa-calendar
+
+# SETEMBRO
+1|2026-09-00|00:00|A definir|A definir|A definir|fas fa-calendar
+
+# OUTUBRO
+1|2026-10-10|19:00|Culto das Crianças|Celebração especial das crianças|Templo Principal|fas fa-child
+
+# NOVEMBRO
+1|2026-11-00|00:00|A definir|A definir|A definir|fas fa-calendar
+
+# DEZEMBRO
+1|2026-12-25|19:00|Culto Natalino|Celebração especial de Natal|Templo Principal|fas fa-gift
+2|2026-12-31|22:00|Culto de Gratidão – Ano Novo|Culto especial de virada do ano|Templo Principal|fas fa-star

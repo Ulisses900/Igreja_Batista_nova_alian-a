@@ -115,6 +115,38 @@
             font-size: 1.2rem;
         }
 
+        .content-block {
+            margin-bottom: 1.5rem;
+        }
+
+        .content-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            color: var(--accent-gold);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .content-verse {
+            font-style: italic;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            border-left: 2px solid var(--accent-gold);
+        }
+
+        .content-explanation {
+            margin-bottom: 0.5rem;
+        }
+
+        .content-application {
+            background-color: rgba(212, 175, 55, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-gold);
+            margin-top: 0.5rem;
+        }
+
     </style>
 </head>
 <body>
@@ -299,25 +331,65 @@
             container.innerHTML = `<div class="error">${message}</div>`;
         }
 
-        // Função para converter array de conteúdo em string (PARA ESTUDOS BÍBLICOS)
-        function processarConteudoEstudo(conteudo) {
-            if (!conteudo) return "Conteúdo não disponível";
+        // Função para converter array de conteúdo em HTML formatado
+        function processarConteudoParaHTML(conteudo) {
+            if (!conteudo) return "<p>Conteúdo não disponível</p>";
             
-            // Se for array, converte para string formatada
+            let html = '';
+            
+            // Se for array, processa cada item
             if (Array.isArray(conteudo)) {
-                return conteudo.map(item => {
-                    let textoFormatado = '';
-                    if (item.titulo) textoFormatado += `**${item.titulo}**\n\n`;
-                    if (item.texto) textoFormatado += `${item.texto}\n\n`;
-                    if (item.versiculo) textoFormatado += `*${item.versiculo}*\n\n`;
-                    if (item.explicacao) textoFormatado += `${item.explicacao}\n\n`;
-                    if (item.aplicacao) textoFormatado += `${item.aplicacao}\n\n`;
-                    return textoFormatado;
-                }).join('\n');
+                conteudo.forEach(item => {
+                    html += '<div class="content-block">';
+                    
+                    if (item.titulo) {
+                        html += `<div class="content-title">${item.titulo}</div>`;
+                    }
+                    
+                    if (item.versiculo) {
+                        html += `<div class="content-verse">${item.versiculo}</div>`;
+                    }
+                    
+                    if (item.texto) {
+                        html += `<div class="content-explanation">${formatarTexto(item.texto)}</div>`;
+                    }
+                    
+                    if (item.explicacao) {
+                        html += `<div class="content-explanation">${formatarTexto(item.explicacao)}</div>`;
+                    }
+                    
+                    if (item.aplicacao) {
+                        html += `<div class="content-application">${formatarTexto(item.aplicacao)}</div>`;
+                    }
+                    
+                    html += '</div>';
+                });
+            } else {
+                // Se for string, formata como parágrafos
+                html = `<div class="content-block">${formatarTexto(conteudo)}</div>`;
             }
             
-            // Se já for string, retorna como está
-            return conteudo;
+            return html;
+        }
+
+        // Função para formatar texto (Markdown básico para HTML)
+        function formatarTexto(texto) {
+            if (!texto) return '';
+            
+            return texto
+                .split('\n\n') // Divide em parágrafos
+                .map(paragrafo => {
+                    if (!paragrafo.trim()) return '';
+                    
+                    // Processa formatação inline dentro do parágrafo
+                    let formatted = paragrafo
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **negrito**
+                        .replace(/\*(.*?)\*/g, '<em>$1</em>') // *itálico*
+                        .replace(/\n/g, '<br>'); // Quebras de linha
+                    
+                    return `<p>${formatted}</p>`;
+                })
+                .join('');
         }
 
         // Função para criar resumo do conteúdo
@@ -340,10 +412,15 @@
                 textoResumo = conteudo;
             }
             
+            // Remove formatação Markdown para o resumo
+            textoResumo = textoResumo
+                .replace(/\*\*(.*?)\*\*/g, '$1')
+                .replace(/\*(.*?)\*/g, '$1');
+            
             return textoResumo.substring(0, maxLength) + (textoResumo.length > maxLength ? '...' : '');
         }
 
-        // Função para renderizar estudos bíblicos (VERSÃO CORRIGIDA PARA ARRAY)
+        // Função para renderizar estudos bíblicos
         function renderEstudos(estudos) {
             const container = document.getElementById('estudos-content');
             
@@ -356,14 +433,13 @@
             estudos.forEach(estudo => {
                 const titulo = estudo.titulo || "Título não disponível";
                 const data = estudo.data || "Data não informada";
-                const conteudoProcessado = processarConteudoEstudo(estudo.conteudo);
                 const resumoConteudo = criarResumo(estudo.conteudo);
 
                 html += `
                     <div class="blog-post-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-l-4 border-l-[color:var(--accent-gold)] cursor-pointer" 
-                         data-title="${titulo.replace(/"/g, '&quot;')}"
-                         data-content="${conteudoProcessado.replace(/"/g, '&quot;')}"
-                         data-date="${data}"
+                         data-titulo="${titulo.replace(/"/g, '&quot;')}"
+                         data-conteudo='${JSON.stringify(estudo.conteudo).replace(/'/g, "&#39;")}'
+                         data-data="${data}"
                          onclick="openBlogModalFromDataset(this, 'Estudo Bíblico')">
                         <i class="fas fa-book-open text-3xl text-[color:var(--accent-gold)] mb-3"></i>
                         <h3 class="font-montserrat text-xl font-bold mb-2">${titulo}</h3>
@@ -391,14 +467,13 @@
                 const titulo = noticia.titulo || "Título não disponível";
                 const data = noticia.data || "Data não informada";
                 
-                // Resumo para o card
-                const resumoConteudo = conteudo.substring(0, 120) + (conteudo.length > 120 ? '...' : '');
+                const resumoConteudo = criarResumo(conteudo);
 
                 html += `
                     <div class="blog-post-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-l-4 border-l-[color:var(--accent-gold)] cursor-pointer" 
-                         data-title="${titulo.replace(/"/g, '&quot;')}"
-                         data-content="${conteudo.replace(/"/g, '&quot;')}"
-                         data-date="${data}"
+                         data-titulo="${titulo.replace(/"/g, '&quot;')}"
+                         data-conteudo='${JSON.stringify(conteudo).replace(/'/g, "&#39;")}'
+                         data-data="${data}"
                          onclick="openBlogModalFromDataset(this, 'Notícia')">
                         <i class="fas fa-newspaper text-3xl text-[color:var(--accent-gold)] mb-3"></i>
                         <h3 class="font-montserrat text-xl font-bold mb-2">${titulo}</h3>
@@ -426,9 +501,9 @@
 
             const html = `
                 <div class="blog-post-card bg-[color:var(--secondary-bg)] p-8 rounded-xl shadow-xl border-l-4 border-l-[color:var(--accent-gold)] cursor-pointer" 
-                     data-title="${titulo.replace(/"/g, '&quot;')}"
-                     data-content="${conteudo.replace(/"/g, '&quot;')}"
-                     data-date="${data}"
+                     data-titulo="${titulo.replace(/"/g, '&quot;')}"
+                     data-conteudo='${JSON.stringify(conteudo).replace(/'/g, "&#39;")}'
+                     data-data="${data}"
                      onclick="openBlogModalFromDataset(this, 'Mensagem do Domingo')">
                     <div class="flex items-start mb-4">
                         <i class="fas fa-church text-4xl text-[color:var(--accent-gold)] mr-4"></i>
@@ -437,14 +512,14 @@
                             <span class="text-sm text-[color:var(--accent-gold)] font-semibold">${data}</span>
                         </div>
                     </div>
-                    <p class="text-[color:var(--text-light)] text-lg">${conteudo.substring(0, 200)}...</p>
+                    <p class="text-[color:var(--text-light)] text-lg">${criarResumo(conteudo, 200)}</p>
                 </div>
             `;
             
             container.innerHTML = html;
         }
 
-        // Função para renderizar eventos
+        // Funções para eventos e avisos (mantidas similares)
         function renderEventos(eventos) {
             const container = document.getElementById('eventos-content');
             
@@ -459,14 +534,13 @@
                 const titulo = evento.titulo || "Título não disponível";
                 const data = evento.data || "Data não informada";
                 
-                // Resumo para o card
-                const resumoDescricao = descricao.substring(0, 120) + (descricao.length > 120 ? '...' : '');
+                const resumoDescricao = criarResumo(descricao);
 
                 html += `
                     <div class="blog-post-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-l-4 border-l-[color:var(--accent-gold)] cursor-pointer" 
-                         data-title="${titulo.replace(/"/g, '&quot;')}"
-                         data-content="${descricao.replace(/"/g, '&quot;')}"
-                         data-date="${data}"
+                         data-titulo="${titulo.replace(/"/g, '&quot;')}"
+                         data-conteudo='${JSON.stringify(descricao).replace(/'/g, "&#39;")}'
+                         data-data="${data}"
                          onclick="openBlogModalFromDataset(this, 'Evento')">
                         <i class="fas fa-calendar-alt text-3xl text-[color:var(--accent-gold)] mb-3"></i>
                         <h3 class="font-montserrat text-xl font-bold mb-2">${titulo}</h3>
@@ -479,7 +553,6 @@
             container.innerHTML = html;
         }
 
-        // Função para renderizar avisos
         function renderAvisos(avisos) {
             const container = document.getElementById('avisos-content');
             
@@ -494,14 +567,13 @@
                 const titulo = aviso.titulo || "Título não disponível";
                 const data = aviso.data || "Data não informada";
                 
-                // Resumo para o card
-                const resumoConteudo = conteudo.substring(0, 120) + (conteudo.length > 120 ? '...' : '');
+                const resumoConteudo = criarResumo(conteudo);
 
                 html += `
                     <div class="blog-post-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-l-4 border-l-[color:var(--accent-gold)] cursor-pointer" 
-                         data-title="${titulo.replace(/"/g, '&quot;')}"
-                         data-content="${conteudo.replace(/"/g, '&quot;')}"
-                         data-date="${data}"
+                         data-titulo="${titulo.replace(/"/g, '&quot;')}"
+                         data-conteudo='${JSON.stringify(conteudo).replace(/'/g, "&#39;")}'
+                         data-data="${data}"
                          onclick="openBlogModalFromDataset(this, 'Aviso')">
                         <i class="fas fa-bullhorn text-3xl text-[color:var(--accent-gold)] mb-3"></i>
                         <h3 class="font-montserrat text-xl font-bold mb-2">${titulo}</h3>
@@ -517,7 +589,6 @@
         // Função para carregar todos os dados
         async function loadAllData() {
             try {
-                // Carregar todos os dados em paralelo
                 const [estudos, noticias, mensagem, eventos, avisos] = await Promise.all([
                     loadJSON(JSON_URLS.estudos),
                     loadJSON(JSON_URLS.noticias),
@@ -526,7 +597,6 @@
                     loadJSON(JSON_URLS.avisos)
                 ]);
 
-                // Renderizar os dados
                 renderEstudos(estudos);
                 renderNoticias(noticias);
                 renderMensagem(mensagem);
@@ -540,22 +610,15 @@
 
         // --- FUNÇÕES DO BLOG MODAL ---
         function openBlogModalFromDataset(element, source) {
-            const title = element.dataset.title;
-            const content = element.dataset.content;
-            const date = element.dataset.date;
+            const title = element.dataset.titulo;
+            const content = JSON.parse(element.dataset.conteudo.replace(/&#39;/g, "'"));
+            const date = element.dataset.data;
             
             document.getElementById('modal-title').textContent = title;
             document.getElementById('modal-date').textContent = date + ' | Fonte: ' + source;
             
-            // Formata o conteúdo para exibição
-            const formattedContent = content
-                .replace(/&quot;/g, '"')
-                .replace(/\n/g, '<br>')
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **texto** para <strong>
-                .replace(/\*(.*?)\*/g, '<em>$1</em>') // *texto* para <em>
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
-            
+            // Processa o conteúdo para HTML formatado
+            const formattedContent = processarConteudoParaHTML(content);
             document.getElementById('modal-body').innerHTML = formattedContent;
             document.getElementById('blog-modal').style.display = 'block';
         }
@@ -568,12 +631,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadAllData();
 
-            // Listener para o menu mobile
             document.getElementById('mobile-menu-button').addEventListener('click', () => {
                 document.getElementById('mobile-menu').classList.toggle('hidden');
             });
             
-            // Fecha o modal do blog ao clicar fora dele
             window.addEventListener('click', (event) => {
                 const modal = document.getElementById('blog-modal');
                 if (event.target === modal) {
@@ -581,7 +642,6 @@
                 }
             });
 
-            // Botão de atualizar conteúdo
             document.getElementById('refresh-btn').addEventListener('click', loadAllData);
         });
     </script>

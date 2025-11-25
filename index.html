@@ -2,16 +2,6 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          appId: "21faf23a-a714-4ad6-9037-7aee086fde9c",
-        });
-      });
-    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Igreja Batista Nova Aliança | Site Oficial</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -116,6 +106,55 @@
             display: inline-block;
             min-width: 80px;
         }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        .error {
+            background-color: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: #f87171;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        /* Estilos para a programação semanal */
+        .schedule-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .schedule-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .schedule-day {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+        }
+
+        .schedule-time {
+            background-color: rgba(212, 175, 55, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid var(--accent-gold);
+        }
+
+        .invite-message {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(15, 23, 42, 0.1) 100%);
+            border-left: 3px solid var(--accent-gold);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -124,17 +163,17 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex-shrink-0">
-                    <span class="font-montserrat text-2xl font-black text-[color:var(--accent-gold)]">IBNA</span>
+                    <a href="index.html" class="font-montserrat text-2xl font-black text-[color:var(--accent-gold)]">IBNA</a>
                 </div>
                 <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
                     <a href="#inicio" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Início</a>
                     <a href="vmv.html" target="_blank" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Quem Somos</a>
-                    <a href="#eventos" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Eventos</a>
-                    <a href="#blog" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Blog</a>
+                    <a href="eventos.html" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Eventos</a>
+                    <a href="blog.html" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Blog</a>
                     <a href="#contato" class="text-[color:var(--text-light)] hover:text-[color:var(--accent-gold)] px-3 py-2 rounded-md text-sm font-medium transition duration-150">Contato</a>
                 </div>
                 <a href="calendario.html" class="hidden sm:inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-black bg-[color:var(--accent-gold)] hover:bg-yellow-600 transition duration-150">
-                    <i class="far fa-calendar-alt mr-2"></i> Calendário
+                    <i class="far fa-calendar-alt mr-2"></i> Calendario 2026
                 </a>
                 <div class="sm:hidden">
                     <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-[color:var(--text-muted)] hover:text-[color:var(--accent-gold)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[color:var(--accent-gold)]" aria-controls="mobile-menu" aria-expanded="false">
@@ -148,11 +187,11 @@
             <div class="pt-2 pb-3 space-y-1 px-2">
                 <a href="#inicio" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Início</a>
                 <a href="vmv.html" target="_blank" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Quem Somos</a>
-                <a href="#eventos" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Eventos</a>
-                <a href="#blog" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Blog</a>
+                <a href="eventos.html" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Eventos</a>
+                <a href="blog.html" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Blog</a>
                 <a href="#contato" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Contato</a>
-                <a href="calendario.html" class="inline-flex items-center w-full justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-black bg-[color:var(--accent-gold)] hover:bg-yellow-600 transition duration-150 mt-4">
-                    <i class="far fa-calendar-alt mr-2"></i> Ver Calendário
+                <a href="eventos.html" class="inline-flex items-center w-full justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-black bg-[color:var(--accent-gold)] hover:bg-yellow-600 transition duration-150 mt-4">
+                    <i class="far fa-calendar-alt mr-2"></i> Eventos
                 </a>
             </div>
         </div>
@@ -203,65 +242,133 @@
         </div>
     </section>
 
-    <section id="eventos" class="py-16 md:py-24 bg-[color:var(--secondary-bg)]">
+    <section id="eventos-preview" class="py-16 md:py-24 bg-[color:var(--secondary-bg)]">
         <div class="container mx-auto px-4">
             <h2 class="font-montserrat text-4xl font-extrabold text-center mb-12 text-[color:var(--accent-gold)]">
                 Próximos Eventos
             </h2>
             <p class="text-center text-lg text-[color:var(--text-muted)] mb-10 max-w-3xl mx-auto">
-                Confira os eventos mais próximos! O calendário completo está disponível na página de Calendário.
+                Confira os eventos mais próximos! O calendário completo está disponível na página de Eventos.
             </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="events-container">
-                <div class="event-card-main bg-[color:var(--primary-bg)] p-6 rounded-xl shadow-2xl border-l-4 border-l-[color:var(--accent-gold)]">
-                    <div class="flex items-center mb-3">
-                        <i class="fas fa-user-friends text-3xl text-[color:var(--accent-gold)] mr-3"></i>
-                        <h3 class="font-montserrat text-xl font-bold text-[color:var(--text-light)]">Confraternização da Igreja</h3>
-                    </div>
-                    <p class="text-[color:var(--text-muted)] mb-4">Momento especial de comunhão e encerramento das atividades do ano.</p>
-                    <div class="text-sm space-y-2">
-                        <p><i class="far fa-calendar-alt mr-2 text-[color:var(--accent-gold)]"></i> Sábado, 13 de Dezembro</p>
-                        <p><i class="far fa-clock mr-2 text-[color:var(--accent-gold)]"></i> Horário: 07:00h</p>
-                        <p><i class="fas fa-map-marker-alt mr-2 text-[color:var(--accent-gold)]"></i> Local: Forte Orange</p>
-                    </div>
-                </div>
-
-                <div class="event-card-main bg-[color:var(--primary-bg)] p-6 rounded-xl shadow-2xl border-l-4 border-l-[color:var(--accent-gold)]">
-                    <div class="flex items-center mb-3">
-                        <i class="fas fa-gift text-3xl text-[color:var(--accent-gold)] mr-3"></i>
-                        <h3 class="font-montserrat text-xl font-bold text-[color:var(--text-light)]">Culto Natalino</h3>
-                    </div>
-                    <p class="text-[color:var(--text-muted)] mb-4">Celebração do nascimento de nosso Senhor Jesus Cristo.</p>
-                    <div class="text-sm space-y-2">
-                        <p><i class="far fa-calendar-alt mr-2 text-[color:var(--accent-gold)]"></i> Quinta-feira, 25 de Dezembro</p>
-                        <p><i class="far fa-clock mr-2 text-[color:var(--accent-gold)]"></i> Horário: 19:00h</p>
-                        <p><i class="fas fa-map-marker-alt mr-2 text-[color:var(--accent-gold)]"></i> Local: Templo Principal</p>
-                    </div>
-                </div>
-
-                <div class="event-card-main bg-[color:var(--primary-bg)] p-6 rounded-xl shadow-2xl border-l-4 border-l-[color:var(--accent-gold)]">
-                    <div class="flex items-center mb-3">
-                        <i class="fas fa-star text-3xl text-[color:var(--accent-gold)] mr-3"></i>
-                        <h3 class="font-montserrat text-xl font-bold text-[color:var(--text-light)]">Culto de Gratidão – Ano Novo</h3>
-                    </div>
-                    <p class="text-[color:var(--text-muted)] mb-4">Culto especial de virada do ano, entregando o novo ciclo a Deus.</p>
-                    <div class="text-sm space-y-2">
-                        <p><i class="far fa-calendar-alt mr-2 text-[color:var(--accent-gold)]"></i> Quarta-feira, 31 de Dezembro</p>
-                        <p><i class="far fa-clock mr-2 text-[color:var(--accent-gold)]"></i> Horário: 22:00h</p>
-                        <p><i class="fas fa-map-marker-alt mr-2 text-[color:var(--accent-gold)]"></i> Local: Templo Principal</p>
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="events-preview-container">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                    <p>Carregando eventos...</p>
                 </div>
             </div>
 
             <div class="text-center mt-12">
                 <a href="eventos.html" class="inline-block px-8 py-3 text-lg font-semibold rounded-full bg-[color:var(--accent-gold)] text-gray-900 shadow-xl hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
-                    Ver eventos Completo <i class="fas fa-arrow-right ml-2"></i>
+                    Ver Eventos Completos <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
         </div>
     </section>
 
-    <section id="blog" class="py-16 md:py-24 bg-[color:var(--primary-bg)]">
+    <!-- NOVA SEÇÃO: PROGRAMAÇÃO SEMANAL -->
+    <section id="programacao-semanal" class="py-16 md:py-20 bg-[color:var(--primary-bg)]">
+        <div class="container mx-auto px-4">
+            <h2 class="font-montserrat text-4xl font-extrabold text-center mb-4 text-[color:var(--accent-gold)]">
+                Programação Semanal
+            </h2>
+            <p class="text-center text-lg text-[color:var(--text-muted)] mb-12 max-w-3xl mx-auto">
+                Nossos cultos e encontros regulares para edificação e comunhão
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="weekly-schedule-container">
+                <!-- Segunda-feira -->
+                <div class="schedule-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="schedule-day">SEGUNDA</span>
+                        <span class="schedule-time text-[color:var(--accent-gold)]">19:30 - 21:00</span>
+                    </div>
+                    <h3 class="font-montserrat text-xl font-bold mb-3 text-[color:var(--text-light)]">
+                        Culto das Mulheres
+                    </h3>
+                    <div class="invite-message">
+                        <p class="text-sm text-[color:var(--text-light)]">
+                            <span class="text-lg">🌹</span> <strong>MULHER, ESTE LUGAR É SEU!</strong> Convidamos você a se juntar a nós para um tempo poderoso de comunhão, oração e Palavra. Compartilhe sua jornada e encontre a força e a inspiração necessárias para vencer sua semana. Venha florescer conosco!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Quarta-feira -->
+                <div class="schedule-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="schedule-day">QUARTA</span>
+                        <span class="schedule-time text-[color:var(--accent-gold)]">19:30 - 21:00</span>
+                    </div>
+                    <h3 class="font-montserrat text-xl font-bold mb-3 text-[color:var(--text-light)]">
+                        Culto de Oração e Doutrina
+                    </h3>
+                    <div class="invite-message">
+                        <p class="text-sm text-[color:var(--text-light)]">
+                            <span class="text-lg">🙏</span> <strong>Raízes Profundas!</strong> Fortaleça seu espírito em oração e aprofunde-se nos fundamentos da Palavra de Deus (Doutrina). O conhecimento que liberta e a fé que move montanhas. Sua base inabalável para a vida.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Quinta-feira -->
+                <div class="schedule-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="schedule-day">QUINTA</span>
+                        <span class="schedule-time text-[color:var(--accent-gold)]">19:30 - 21:00</span>
+                    </div>
+                    <h3 class="font-montserrat text-xl font-bold mb-3 text-[color:var(--text-light)]">
+                        EB - Escola Bíblica
+                    </h3>
+                    <div class="invite-message">
+                        <p class="text-sm text-[color:var(--text-light)]">
+                            <span class="text-lg">🧠</span> <strong>Aprender para Viver!</strong> A Bíblia é o mapa da vida. Venha estudar, debater e aplicar os ensinamentos para o seu dia a dia. Não apenas ouvir, mas entender e praticar! Invista no seu conhecimento de fé.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Domingo -->
+                <div class="schedule-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="schedule-day">DOMINGO</span>
+                        <span class="schedule-time text-[color:var(--accent-gold)]">19:00 - 21:00</span>
+                    </div>
+                    <h3 class="font-montserrat text-xl font-bold mb-3 text-[color:var(--text-light)]">
+                        Culto da Família
+                    </h3>
+                    <div class="invite-message">
+                        <p class="text-sm text-[color:var(--text-light)]">
+                            <span class="text-lg">👨‍👩‍👧‍👦</span> <strong>Celebração e União!</strong> O ponto alto da nossa semana. Traga sua família para adorarmos juntos. Palavra que restaura, louvor que eleva e a presença que transforma lares. O melhor lugar para estar é na Casa do Pai.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <div class="bg-[color:var(--secondary-bg)] p-6 rounded-xl border-2 border-[color:var(--accent-gold)] max-w-2xl mx-auto">
+                    <h3 class="font-montserrat text-xl font-bold mb-3 text-[color:var(--accent-gold)]">
+                        📍 Local dos Cultos
+                    </h3>
+                    <p class="text-[color:var(--text-light)] mb-2">
+                        <i class="fas fa-map-marker-alt text-[color:var(--accent-gold)] mr-2"></i>
+                        <strong>Endereço:</strong> 
+                        <a href="https://maps.app.goo.gl/2TBskB7vFDQ4kwfL8" target="_blank" class="text-[color:var(--accent-gold)] hover:text-yellow-400 underline transition duration-200">
+                            Rio Ambar - Itamaracá/PE
+                            <i class="fas fa-external-link-alt ml-1 text-sm"></i>
+                        </a>
+                    </p>
+                    <p class="text-sm text-[color:var(--text-muted)] mt-3">
+                        Estamos te esperando de braços abertos! Venha fazer parte da nossa família.
+                    </p>
+                    <div class="mt-4">
+                        <a href="https://maps.app.goo.gl/2TBskB7vFDQ4kwfL8" target="_blank" class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-full bg-[color:var(--accent-gold)] text-gray-900 hover:bg-yellow-600 transition duration-300">
+                            <i class="fas fa-map-marked-alt mr-2"></i>
+                            Abrir no Google Maps
+                        </a>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <section id="blog-preview" class="py-16 md:py-24 bg-[color:var(--primary-bg)]">
         <div class="container mx-auto px-4">
             <h2 class="font-montserrat text-4xl font-extrabold text-center mb-12 text-[color:var(--accent-gold)]">
                 Últimas Notícias e Blog
@@ -270,8 +377,12 @@
                 Leia nossas mensagens mais recentes, estudos bíblicos e novidades da comunidade.
             </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="featured-blog-posts">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="blog-preview-container">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                    <p>Carregando conteúdo do blog...</p>
                 </div>
+            </div>
 
             <div class="text-center mt-12">
                 <a href="blog.html" class="inline-block px-8 py-3 text-lg font-semibold rounded-full bg-[color:var(--accent-gold)] text-gray-900 shadow-xl hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
@@ -318,55 +429,196 @@
     <script>
         let countdownInterval;
         
-        // =======================================================
-        // 1. DADOS CENTRALIZADOS DO BLOG (A ser copiado para blog.html)
-        // =======================================================
-        const BLOG_POSTS = [
-            {
-                id: 'graca-transformadora',
-                source: 'IBNA',
-                title: 'O Poder Transformador da Graça',
-                summary: 'A graça de Deus não é apenas um conceito teológico, mas uma força ativa que transforma vidas. Exploramos como a graça nos capacita a viver uma vida de santidade e propósito. Esta mensagem foi pregada no último culto dominical.',
-                icon: 'fas fa-feather-alt',
-                date: '15 de Novembro de 2025'
-            },
-            {
-                id: 'fe-e-obras',
-                source: 'Estudo Bíblico',
-                title: 'Fé e Obras: Uma Conexão Indissolúvel',
-                summary: 'Muitos se perguntam sobre a relação entre fé e obras. Este estudo de Tiago nos mostra que a fé verdadeira sempre resulta em ações. Obras não nos salvam, mas provam que fomos salvos. Uma jornada para entender a vida cristã prática.',
-                icon: 'fas fa-book-open',
-                date: '01 de Dezembro de 2025'
-            },
-            {
-                id: 'encontro-casais',
-                source: 'Comunidade',
-                title: 'Inscrições Abertas para o Encontro de Casais',
-                summary: 'O Ministério de Família anuncia a abertura das inscrições para o próximo Encontro de Casais, que acontecerá em Junho de 2026. Garanta sua vaga! O foco será em comunicação e perdão no casamento.',
-                icon: 'fas fa-hands-heart',
-                date: '10 de Dezembro de 2025'
-            },
-            {
-                id: 'proposito-vida',
-                source: 'Mensagem Pastoral',
-                title: 'Descobrindo o Propósito da Vida',
-                summary: 'Uma reflexão sobre a busca por significado e como a Palavra de Deus nos revela nosso verdadeiro propósito.',
-                icon: 'fas fa-lightbulb',
-                date: '05 de Dezembro de 2025'
-            },
-            {
-                id: 'ministerio-jovem',
-                source: 'Jovens IBNA',
-                title: 'Encontro de Louvor e Adoração Jovem',
-                summary: 'Detalhes sobre o próximo evento do Ministério Jovem, focado em louvor e adoração para a nova geração.',
-                icon: 'fas fa-guitar',
-                date: '20 de Dezembro de 2025'
+        // URLs dos arquivos JSON
+        const JSON_URLS = {
+            eventos: 'data/eventos.json',
+            estudos: 'data/estudos.json',
+            noticias: 'data/noticias.json',
+            mensagem: 'data/mensagem.json'
+        };
+
+        // --- FUNÇÕES DE CARREGAMENTO DINÂMICO ---
+        
+        // Função para carregar dados JSON
+        async function loadJSON(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Erro ao carregar: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error(`Erro ao carregar ${url}:`, error);
+                return null;
             }
-            // Adicione mais posts aqui. O index.html exibirá apenas os 3 primeiros.
-        ];
+        }
 
+        // Função para exibir mensagem de erro
+        function showError(container, message) {
+            container.innerHTML = `<div class="error">${message}</div>`;
+        }
 
-        // --- FUNÇÕES DO BLOG MODAL (Mantidas) ---
+        // Função para carregar preview dos eventos
+        async function loadEventsPreview() {
+            const container = document.getElementById('events-preview-container');
+            const eventos = await loadJSON(JSON_URLS.eventos);
+            
+            if (!eventos || !Array.isArray(eventos) || eventos.length === 0) {
+                showError(container, 'Nenhum evento programado no momento.');
+                return;
+            }
+            
+            // Pega apenas os 3 primeiros eventos
+            const eventosPreview = eventos.slice(0, 3);
+            let html = '';
+            
+            eventosPreview.forEach(evento => {
+                const titulo = evento.titulo || "Título não disponível";
+                const descricao = evento.descricao || "Descrição não disponível";
+                const data = evento.data || "Data não informada";
+                const hora = evento.hora || "Horário não informado";
+                const local = evento.local || "Local não informado";
+                
+                // Resumo para o card
+                const resumoDescricao = descricao.substring(0, 100) + (descricao.length > 100 ? '...' : '');
+                
+                html += `
+                    <div class="event-card-main bg-[color:var(--primary-bg)] p-6 rounded-xl shadow-2xl border-l-4 border-l-[color:var(--accent-gold)]">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-calendar-alt text-3xl text-[color:var(--accent-gold)] mr-3"></i>
+                            <h3 class="font-montserrat text-xl font-bold text-[color:var(--text-light)]">${titulo}</h3>
+                        </div>
+                        <p class="text-[color:var(--text-muted)] mb-4">${resumoDescricao}</p>
+                        <div class="text-sm space-y-2">
+                            <p><i class="far fa-calendar-alt mr-2 text-[color:var(--accent-gold)]"></i> ${data}</p>
+                            <p><i class="far fa-clock mr-2 text-[color:var(--accent-gold)]"></i> Horário: ${hora}</p>
+                            <p><i class="fas fa-map-marker-alt mr-2 text-[color:var(--accent-gold)]"></i> Local: ${local}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Função para carregar preview do blog
+        async function loadBlogPreview() {
+            const container = document.getElementById('blog-preview-container');
+            
+            // Carrega estudos e notícias
+            const [estudos, noticias, mensagem] = await Promise.all([
+                loadJSON(JSON_URLS.estudos),
+                loadJSON(JSON_URLS.noticias),
+                loadJSON(JSON_URLS.mensagem)
+            ]);
+            
+            let allContent = [];
+            
+            // Adiciona estudos
+            if (estudos && Array.isArray(estudos)) {
+                estudos.forEach(estudo => {
+                    allContent.push({
+                        tipo: 'estudo',
+                        titulo: estudo.titulo,
+                        conteudo: estudo.conteudo,
+                        data: estudo.data,
+                        icone: 'fas fa-book-open'
+                    });
+                });
+            }
+            
+            // Adiciona notícias
+            if (noticias && Array.isArray(noticias)) {
+                noticias.forEach(noticia => {
+                    allContent.push({
+                        tipo: 'noticia',
+                        titulo: noticia.titulo,
+                        conteudo: noticia.conteudo,
+                        data: noticia.data,
+                        icone: 'fas fa-newspaper'
+                    });
+                });
+            }
+            
+            // Adiciona mensagem
+            if (mensagem && mensagem.titulo) {
+                allContent.push({
+                    tipo: 'mensagem',
+                    titulo: mensagem.titulo,
+                    conteudo: mensagem.conteudo,
+                    data: mensagem.data,
+                    icone: 'fas fa-church'
+                });
+            }
+            
+            // Ordena por data (mais recente primeiro) e pega os 3 primeiros
+            allContent.sort((a, b) => new Date(b.data) - new Date(a.data));
+            const previewContent = allContent.slice(0, 3);
+            
+            if (previewContent.length === 0) {
+                showError(container, 'Nenhum conteúdo disponível no momento.');
+                return;
+            }
+            
+            let html = '';
+            previewContent.forEach(item => {
+                // Cria resumo do conteúdo
+                let conteudoResumo = '';
+                if (Array.isArray(item.conteudo)) {
+                    if (item.conteudo.length > 0 && item.conteudo[0].texto) {
+                        conteudoResumo = item.conteudo[0].texto;
+                    } else if (item.conteudo.length > 0 && item.conteudo[0].explicacao) {
+                        conteudoResumo = item.conteudo[0].explicacao;
+                    }
+                } else {
+                    conteudoResumo = item.conteudo;
+                }
+                
+                const resumo = conteudoResumo.substring(0, 100) + (conteudoResumo.length > 100 ? '...' : '');
+                
+                html += `
+                    <div class="interactive-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" 
+                         onclick="openBlogModal('${item.tipo.charAt(0).toUpperCase() + item.tipo.slice(1)}', '${item.titulo.replace(/'/g, "\\'")}', '${(item.conteudo || 'Conteúdo não disponível').toString().replace(/'/g, "\\'")}', '${item.data}')">
+                        <i class="${item.icone} text-3xl text-[color:var(--accent-gold)] mb-3"></i>
+                        <h3 class="font-montserrat text-xl font-bold mb-2">${item.titulo}</h3>
+                        <p class="text-[color:var(--text-muted)] text-sm mb-3">${resumo}</p>
+                        <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${item.data}</span>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // --- FUNÇÕES DE NOTIFICAÇÃO PUSH ---
+        function requestNotificationPermission() {
+            if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        console.log('Permissão de notificação concedida. Registrando Service Worker...');
+                        registerServiceWorker();
+                    } else if (permission === 'denied') {
+                        console.log('Permissão de notificação negada.');
+                    }
+                });
+            } else {
+                console.log('Seu navegador não suporta notificações.');
+            }
+        }
+
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./service-worker.js')
+                .then(registration => {
+                    console.log('Service Worker registrado com sucesso:', registration.scope);
+                })
+                .catch(error => {
+                    console.error('Falha no registro do Service Worker:', error);
+                });
+            }
+        }
+
+        // --- FUNÇÕES DO BLOG MODAL ---
         function openBlogModal(source, title, body, date) {
             document.getElementById('modal-title').textContent = title;
             document.getElementById('modal-date').textContent = date + ' | Fonte: ' + source;
@@ -377,34 +629,8 @@
         function closeBlogModal() {
             document.getElementById('blog-modal').style.display = 'none';
         }
-        
-        // =======================================================
-        // 2. RENDERIZAÇÃO DINÂMICA
-        // =======================================================
 
-        function renderFeaturedPosts() {
-            const container = document.getElementById('featured-blog-posts');
-            container.innerHTML = ''; // Limpa o conteúdo existente
-
-            // Pega apenas os 3 primeiros posts
-            const featuredPosts = BLOG_POSTS.slice(0, 3); 
-
-            featuredPosts.forEach(post => {
-                const postHtml = `
-                    <div class="interactive-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" 
-                         onclick="openBlogModal('${post.source}', '${post.title}', '${post.summary.replace(/'/g, "\\'")}', '${post.date}')">
-                        <i class="${post.icon} text-3xl text-[color:var(--accent-gold)] mb-3"></i>
-                        <h3 class="font-montserrat text-xl font-bold mb-2">${post.title}</h3>
-                        <p class="text-[color:var(--text-muted)] text-sm mb-3">${post.summary.substring(0, 80)}...</p>
-                        <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${post.date}</span>
-                    </div>
-                `;
-                container.innerHTML += postHtml;
-            });
-        }
-
-
-        // --- SISTEMA DE CONTAGEM REGRESSIVA SEMANAL (Mantido) ---
+        // --- SISTEMA DE CONTAGEM REGRESSIVA SEMANAL ---
         
         const WEEKLY_SERVICES = [
             {
@@ -495,7 +721,6 @@
             document.getElementById('next-service-info').textContent = 
                 `${targetDateTime.toLocaleDateString('pt-BR', dateOptions)} às ${timeString}`;
 
-
             countdownInterval = setInterval(function() {
                 const now = new Date().getTime();
                 let distance = targetDateTime.getTime() - now;
@@ -529,12 +754,15 @@
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DOM carregado, iniciando aplicação...");
             
-            // Renderiza os posts do blog
-            renderFeaturedPosts();
-            
             // Inicia o contador semanal 
             startCountdown();
-            // A lógica de Notificação Push é agora controlada pelo OneSignal SDK no <head>
+            
+            // Carrega conteúdo dinâmico
+            loadEventsPreview();
+            loadBlogPreview();
+            
+            // Tenta pedir permissão de notificação
+            requestNotificationPermission(); 
 
             // Listener para o menu mobile
             document.getElementById('mobile-menu-button').addEventListener('click', () => {
