@@ -247,8 +247,9 @@
         </div>
     </footer>
 
-    <script>
+<script>
         // URLs dos arquivos JSON
+        // CORREÇÃO: Usando caminho relativo 'data/' para funcionar corretamente no Netlify
         const JSON_URLS = {
             estudos: 'data/estudos.json',
             noticias: 'data/noticias.json',
@@ -287,12 +288,32 @@
             
             let html = '';
             estudos.forEach(estudo => {
+                // INÍCIO DA CORREÇÃO OBRIGATÓRIA PARA CONTEÚDO EM ARRAY
+                let textoConteudo;
+                
+                if (Array.isArray(estudo.conteudo)) {
+                    // Se for um Array, extrai o campo 'texto' de cada objeto e junta-os com quebras de linha
+                    textoConteudo = estudo.conteudo
+                        .map(item => item.texto || "")
+                        .join("\n\n");
+                } else {
+                    // Se não for um Array, assume que é uma String (fallback)
+                    textoConteudo = estudo.conteudo || "Conteúdo não disponível";
+                }
+
+                // Prepara o conteúdo completo para o Modal (escapa aspas simples)
+                const conteudoParaModal = textoConteudo.replace(/'/g, "\\'");
+                
+                // Prepara o resumo para o card (os primeiros 120 caracteres)
+                const resumoConteudo = textoConteudo.substring(0, 120) + '...';
+                // FIM DA CORREÇÃO OBRIGATÓRIA
+                
                 html += `
                     <div class="blog-post-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-l-4 border-l-[color:var(--accent-gold)] cursor-pointer" 
-                         onclick="openBlogModal('Estudo Bíblico', '${estudo.titulo || 'Título não disponível'}', '${(estudo.conteudo || 'Conteúdo não disponível').replace(/'/g, "\\'")}', '${estudo.data || 'Data não informada'}')">
+                         onclick="openBlogModal('Estudo Bíblico', '${estudo.titulo || 'Título não disponível'}', '${conteudoParaModal}', '${estudo.data || 'Data não informada'}')">
                         <i class="fas fa-book-open text-3xl text-[color:var(--accent-gold)] mb-3"></i>
                         <h3 class="font-montserrat text-xl font-bold mb-2">${estudo.titulo || 'Título não disponível'}</h3>
-                        <p class="text-[color:var(--text-muted)] text-sm mb-3">${(estudo.conteudo || '').substring(0, 120)}...</p>
+                        <p class="text-[color:var(--text-muted)] text-sm mb-3">${resumoConteudo}</p>
                         <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${estudo.data || 'Data não informada'}</span>
                     </div>
                 `;
