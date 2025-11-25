@@ -246,7 +246,6 @@
             </p>
         </div>
     </footer>
-
 <script>
         // URLs dos arquivos JSON
         // CORRIGIDO: Usando caminho relativo 'data/' para funcionar corretamente no Netlify
@@ -277,7 +276,7 @@
             container.innerHTML = `<div class="error">${message}</div>`;
         }
 
-        // Função para renderizar estudos bíblicos (CORRIGIDA: Trata Array e Escape)
+        // Função para renderizar estudos bíblicos (Incluindo Array e Escape)
         function renderEstudos(estudos) {
             const container = document.getElementById('estudos-content');
             
@@ -288,11 +287,11 @@
             
             let html = '';
             estudos.forEach(estudo => {
-                // Trata 'conteudo' como Array de Objetos ou String
+                // CORREÇÃO ESSENCIAL: Trata 'conteudo' como Array de Objetos ou String
                 let textoConteudo;
                 
                 if (Array.isArray(estudo.conteudo)) {
-                    // Extrai o campo 'texto' de cada objeto e junta-os
+                    // Se for Array, extrai o campo 'texto' de cada objeto e junta-os com quebras de linha
                     textoConteudo = estudo.conteudo
                         .map(item => item.texto || "")
                         .join("\n\n");
@@ -348,7 +347,7 @@
             container.innerHTML = html;
         }
 
-        // Função para renderizar mensagem (CORRIGIDA: Adicionado ')' no onclick)
+        // Função para renderizar mensagem
         function renderMensagem(mensagem) {
             const container = document.getElementById('mensagem-content');
             
@@ -453,7 +452,7 @@
             document.getElementById('modal-title').textContent = title;
             document.getElementById('modal-date').textContent = date + ' | Fonte: ' + source;
             
-            // CORREÇÃO: Converte as quebras de linha escapadas ('\n') em HTML (<br>) para exibição correta no modal
+            // CORREÇÃO ESSENCIAL: Converte as quebras de linha escapadas ('\n') em HTML (<br>) para exibição correta no modal
             const modalBody = document.getElementById('modal-body');
             modalBody.innerHTML = body.replace(/\\n/g, '<br>');
             
