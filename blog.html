@@ -232,7 +232,7 @@
             <span class="close-button" onclick="closeBlogModal()">&times;</span>
             <h2 id="modal-title" class="font-montserrat text-3xl font-bold mb-2 text-[color:var(--accent-gold)]">Título do Artigo</h2>
             <p id="modal-date" class="text-sm text-[color:var(--text-muted)] mb-4">Data | Fonte</p>
-            <p id="modal-body" class="text-[color:var(--text-light)] text-lg">Conteúdo do artigo...</p>
+            <div id="modal-body" class="text-[color:var(--text-light)] text-lg leading-relaxed"></div>
         </div>
     </div>
 
@@ -246,9 +246,9 @@
             </p>
         </div>
     </footer>
+
 <script>
         // URLs dos arquivos JSON
-        // CORRIGIDO: Usando caminho relativo 'data/' para funcionar corretamente no Netlify
         const JSON_URLS = {
             estudos: 'data/estudos.json',
             noticias: 'data/noticias.json',
@@ -260,11 +260,14 @@
         // Função para carregar dados JSON
         async function loadJSON(url) {
             try {
+                console.log(`Tentando carregar: ${url}`);
                 const response = await fetch(url);
                 if (!response.ok) {
-                    throw new Error(`Erro ao carregar: ${response.status}`);
+                    throw new Error(`Erro HTTP: ${response.status}`);
                 }
-                return await response.json();
+                const data = await response.json();
+                console.log(`Dados carregados de ${url}:`, data);
+                return data;
             } catch (error) {
                 console.error(`Erro ao carregar ${url}:`, error);
                 return null;
@@ -276,7 +279,7 @@
             container.innerHTML = `<div class="error">${message}</div>`;
         }
 
-        // Função para renderizar estudos bíblicos (Incluindo Array e Escape)
+        // Função para renderizar estudos bíblicos (VERSÃO CORRIGIDA COM DATASET)
         function renderEstudos(estudos) {
             const container = document.getElementById('estudos-content');
             
@@ -287,34 +290,23 @@
             
             let html = '';
             estudos.forEach(estudo => {
-                // CORREÇÃO ESSENCIAL: Trata 'conteudo' como Array de Objetos ou String
-                let textoConteudo;
-                
-                if (Array.isArray(estudo.conteudo)) {
-                    // Se for Array, extrai o campo 'texto' de cada objeto e junta-os com quebras de linha
-                    textoConteudo = estudo.conteudo
-                        .map(item => item.texto || "")
-                        .join("\n\n");
-                } else {
-                    // Fallback se for uma String simples
-                    textoConteudo = estudo.conteudo || "Conteúdo não disponível";
-                }
-
-                // ESCAPE PARA O ONCLICK: Converte aspas (') e quebras de linha (\n) para não quebrar o JS
-                const conteudoParaModal = textoConteudo
-                                            .replace(/'/g, "\\'")
-                                            .replace(/\n/g, "\\n");
+                const conteudo = estudo.conteudo || "Conteúdo não disponível";
+                const titulo = estudo.titulo || "Título não disponível";
+                const data = estudo.data || "Data não informada";
                 
                 // Resumo para o card
-                const resumoConteudo = textoConteudo.substring(0, 120) + '...';
+                const resumoConteudo = conteudo.substring(0, 120) + (conteudo.length > 120 ? '...' : '');
 
                 html += `
                     <div class="blog-post-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-l-4 border-l-[color:var(--accent-gold)] cursor-pointer" 
-                         onclick="openBlogModal('Estudo Bíblico', '${estudo.titulo || 'Título não disponível'}', '${conteudoParaModal}', '${estudo.data || 'Data não informada'}')">
+                         data-title="${titulo.replace(/"/g, '&quot;')}"
+                         data-content="${conteudo.replace(/"/g, '&quot;')}"
+                         data-date="${data}"
+                         onclick="openBlogModalFromDataset(this, 'Estudo Bíblico')">
                         <i class="fas fa-book-open text-3xl text-[color:var(--accent-gold)] mb-3"></i>
-                        <h3 class="font-montserrat text-xl font-bold mb-2">${estudo.titulo || 'Título não disponível'}</h3>
+                        <h3 class="font-montserrat text-xl font-bold mb-2">${titulo}</h3>
                         <p class="text-[color:var(--text-muted)] text-sm mb-3">${resumoConteudo}</p>
-                        <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${estudo.data || 'Data não informada'}</span>
+                        <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${data}</span>
                     </div>
                 `;
             });
@@ -322,7 +314,7 @@
             container.innerHTML = html;
         }
 
-        // Função para renderizar notícias
+        // Função para renderizar notícias (VERSÃO CORRIGIDA COM DATASET)
         function renderNoticias(noticias) {
             const container = document.getElementById('noticias-content');
             
@@ -333,13 +325,23 @@
             
             let html = '';
             noticias.forEach(noticia => {
+                const conteudo = noticia.conteudo || "Conteúdo não disponível";
+                const titulo = noticia.titulo || "Título não disponível";
+                const data = noticia.data || "Data não informada";
+                
+                // Resumo para o card
+                const resumoConteudo = conteudo.substring(0, 120) + (conteudo.length > 120 ? '...' : '');
+
                 html += `
                     <div class="blog-post-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-l-4 border-l-[color:var(--accent-gold)] cursor-pointer" 
-                         onclick="openBlogModal('Notícia', '${noticia.titulo || 'Título não disponível'}', '${(noticia.conteudo || 'Conteúdo não disponível').replace(/'/g, "\\'")}', '${noticia.data || 'Data não informada'}')">
+                         data-title="${titulo.replace(/"/g, '&quot;')}"
+                         data-content="${conteudo.replace(/"/g, '&quot;')}"
+                         data-date="${data}"
+                         onclick="openBlogModalFromDataset(this, 'Notícia')">
                         <i class="fas fa-newspaper text-3xl text-[color:var(--accent-gold)] mb-3"></i>
-                        <h3 class="font-montserrat text-xl font-bold mb-2">${noticia.titulo || 'Título não disponível'}</h3>
-                        <p class="text-[color:var(--text-muted)] text-sm mb-3">${(noticia.conteudo || '').substring(0, 120)}...</p>
-                        <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${noticia.data || 'Data não informada'}</span>
+                        <h3 class="font-montserrat text-xl font-bold mb-2">${titulo}</h3>
+                        <p class="text-[color:var(--text-muted)] text-sm mb-3">${resumoConteudo}</p>
+                        <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${data}</span>
                     </div>
                 `;
             });
@@ -347,7 +349,7 @@
             container.innerHTML = html;
         }
 
-        // Função para renderizar mensagem
+        // Função para renderizar mensagem (VERSÃO CORRIGIDA COM DATASET)
         function renderMensagem(mensagem) {
             const container = document.getElementById('mensagem-content');
             
@@ -356,24 +358,31 @@
                 return;
             }
             
+            const conteudo = mensagem.conteudo || "Conteúdo não disponível";
+            const titulo = mensagem.titulo;
+            const data = mensagem.data || "Data não informada";
+
             const html = `
                 <div class="blog-post-card bg-[color:var(--secondary-bg)] p-8 rounded-xl shadow-xl border-l-4 border-l-[color:var(--accent-gold)] cursor-pointer" 
-                     onclick="openBlogModal('Mensagem do Domingo', '${mensagem.titulo}', '${(mensagem.conteudo || 'Conteúdo não disponível').replace(/'/g, "\\'")}', '${mensagem.data || 'Data não informada'}')">
+                     data-title="${titulo.replace(/"/g, '&quot;')}"
+                     data-content="${conteudo.replace(/"/g, '&quot;')}"
+                     data-date="${data}"
+                     onclick="openBlogModalFromDataset(this, 'Mensagem do Domingo')">
                     <div class="flex items-start mb-4">
                         <i class="fas fa-church text-4xl text-[color:var(--accent-gold)] mr-4"></i>
                         <div>
-                            <h3 class="font-montserrat text-2xl font-bold mb-2">${mensagem.titulo}</h3>
-                            <span class="text-sm text-[color:var(--accent-gold)] font-semibold">${mensagem.data || 'Data não informada'}</span>
+                            <h3 class="font-montserrat text-2xl font-bold mb-2">${titulo}</h3>
+                            <span class="text-sm text-[color:var(--accent-gold)] font-semibold">${data}</span>
                         </div>
                     </div>
-                    <p class="text-[color:var(--text-light)] text-lg">${mensagem.conteudo || 'Conteúdo não disponível'}</p>
+                    <p class="text-[color:var(--text-light)] text-lg">${conteudo.substring(0, 200)}...</p>
                 </div>
             `;
             
             container.innerHTML = html;
         }
 
-        // Função para renderizar eventos
+        // Função para renderizar eventos (VERSÃO CORRIGIDA COM DATASET)
         function renderEventos(eventos) {
             const container = document.getElementById('eventos-content');
             
@@ -384,13 +393,23 @@
             
             let html = '';
             eventos.forEach(evento => {
+                const descricao = evento.descricao || "Descrição não disponível";
+                const titulo = evento.titulo || "Título não disponível";
+                const data = evento.data || "Data não informada";
+                
+                // Resumo para o card
+                const resumoDescricao = descricao.substring(0, 120) + (descricao.length > 120 ? '...' : '');
+
                 html += `
                     <div class="blog-post-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-l-4 border-l-[color:var(--accent-gold)] cursor-pointer" 
-                         onclick="openBlogModal('Evento', '${evento.titulo || 'Título não disponível'}', '${(evento.descricao || 'Descrição não disponível').replace(/'/g, "\\'")}', '${evento.data || 'Data não informada'}')">
+                         data-title="${titulo.replace(/"/g, '&quot;')}"
+                         data-content="${descricao.replace(/"/g, '&quot;')}"
+                         data-date="${data}"
+                         onclick="openBlogModalFromDataset(this, 'Evento')">
                         <i class="fas fa-calendar-alt text-3xl text-[color:var(--accent-gold)] mb-3"></i>
-                        <h3 class="font-montserrat text-xl font-bold mb-2">${evento.titulo || 'Título não disponível'}</h3>
-                        <p class="text-[color:var(--text-muted)] text-sm mb-3">${(evento.descricao || '').substring(0, 120)}...</p>
-                        <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${evento.data || 'Data não informada'}</span>
+                        <h3 class="font-montserrat text-xl font-bold mb-2">${titulo}</h3>
+                        <p class="text-[color:var(--text-muted)] text-sm mb-3">${resumoDescricao}</p>
+                        <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${data}</span>
                     </div>
                 `;
             });
@@ -398,7 +417,7 @@
             container.innerHTML = html;
         }
 
-        // Função para renderizar avisos
+        // Função para renderizar avisos (VERSÃO CORRIGIDA COM DATASET)
         function renderAvisos(avisos) {
             const container = document.getElementById('avisos-content');
             
@@ -409,13 +428,23 @@
             
             let html = '';
             avisos.forEach(aviso => {
+                const conteudo = aviso.conteudo || "Conteúdo não disponível";
+                const titulo = aviso.titulo || "Título não disponível";
+                const data = aviso.data || "Data não informada";
+                
+                // Resumo para o card
+                const resumoConteudo = conteudo.substring(0, 120) + (conteudo.length > 120 ? '...' : '');
+
                 html += `
                     <div class="blog-post-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-l-4 border-l-[color:var(--accent-gold)] cursor-pointer" 
-                         onclick="openBlogModal('Aviso', '${aviso.titulo || 'Título não disponível'}', '${(aviso.conteudo || 'Conteúdo não disponível').replace(/'/g, "\\'")}', '${aviso.data || 'Data não informada'}')">
+                         data-title="${titulo.replace(/"/g, '&quot;')}"
+                         data-content="${conteudo.replace(/"/g, '&quot;')}"
+                         data-date="${data}"
+                         onclick="openBlogModalFromDataset(this, 'Aviso')">
                         <i class="fas fa-bullhorn text-3xl text-[color:var(--accent-gold)] mb-3"></i>
-                        <h3 class="font-montserrat text-xl font-bold mb-2">${aviso.titulo || 'Título não disponível'}</h3>
-                        <p class="text-[color:var(--text-muted)] text-sm mb-3">${(aviso.conteudo || '').substring(0, 120)}...</p>
-                        <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${aviso.data || 'Data não informada'}</span>
+                        <h3 class="font-montserrat text-xl font-bold mb-2">${titulo}</h3>
+                        <p class="text-[color:var(--text-muted)] text-sm mb-3">${resumoConteudo}</p>
+                        <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${data}</span>
                     </div>
                 `;
             });
@@ -447,15 +476,23 @@
             }
         }
 
-        // --- FUNÇÕES DO BLOG MODAL ---
-        function openBlogModal(source, title, body, date) {
+        // --- FUNÇÕES DO BLOG MODAL (VERSÃO CORRIGIDA COM DATASET) ---
+        function openBlogModalFromDataset(element, source) {
+            const title = element.dataset.title;
+            const content = element.dataset.content;
+            const date = element.dataset.date;
+            
             document.getElementById('modal-title').textContent = title;
             document.getElementById('modal-date').textContent = date + ' | Fonte: ' + source;
             
-            // CORREÇÃO ESSENCIAL: Converte as quebras de linha escapadas ('\n') em HTML (<br>) para exibição correta no modal
-            const modalBody = document.getElementById('modal-body');
-            modalBody.innerHTML = body.replace(/\\n/g, '<br>');
+            // Formata o conteúdo para exibição
+            const formattedContent = content
+                .replace(/&quot;/g, '"')
+                .replace(/\n/g, '<br>')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
             
+            document.getElementById('modal-body').innerHTML = formattedContent;
             document.getElementById('blog-modal').style.display = 'block';
         }
 
@@ -485,4 +522,4 @@
         });
     </script>
 </body>
-</html>    
+</html>
