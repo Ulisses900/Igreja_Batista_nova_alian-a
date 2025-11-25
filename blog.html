@@ -249,7 +249,7 @@
 
 <script>
         // URLs dos arquivos JSON
-        // CORREÇÃO: Usando caminho relativo 'data/' para funcionar corretamente no Netlify
+        // CORRIGIDO: Usando caminho relativo 'data/' para funcionar corretamente no Netlify
         const JSON_URLS = {
             estudos: 'data/estudos.json',
             noticias: 'data/noticias.json',
@@ -277,7 +277,7 @@
             container.innerHTML = `<div class="error">${message}</div>`;
         }
 
-        // Função para renderizar estudos bíblicos
+        // Função para renderizar estudos bíblicos (CORRIGIDA: Trata Array e Escape)
         function renderEstudos(estudos) {
             const container = document.getElementById('estudos-content');
             
@@ -288,7 +288,7 @@
             
             let html = '';
             estudos.forEach(estudo => {
-                // CORREÇÃO OBRIGATÓRIA: Trata 'conteudo' como Array de Objetos
+                // Trata 'conteudo' como Array de Objetos ou String
                 let textoConteudo;
                 
                 if (Array.isArray(estudo.conteudo)) {
@@ -348,7 +348,7 @@
             container.innerHTML = html;
         }
 
-        // Função para renderizar mensagem
+        // Função para renderizar mensagem (CORRIGIDA: Adicionado ')' no onclick)
         function renderMensagem(mensagem) {
             const container = document.getElementById('mensagem-content');
             
