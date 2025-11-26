@@ -120,6 +120,45 @@ async function diagnosePushIssues() {
 }
 
 // ==========================================================
+// SALVAR TOKEN NO GOOGLE SHEETS (APPS SCRIPT)
+// ==========================================================
+
+async function saveTokenToGoogleSheets(token) {
+  // 🔥 SUBSTITUA PELA URL DO SEU WEB APP DO GOOGLE APPS SCRIPT
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw93LOXmAc7YsQZT0NBV6o6y4_uq7JqMq1mdxZjFEy5o37VNVCEICHzvZc_21efZao/exec';
+  
+  try {
+    console.log('📤 Enviando token para Google Sheets...');
+    
+    const response = await fetch(WEB_APP_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'saveToken',
+        token: token,
+        device: navigator.userAgent,
+        timestamp: new Date().toISOString(),
+        url: window.location.href
+      })
+    });
+    
+    if (response.ok) {
+      const result = await response.text();
+      console.log('✅ Token salvo no Google Sheets:', result);
+      return true;
+    } else {
+      console.warn('⚠️ Erro ao salvar no Google Sheets:', response.status);
+      return false;
+    }
+  } catch (error) {
+    console.warn('⚠️ Não foi possível conectar ao Google Sheets:', error);
+    return false;
+  }
+}
+
+// ==========================================================
 // FUNÇÃO PRINCIPAL DE INSCRIÇÃO
 // ==========================================================
 
@@ -190,8 +229,13 @@ async function subscribeWithFirebase() {
     
     console.log("💾 Token salvo no localStorage:", token);
 
-    // Opcional: Enviar token para seu backend
-    // await sendTokenToBackend(token);
+    // ✅ SALVAR NO GOOGLE SHEETS (APPS SCRIPT)
+    const saved = await saveTokenToGoogleSheets(token);
+    if (saved) {
+      console.log('✅ Token registrado no sistema de notificações!');
+    } else {
+      console.log('⚠️ Token não foi salvo no Google Sheets, mas está no localStorage');
+    }
 
     alert("🎉 Inscrição realizada com sucesso! Você receberá notificações da IBNA.");
     
@@ -453,8 +497,18 @@ window.ibnaDebug = {
     hasToken: !!localStorage.getItem("fcmToken"),
     fallback: localStorage.getItem("fcmFallback") === 'true',
     timestamp: localStorage.getItem("fcmTokenTimestamp")
-  })
+  }),
+  // Nova função para testar conexão com Google Sheets
+  testGoogleSheets: async () => {
+    const token = localStorage.getItem("fcmToken");
+    if (!token) {
+      alert('Nenhum token encontrado. Faça a inscrição primeiro.');
+      return;
+    }
+    const result = await saveTokenToGoogleSheets(token);
+    alert(result ? '✅ Conexão com Google Sheets OK!' : '❌ Falha na conexão');
+  }
 };
 
 console.log('🔧 Debug functions available: window.ibnaDebug');
-console.log('💡 Use window.ibnaDebug.diagnose() para verificar problemas');
+console.log('💡 Use window.ibnaDebug.testGoogleSheets() para testar a conexão');
