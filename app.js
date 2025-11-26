@@ -14,7 +14,7 @@ async function subscribeWithFirebase() {
     console.log('Iniciando inscrição com Firebase...');
     
     // Importar funções do Firebase (ajuste o caminho conforme sua estrutura)
-    const { requestNotificationPermission } = await import('./firebase-messaging.js');
+    const { requestNotificationPermission } = await import('./firebase.js');
     
     // Solicitar permissão e obter token
     const token = await requestNotificationPermission();
