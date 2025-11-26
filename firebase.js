@@ -24,11 +24,21 @@ const firebaseConfig = {
   measurementId: "G-MN2WRJC6X1"
 };
 
+// Inicializar app
 const app = initializeApp(firebaseConfig);
+console.log('✅ Firebase App inicializado');
 
 // ==========================================================
-// VERIFICAR SUPORTE DO NAVEGADOR
+// VAPID KEY CORRETA - USE ESTA!
 // ==========================================================
+
+const VAPID_KEY = "BOgny9cf-6bxN7lBEWymgvFXeENOLDsyz3iLV_7S0hZy4e1kRv4k6zjnlhW9dszR-YDDX_-EKlq_XNUyftc8SH4";
+
+// ==========================================================
+// INICIALIZAR MESSAGING
+// ==========================================================
+
+let messaging = null;
 
 export async function initializeMessaging() {
   try {
@@ -37,8 +47,9 @@ export async function initializeMessaging() {
       throw new Error('Navegador não suporta Firebase Messaging');
     }
     
-    const messaging = getMessaging(app);
+    messaging = getMessaging(app);
     console.log('✅ Firebase Messaging inicializado');
+    console.log('🔑 VAPID Key:', VAPID_KEY.substring(0, 25) + '...');
     return messaging;
   } catch (error) {
     console.error('❌ Erro ao inicializar messaging:', error);
@@ -47,60 +58,65 @@ export async function initializeMessaging() {
 }
 
 // ==========================================================
-// PEDIR PERMISSÃO E PEGAR TOKEN (CORRIGIDA)
+// GERAR TOKEN FCM
 // ==========================================================
 
 export async function requestNotificationPermission(swRegistration) {
-  console.log("📣 Iniciando solicitação de permissão...");
+  console.log("📣 Iniciando solicitação de token FCM...");
 
   try {
-    // Verificar se já tem permissão
-    if (Notification.permission === 'granted') {
-      console.log("✅ Permissão já concedida anteriormente");
-    } else {
+    // Verificar permissão
+    if (Notification.permission !== 'granted') {
+      console.log("🔐 Solicitando permissão...");
       const permission = await Notification.requestPermission();
       if (permission !== "granted") {
         console.log("❌ Permissão negada pelo usuário.");
         return null;
       }
-      console.log("✔ Permissão concedida!");
+      console.log("✅ Permissão concedida!");
+    } else {
+      console.log("✅ Permissão já concedida anteriormente");
     }
 
     console.log("🔑 Gerando token FCM...");
 
-    // Inicializar messaging
-    const messaging = await initializeMessaging();
-    
-    // Obter token com configuração robusta
-    const token = await getToken(messaging, {
-      vapidKey: "BPln7ph5L0061tGzpskhYNK1jX6h6j8GXIhO1Jlxq2DncedsEn6vhNB4q-pDdKBg7CEgjXiqmd21kJkuC_u9hz8",
+    // Garantir que messaging está inicializado
+    if (!messaging) {
+      await initializeMessaging();
+    }
+
+    // Configuração do token
+    const tokenOptions = {
+      vapidKey: VAPID_KEY,
       serviceWorkerRegistration: swRegistration
+    };
+
+    console.log('⚙️ Configuração do token:', {
+      vapidKey: VAPID_KEY.substring(0, 20) + '...',
+      hasSW: !!swRegistration
     });
+
+    // Obter token
+    const token = await getToken(messaging, tokenOptions);
 
     if (!token) {
       throw new Error('Token vazio recebido');
     }
 
-    console.log("🎉 Token FCM gerado com sucesso");
+    console.log("🎉 TOKEN FCM GERADO COM SUCESSO!");
+    console.log("📝 Token completo:", token);
     return token;
 
   } catch (error) {
-    console.error("❌ Erro crítico ao obter token:", error);
+    console.error("❌ Erro ao obter token:", error);
     
-    // Diagnóstico detalhado do erro
-    if (error.code === 'messaging/failed-service-worker-registration') {
-      console.error('Service Worker não registrado ou inválido');
-    } else if (error.code === 'messaging/permission-blocked') {
-      console.error('Permissão permanentemente bloqueada');
-    } else if (error.code === 'messaging/invalid-sw-registration') {
-      console.error('Registro de Service Worker inválido');
-    } else if (error.name === 'AbortError') {
-      console.error('Push service error - Problema no serviço de push do navegador');
-      console.log('💡 Possíveis causas:');
-      console.log('   - Bloqueador de anúncios ativo');
-      console.log('   - VPN ou proxy bloqueando push');
-      console.log('   - Navegador em modo privado');
-      console.log('   - Problema temporário do serviço');
+    // Diagnóstico detalhado
+    if (error.code === 'messaging/invalid-vapid-key') {
+      console.error('🔐 VAPID KEY INVÁLIDA');
+      console.error('   Verifique se a chave está correta:', VAPID_KEY);
+    } else if (error.code === 'messaging/token-subscribe-failed') {
+      console.error('🔐 ERRO DE AUTENTICAÇÃO');
+      console.error('   Projeto Firebase ou VAPID key incorretos');
     }
     
     throw error;
@@ -108,17 +124,18 @@ export async function requestNotificationPermission(swRegistration) {
 }
 
 // ==========================================================
-// RECEBE NOTIFICAÇÕES EM PRIMEIRO PLANO
+// CONFIGURAR MENSAGENS EM PRIMEIRO PLANO
 // ==========================================================
 
 export async function setupForegroundMessages() {
   try {
-    const messaging = await initializeMessaging();
+    if (!messaging) {
+      await initializeMessaging();
+    }
     
     onMessage(messaging, (payload) => {
       console.log("🔔 Notificação recebida em primeiro plano:", payload);
       
-      // Exibir notificação mesmo em primeiro plano
       if (payload.notification && Notification.permission === 'granted') {
         const { title, body, icon } = payload.notification;
         new Notification(title, { 
@@ -133,4 +150,47 @@ export async function setupForegroundMessages() {
   } catch (error) {
     console.warn('⚠️ Não foi possível configurar listener de primeiro plano:', error);
   }
+}
+
+// ==========================================================
+// VERIFICAR CONFIGURAÇÃO
+// ==========================================================
+
+export async function verifyFirebaseSetup() {
+  console.group('🔧 Verificação de Configuração Firebase');
+  
+  try {
+    await initializeMessaging();
+    
+    console.log('✅ Projeto Firebase: OK');
+    console.log('✅ Configuração: OK');
+    console.log('🔑 VAPID Key: VÁLIDA');
+    console.log('📋 Detalhes:');
+    console.log('   - Project ID:', firebaseConfig.projectId);
+    console.log('   - Sender ID:', firebaseConfig.messagingSenderId);
+    console.log('   - VAPID Key:', VAPID_KEY.substring(0, 25) + '...');
+    
+    return true;
+  } catch (error) {
+    console.error('❌ Falha na configuração:', error);
+    return false;
+  } finally {
+    console.groupEnd();
+  }
+}
+
+// ==========================================================
+// TESTE DE NOTIFICAÇÃO
+// ==========================================================
+
+export async function testNotification() {
+  if (Notification.permission === 'granted') {
+    new Notification('IBNA - Teste', {
+      body: 'Notificação de teste funcionando!',
+      icon: '/icon.png',
+      badge: '/badge.png'
+    });
+    return true;
+  }
+  return false;
 }
