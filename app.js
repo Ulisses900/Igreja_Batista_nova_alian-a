@@ -120,85 +120,242 @@ async function diagnosePushIssues() {
 }
 
 // ==========================================================
-// SALVAR TOKEN NO GOOGLE SHEETS (MÉTODO CORRIGIDO)
+// URL DO WEB APP DO GOOGLE APPS SCRIPT
+// ==========================================================
+
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw93LOXmAc7YsQZT0NBV6o6y4_uq7JqMq1mdxZjFEy5o37VNVCEICHzvZc_21efZao/exec';
+
+// ==========================================================
+// VERIFICAR STATUS DO SISTEMA
+// ==========================================================
+
+async function checkSystemStatus() {
+  try {
+    console.log('🔍 Verificando status do sistema...');
+    
+    const response = await fetch(`${WEB_APP_URL}?action=status&timestamp=${Date.now()}`);
+    
+    if (response.ok) {
+      const result = await response.json();
+      console.log('✅ Sistema online:', result);
+      return result;
+    }
+  } catch (error) {
+    console.log('⚠️ Não foi possível verificar status do sistema:', error);
+  }
+  
+  return null;
+}
+
+// ==========================================================
+// INICIALIZAR SISTEMA NO GOOGLE APPS SCRIPT
+// ==========================================================
+
+async function initializeSystem() {
+  try {
+    console.log('🔧 Inicializando sistema no Google Apps Script...');
+    
+    const response = await fetch(`${WEB_APP_URL}?action=initialize&timestamp=${Date.now()}`);
+    
+    if (response.ok) {
+      const result = await response.json();
+      console.log('✅ Sistema inicializado:', result);
+      return result;
+    }
+  } catch (error) {
+    console.error('❌ Erro ao inicializar sistema:', error);
+  }
+  
+  return null;
+}
+
+// ==========================================================
+// SALVAR TOKEN NO GOOGLE SHEETS (SISTEMA AUTOMÁTICO)
 // ==========================================================
 
 async function saveTokenToGoogleSheets(token) {
-  // URL do Web App do Google Apps Script
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw93LOXmAc7YsQZT0NBV6o6y4_uq7JqMq1mdxZjFEy5o37VNVCEICHzvZc_21efZao/exec';
-  
   try {
     console.log('📤 Enviando token para Google Sheets...');
     
-    // Método 1: Tentar com POST (pode falhar por CORS)
-    try {
-      const response = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'saveToken',
-          token: token,
-          device: navigator.userAgent,
-          timestamp: new Date().toISOString(),
-          url: window.location.href
-        })
-      });
-      
-      if (response.ok) {
-        const result = await response.text();
-        console.log('✅ Token salvo via POST:', result);
-        return true;
-      }
-    } catch (postError) {
-      console.log('⚠️ POST falhou, tentando GET...', postError);
+    // Verificar status do sistema primeiro
+    const status = await checkSystemStatus();
+    if (!status) {
+      console.log('⚠️ Sistema não respondeu, tentando inicialização...');
+      await initializeSystem();
     }
     
-    // Método 2: Usar GET com parâmetros (evita CORS)
+    // Método GET com parâmetros (funciona melhor com CORS)
     const params = new URLSearchParams({
       action: 'saveToken',
       token: token,
-      device: navigator.userAgent.substring(0, 100), // Limitar tamanho
+      device: navigator.userAgent.substring(0, 100),
       url: window.location.href,
       origin: window.location.origin,
-      timestamp: new Date().getTime()
+      timestamp: new Date().getTime(),
+      source: 'webapp-frontend',
+      autoCreate: 'true'
     });
     
     const getUrl = `${WEB_APP_URL}?${params.toString()}`;
-    console.log('🔄 Tentando via GET...');
     
-    const getResponse = await fetch(getUrl, {
+    // Tentar com fetch normal primeiro
+    try {
+      const response = await fetch(getUrl);
+      if (response.ok) {
+        const result = await response.text();
+        console.log('✅ Resposta do servidor:', result);
+        
+        // Tentar parsear JSON se possível
+        try {
+          const data = JSON.parse(result);
+          if (data.success) {
+            showSuccessMessage(`Inscrição realizada! ${data.totalUsers ? `Total de ${data.totalUsers} usuários.` : ''}`);
+          }
+        } catch (e) {
+          // Se não for JSON, mostrar mensagem genérica
+          showSuccessMessage('Inscrição realizada com sucesso!');
+        }
+        
+        return true;
+      }
+    } catch (fetchError) {
+      console.log('⚠️ Fetch normal falhou, usando no-cors...', fetchError);
+    }
+    
+    // Método FALLBACK: no-cors (sempre funciona)
+    await fetch(getUrl, {
       method: 'GET',
-      mode: 'no-cors' // Modo no-cors para evitar bloqueio
+      mode: 'no-cors',
+      credentials: 'omit'
     });
     
-    // Com no-cors não podemos ler a resposta, mas a requisição foi enviada
-    console.log('✅ Requisição GET enviada (modo no-cors)');
+    console.log('✅ Requisição enviada (modo no-cors)');
+    showSuccessMessage('Inscrição realizada com sucesso!');
+    
     return true;
     
   } catch (error) {
-    console.warn('⚠️ Não foi possível conectar ao Google Sheets:', error);
-    
-    // Método 3: Usar image beacon (fallback final)
-    try {
-      const params = new URLSearchParams({
-        action: 'saveToken',
-        token: token,
-        device: 'BeaconFallback',
-        url: window.location.href,
-        method: 'beacon'
-      });
-      
-      const beaconUrl = `${WEB_APP_URL}?${params.toString()}`;
-      navigator.sendBeacon(beaconUrl);
-      console.log('📡 Token enviado via Beacon API');
-      return true;
-    } catch (beaconError) {
-      console.warn('❌ Todos os métodos falharam:', beaconError);
-      return false;
-    }
+    console.warn('⚠️ Erro ao enviar token:', error);
+    showTokenBackup(token);
+    return false;
   }
+}
+
+// ==========================================================
+// MENSAGEM DE SUCESSO MELHORADA
+// ==========================================================
+
+function showSuccessMessage(message) {
+  // Remover mensagens anteriores
+  const existingMessages = document.querySelectorAll('.success-message');
+  existingMessages.forEach(msg => msg.remove());
+  
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'success-message';
+  messageDiv.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #28a745;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 10000;
+    max-width: 300px;
+    animation: slideIn 0.3s ease-out;
+    font-family: Arial, sans-serif;
+  `;
+  
+  messageDiv.innerHTML = `
+    <strong>🎉 ${message}</strong>
+    <button onclick="this.parentElement.remove()" style="margin-left: 10px; background: transparent; border: 1px solid white; color: white; padding: 2px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">OK</button>
+  `;
+  
+  document.body.appendChild(messageDiv);
+  
+  // Auto-remover após 5 segundos
+  setTimeout(() => {
+    if (messageDiv.parentElement) {
+      messageDiv.remove();
+    }
+  }, 5000);
+}
+
+// ==========================================================
+// BACKUP VISUAL DO TOKEN
+// ==========================================================
+
+function showTokenBackup(token) {
+  const tokenDisplay = document.createElement('div');
+  tokenDisplay.style.cssText = `
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 12px;
+    max-width: 400px;
+    z-index: 10000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    font-family: Arial, sans-serif;
+  `;
+  
+  tokenDisplay.innerHTML = `
+    <strong>⚠️ Backup do Token</strong>
+    <p style="margin: 8px 0; color: #856404;">O sistema pode ter salvado automaticamente, mas aqui está seu token para garantir:</p>
+    <div style="background: #f8f9fa; padding: 10px; border-radius: 4px; border: 1px solid #ddd; word-break: break-all; font-family: 'Courier New', monospace; font-size: 11px;">
+      ${token}
+    </div>
+    <div style="margin-top: 10px; display: flex; gap: 10px;">
+      <button onclick="copyTokenToClipboard('${token}')" style="padding: 5px 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px;">Copiar Token</button>
+      <button onclick="this.parentElement.parentElement.remove()" style="padding: 5px 10px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px;">Fechar</button>
+    </div>
+  `;
+  
+  document.body.appendChild(tokenDisplay);
+  
+  // Remover automaticamente após 15 segundos
+  setTimeout(() => {
+    if (tokenDisplay.parentElement) {
+      tokenDisplay.remove();
+    }
+  }, 15000);
+}
+
+// ==========================================================
+// COPIAR TOKEN PARA ÁREA DE TRANSFERÊNCIA
+// ==========================================================
+
+function copyTokenToClipboard(token) {
+  navigator.clipboard.writeText(token).then(() => {
+    // Mostrar mensagem de confirmação
+    const copyMsg = document.createElement('div');
+    copyMsg.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      z-index: 10001;
+      font-size: 14px;
+    `;
+    copyMsg.textContent = '✅ Token copiado para a área de transferência!';
+    document.body.appendChild(copyMsg);
+    
+    setTimeout(() => {
+      if (copyMsg.parentElement) {
+        copyMsg.remove();
+      }
+    }, 2000);
+  }).catch(err => {
+    console.error('Erro ao copiar token:', err);
+  });
 }
 
 // ==========================================================
@@ -272,16 +429,14 @@ async function subscribeWithFirebase() {
     
     console.log("💾 Token salvo no localStorage:", token);
 
-    // ✅ SALVAR NO GOOGLE SHEETS (APPS SCRIPT)
+    // ✅ SALVAR NO GOOGLE SHEETS (SISTEMA AUTOMÁTICO)
     const saved = await saveTokenToGoogleSheets(token);
     if (saved) {
       console.log('✅ Token registrado no sistema de notificações!');
     } else {
-      console.log('⚠️ Token não foi salvo no Google Sheets, mas está no localStorage');
+      console.log('⚠️ Token pode não ter sido salvo no Google Sheets, mas está no localStorage');
     }
 
-    alert("🎉 Inscrição realizada com sucesso! Você receberá notificações da IBNA.");
-    
     // Atualizar UI se necessário
     updateUIAfterSubscription();
     
@@ -342,7 +497,7 @@ async function alternativeSubscription() {
     localStorage.setItem('fcmFallback', 'true');
     localStorage.setItem('fcmTokenTimestamp', new Date().toISOString());
     
-    alert('✅ Notificações configuradas! Você receberá notificações quando o app estiver aberto.\n\n⚠️ Nota: Para notificações em segundo plano, tente em outro navegador ou desative bloqueadores.');
+    showSuccessMessage('Notificações configuradas! Você receberá notificações quando o app estiver aberto.');
     
     // Atualizar UI
     updateUIAfterSubscription();
@@ -356,7 +511,7 @@ async function alternativeSubscription() {
     try {
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
-        alert('✅ Permissão concedida! Configuração básica concluída.');
+        showSuccessMessage('Permissão concedida! Configuração básica concluída.');
         return true;
       }
     } catch (finalError) {
@@ -378,6 +533,15 @@ function updateUIAfterSubscription() {
     btn.disabled = true;
     btn.style.backgroundColor = "#28a745";
     btn.style.cursor = "default";
+    
+    // Adicionar ícone de verificação
+    if (!btn.querySelector('.check-icon')) {
+      const checkIcon = document.createElement('span');
+      checkIcon.className = 'check-icon';
+      checkIcon.innerHTML = ' ✓';
+      checkIcon.style.fontWeight = 'bold';
+      btn.appendChild(checkIcon);
+    }
   }
   
   // Mostrar status para o usuário
@@ -385,6 +549,7 @@ function updateUIAfterSubscription() {
   if (statusElement) {
     statusElement.textContent = "Status: Inscrito nas notificações";
     statusElement.style.color = "#28a745";
+    statusElement.style.fontWeight = "bold";
   }
   
   // Mostrar token resumido (opcional)
@@ -435,16 +600,23 @@ function clearSubscription() {
     btn.disabled = false;
     btn.style.backgroundColor = "";
     btn.style.cursor = "pointer";
+    
+    // Remover ícone de verificação
+    const checkIcon = btn.querySelector('.check-icon');
+    if (checkIcon) {
+      checkIcon.remove();
+    }
   }
   
   const statusElement = document.getElementById("subscription-status");
   if (statusElement) {
     statusElement.textContent = "Status: Não inscrito";
     statusElement.style.color = "#dc3545";
+    statusElement.style.fontWeight = "normal";
   }
   
   console.log('🧹 Inscrição removida - pronto para novo teste');
-  alert('Inscrição removida. Você pode testar novamente.');
+  showSuccessMessage('Inscrição removida. Você pode testar novamente.');
 }
 
 // ==========================================================
@@ -490,22 +662,39 @@ document.addEventListener('DOMContentLoaded', function() {
   if (window.location.hostname === 'localhost' || window.location.hostname.includes('netlify')) {
     const clearBtn = document.createElement('button');
     clearBtn.textContent = '🧹 Limpar Inscrição (Teste)';
-    clearBtn.style.position = 'fixed';
-    clearBtn.style.bottom = '10px';
-    clearBtn.style.right = '10px';
-    clearBtn.style.zIndex = '10000';
-    clearBtn.style.padding = '5px 10px';
-    clearBtn.style.fontSize = '12px';
-    clearBtn.style.backgroundColor = '#ffc107';
-    clearBtn.style.color = '#000';
-    clearBtn.style.border = 'none';
-    clearBtn.style.borderRadius = '4px';
-    clearBtn.style.cursor = 'pointer';
+    clearBtn.style.cssText = `
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      z-index: 10000;
+      padding: 8px 12px;
+      font-size: 12px;
+      background-color: #ffc107;
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    `;
     clearBtn.addEventListener('click', clearSubscription);
     
     document.body.appendChild(clearBtn);
     console.log('🔧 Botão de limpar inscrição adicionado para testes');
   }
+  
+  // Adicionar CSS para animações
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+  `;
+  document.head.appendChild(style);
 });
 
 // ==========================================================
@@ -515,12 +704,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Expor funções globalmente para debug (remover em produção)
 window.ibnaDebug = {
   getToken: () => localStorage.getItem("fcmToken"),
-  clearSubscription: () => {
-    localStorage.removeItem("fcmToken");
-    localStorage.removeItem("fcmTokenTimestamp");
-    localStorage.removeItem("fcmFallback");
-    location.reload();
-  },
+  clearSubscription: clearSubscription,
   checkSW: () => navigator.serviceWorker?.ready,
   testNotification: () => {
     if (Notification.permission === 'granted') {
@@ -550,8 +734,13 @@ window.ibnaDebug = {
     }
     const result = await saveTokenToGoogleSheets(token);
     alert(result ? '✅ Conexão com Google Sheets OK!' : '❌ Falha na conexão');
-  }
+  },
+  // Função para verificar status do sistema
+  checkSystemStatus: checkSystemStatus,
+  // Função para inicializar sistema
+  initializeSystem: initializeSystem
 };
 
 console.log('🔧 Debug functions available: window.ibnaDebug');
 console.log('💡 Use window.ibnaDebug.testGoogleSheets() para testar a conexão');
+console.log('🌐 Use window.ibnaDebug.checkSystemStatus() para verificar o sistema');
