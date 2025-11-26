@@ -23,10 +23,10 @@ const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
 // ==========================================================
-// PEDIR PERMISSÃO E PEGAR TOKEN
+// PEDIR PERMISSÃO E PEGAR TOKEN (ATUALIZADA)
 // ==========================================================
 
-export async function requestNotificationPermission() {
+export async function requestNotificationPermission(swRegistration) {
   console.log("📣 Iniciando solicitação de permissão...");
 
   const permission = await Notification.requestPermission();
@@ -39,7 +39,8 @@ export async function requestNotificationPermission() {
 
   try {
     const token = await getToken(messaging, {
-      vapidKey: "BPln7ph5L0061tGzpskhYNK1jX6h6j8GXIhO1Jlxq2DncedsEn6vhNB4q-pDdKBg7CEgjXiqmd21kJkuC_u9hz8"
+      vapidKey: "BPln7ph5L0061tGzpskhYNK1jX6h6j8GXIhO1Jlxq2DncedsEn6vhNB4q-pDdKBg7CEgjXiqmd21kJkuC_u9hz8",
+      serviceWorkerRegistration: swRegistration
     });
 
     console.log("🎉 Token FCM:", token);
@@ -47,6 +48,14 @@ export async function requestNotificationPermission() {
 
   } catch (error) {
     console.error("❌ Erro ao obter token:", error);
+    
+    // Verificação de erros comuns
+    if (error.code === 'messaging/failed-service-worker-registration') {
+      console.error('Service Worker não registrado corretamente');
+    } else if (error.code === 'messaging/permission-blocked') {
+      console.error('Permissão de notificação bloqueada');
+    }
+    
     throw error;
   }
 }
@@ -57,4 +66,10 @@ export async function requestNotificationPermission() {
 
 onMessage(messaging, (payload) => {
   console.log("🔔 Notificação recebida em primeiro plano:", payload);
+  
+  // Exibir notificação mesmo em primeiro plano
+  if (payload.notification) {
+    const { title, body, icon } = payload.notification;
+    new Notification(title, { body, icon });
+  }
 });
