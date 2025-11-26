@@ -17,14 +17,11 @@
         await OneSignal.init({
           appId: "21faf23a-a714-4ad6-9037-7aee086fde9c",
           allowLocalhostAsSecureOrigin: true,
-          path: "/Igreja_Batista_nova_alian-a/",            // Caminho do seu site
+          path: "/Igreja_Batista_nova_alian-a/",
           serviceWorkerPath: "/Igreja_Batista_nova_alian-a/OneSignalSDKWorker.js",
           serviceWorkerParam: { scope: "/Igreja_Batista_nova_alian-a/" }
         });
-      });
-    </script>
-
-        
+    
         // Enable automatic prompt
         OneSignal.Notifications.requestPermission();
         
@@ -32,6 +29,7 @@
         OneSignal.Slidedown.promptPush();
       });
     </script>
+
     
     <style>
         /* Variáveis de Cores (Dark Mode IBNA) */
