@@ -191,7 +191,7 @@ async function subscribeWithFirebase() {
     console.log("💾 Token salvo no localStorage:", token);
 
     // Opcional: Enviar token para seu backend
-    await sendTokenToBackend(token);
+    // await sendTokenToBackend(token);
 
     alert("🎉 Inscrição realizada com sucesso! Você receberá notificações da IBNA.");
     
