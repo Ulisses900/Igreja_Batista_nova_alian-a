@@ -1,111 +1,93 @@
 // ==========================================================
-// CONFIGURAÇÕES E IMPORTAÇÕES
+// IMPORTS DO FIREBASE VIA CDN (ESSENCIAL PARA NETLIFY)
 // ==========================================================
 
-const APPS_SCRIPT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbw93LOXmAc7YsQZT0NBV6o6y4_uq7JqMq1mdxZjFEy5o37VNVCEICHzvZc_21efZao/exec';
-const BROWSER_ID = 'ibna-' + Date.now();
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging.js";
 
 // ==========================================================
-// FUNÇÃO PRINCIPAL DE INSCRIÇÃO COM FIREBASE
+// CONFIG FIREBASE
 // ==========================================================
 
-async function subscribeWithFirebase() {
-  try {
-    console.log('Iniciando inscrição com Firebase...');
-    
-    // Importar funções do Firebase (ajuste o caminho conforme sua estrutura)
-    const { requestNotificationPermission } = await import('./firebase.js');
-    
-    // Solicitar permissão e obter token
-    const token = await requestNotificationPermission();
-    
-    if (token) {
-      alert('🎉 Inscrito com sucesso! Você receberá notificações da IBNA.');
-      
-      // Salvar no localStorage para referência futura
-      localStorage.setItem('fcmToken', token);
-      localStorage.setItem('browserId', BROWSER_ID);
-      
-      console.log('Inscrição concluída - Token:', token);
-    } else {
-      alert('❌ Não foi possível completar a inscrição. Por favor, permita as notificações.');
-    }
-    
-  } catch (error) {
-    console.error('Erro na inscrição Firebase:', error);
-    alert('❌ Erro ao tentar se inscrever: ' + error.message);
-  }
-}
-
-// ==========================================================
-// VERIFICAR INSCRIÇÃO EXISTENTE
-// ==========================================================
-
-function checkExistingSubscription() {
-  const token = localStorage.getItem('fcmToken');
-  const browserId = localStorage.getItem('browserId');
-  
-  if (token && browserId) {
-    console.log('Inscrição existente encontrada:', { browserId, token: token.substring(0, 20) + '...' });
-    
-    // Mostrar status para o usuário
-    const statusElement = document.getElementById('subscriptionStatus');
-    if (statusElement) {
-      statusElement.innerHTML = '✅ Você está inscrito para receber notificações';
-      statusElement.style.color = 'green';
-    }
-    
-    return true;
-  }
-  
-  return false;
-}
+const firebaseConfig = {
+  apiKey: "AIzaSyAK3QItAHsUAwHBI0eI7LUDnnD3X25Zz6A",
+  authDomain: "ibna-b5f3d.firebaseapp.com",
+  projectId: "ibna-b5f3d",
+  storageBucket: "ibna-b5f3d.firebasestorage.app",
+  messagingSenderId: "238089075652",
+  appId: "1:238089075652:web:3b0c4d38937f62c01cc291",
+  measurementId: "G-MN2WRJC6X1"
+};
 
 // ==========================================================
 // INICIALIZAÇÃO
 // ==========================================================
 
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('IBNA - Sistema de Notificações inicializando...');
-  
-  // Verificar se já está inscrito
-  checkExistingSubscription();
-  
-  // Configurar botão de inscrição
-  const subscribeButton = document.getElementById('subscribe');
-  if (subscribeButton) {
-    subscribeButton.addEventListener('click', subscribeWithFirebase);
-    subscribeButton.innerHTML = '🔔 Receber Notificações';
-  }
-  
-  // Botão para testar notificação local (apenas desenvolvimento)
-  const testButton = document.getElementById('testNotification');
-  if (testButton) {
-    testButton.addEventListener('click', testLocalNotification);
-    testButton.style.display = 'block';
-  }
-});
+const app = initializeApp(firebaseConfig);
+const messaging = getMessaging(app);
 
 // ==========================================================
-// FUNÇÃO DE TESTE LOCAL (APENAS DESENVOLVIMENTO)
+// PERMISSÃO E TOKEN FCM
 // ==========================================================
 
-function testLocalNotification() {
-  if ('Notification' in window && Notification.permission === 'granted') {
-    const notification = new Notification('🔔 IBNA - Teste', {
-      body: 'Esta é uma notificação de teste do sistema!',
-      icon: '/icon-192x192.png',
-      badge: '/badge-72x72.png',
-      tag: 'test'
+export async function requestNotificationPermission() {
+  console.log("Solicitando permissão para notificações...");
+
+  const permission = await Notification.requestPermission();
+
+  if (permission !== "granted") {
+    console.warn("Permissão negada pelo usuário.");
+    return null;
+  }
+
+  console.log("Permissão concedida. Obtendo token FCM...");
+
+  const token = await getToken(messaging, {
+    vapidKey: "BPln7ph5L0061tGzpskhYNK1jX6h6j8GXIhO1Jlxq2DncedsEn6vhNB4q-pDdKBg7CEgjXiqmd21kJkuC_u9hz8"
+  });
+
+  console.log("Token FCM:", token);
+
+  await sendTokenToServer(token);
+
+  return token;
+}
+
+// ==========================================================
+// ENVIAR TOKEN PARA SEU GOOGLE APP SCRIPT
+// ==========================================================
+
+async function sendTokenToServer(token) {
+  try {
+    const BROWSER_ID = "ibna-" + Date.now();
+
+    await fetch("https://script.google.com/macros/s/AKfycbw93LOXmAc7YsQZT0NBV6o6y4_uq7JqMq1mdxZjFEy5o37VNVCEICHzvZc_21efZao/exec", {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        browserId: BROWSER_ID,
+        fcmToken: token,
+        type: "fcm"
+      })
     });
-    
-    notification.onclick = function() {
-      window.focus();
-      notification.close();
-    };
-    
-    alert('Notificação de teste enviada!');
-  } else {
-    alert('Primeiro você precisa permitir notificações.');
+
+    console.log("Token enviado ao servidor");
+
+  } catch (err) {
+    console.error("Erro ao enviar token ao servidor:", err);
   }
 }
+
+// ==========================================================
+// RECEBER NOTIFICAÇÕES EM PRIMEIRO PLANO
+// ==========================================================
+
+onMessage(messaging, (payload) => {
+  console.log("Mensagem recebida:", payload);
+
+  new Notification(payload.notification.title, {
+    body: payload.notification.body,
+    icon: payload.notification.icon
+  });
+});
