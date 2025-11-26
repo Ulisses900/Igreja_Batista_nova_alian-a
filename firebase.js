@@ -1,5 +1,5 @@
 // ==========================================================
-// IMPORTS DO FIREBASE VIA CDN (ESSENCIAL PARA NETLIFY)
+// IMPORTS DO FIREBASE VIA CDN
 // ==========================================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
@@ -23,30 +23,38 @@ const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
 // ==========================================================
-// PEDIR PERMISSÃO E PEGAR TOKEN FCM
+// PEDIR PERMISSÃO E PEGAR TOKEN
 // ==========================================================
 
 export async function requestNotificationPermission() {
-  console.log("Solicitando permissão para notificações...");
+  console.log("📣 Iniciando solicitação de permissão...");
 
   const permission = await Notification.requestPermission();
-
   if (permission !== "granted") {
-    console.warn("Permissão negada.");
+    console.log("❌ Permissão negada.");
     return null;
   }
 
-  console.log("Permissão concedida. Obtendo token FCM...");
+  console.log("✔ Permissão concedida! Gerando token...");
 
-  const token = await getToken(messaging, {
-    vapidKey: "BPln7ph5L0061tGzpskhYNK1jX6h6j8GXIhO1Jlxq2DncedsEn6vhNB4q-pDdKBg7CEgjXiqmd21kJkuC_u9hz8"
-  });
+  try {
+    const token = await getToken(messaging, {
+      vapidKey: "BPln7ph5L0061tGzpskhYNK1jX6h6j8GXIhO1Jlxq2DncedsEn6vhNB4q-pDdKBg7CEgjXiqmd21kJkuC_u9hz8"
+    });
 
-  console.log("Token FCM obtido:", token);
+    console.log("🎉 Token FCM:", token);
+    return token;
 
-  return token;
+  } catch (error) {
+    console.error("❌ Erro ao obter token:", error);
+    throw error;
+  }
 }
 
+// ==========================================================
+// RECEBE NOTIFICAÇÕES EM PRIMEIRO PLANO
+// ==========================================================
+
 onMessage(messaging, (payload) => {
-  console.log("Mensagem em primeiro plano:", payload);
+  console.log("🔔 Notificação recebida em primeiro plano:", payload);
 });
