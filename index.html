@@ -10,6 +10,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- OneSignal -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "21faf23a-a714-4ad6-9037-7aee086fde9c",
+        });
+      });
+    </script>
+    
     <style>
         /* Variáveis de Cores (Dark Mode IBNA) */
         :root {
@@ -736,19 +747,5 @@
         });
     </script>
 
-	<script>
-		window.addEventListener("load", () => {
-		  if ("serviceWorker" in navigator) {
-		    navigator.serviceWorker.register("/firebase-messaging-sw.js")
-		      .then(reg => console.log("SW registrado:", reg))
-		      .catch(err => console.error("Erro ao registrar SW:", err));
-		  }
-		});
-		</script>
-		
-		<script type="module" src="/app.js"></script>
-
 </body>
 </html>
-
-
