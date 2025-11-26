@@ -120,41 +120,84 @@ async function diagnosePushIssues() {
 }
 
 // ==========================================================
-// SALVAR TOKEN NO GOOGLE SHEETS (APPS SCRIPT)
+// SALVAR TOKEN NO GOOGLE SHEETS (MÉTODO CORRIGIDO)
 // ==========================================================
 
 async function saveTokenToGoogleSheets(token) {
-  // 🔥 SUBSTITUA PELA URL DO SEU WEB APP DO GOOGLE APPS SCRIPT
+  // URL do Web App do Google Apps Script
   const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw93LOXmAc7YsQZT0NBV6o6y4_uq7JqMq1mdxZjFEy5o37VNVCEICHzvZc_21efZao/exec';
   
   try {
     console.log('📤 Enviando token para Google Sheets...');
     
-    const response = await fetch(WEB_APP_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        action: 'saveToken',
-        token: token,
-        device: navigator.userAgent,
-        timestamp: new Date().toISOString(),
-        url: window.location.href
-      })
+    // Método 1: Tentar com POST (pode falhar por CORS)
+    try {
+      const response = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'saveToken',
+          token: token,
+          device: navigator.userAgent,
+          timestamp: new Date().toISOString(),
+          url: window.location.href
+        })
+      });
+      
+      if (response.ok) {
+        const result = await response.text();
+        console.log('✅ Token salvo via POST:', result);
+        return true;
+      }
+    } catch (postError) {
+      console.log('⚠️ POST falhou, tentando GET...', postError);
+    }
+    
+    // Método 2: Usar GET com parâmetros (evita CORS)
+    const params = new URLSearchParams({
+      action: 'saveToken',
+      token: token,
+      device: navigator.userAgent.substring(0, 100), // Limitar tamanho
+      url: window.location.href,
+      origin: window.location.origin,
+      timestamp: new Date().getTime()
     });
     
-    if (response.ok) {
-      const result = await response.text();
-      console.log('✅ Token salvo no Google Sheets:', result);
-      return true;
-    } else {
-      console.warn('⚠️ Erro ao salvar no Google Sheets:', response.status);
-      return false;
-    }
+    const getUrl = `${WEB_APP_URL}?${params.toString()}`;
+    console.log('🔄 Tentando via GET...');
+    
+    const getResponse = await fetch(getUrl, {
+      method: 'GET',
+      mode: 'no-cors' // Modo no-cors para evitar bloqueio
+    });
+    
+    // Com no-cors não podemos ler a resposta, mas a requisição foi enviada
+    console.log('✅ Requisição GET enviada (modo no-cors)');
+    return true;
+    
   } catch (error) {
     console.warn('⚠️ Não foi possível conectar ao Google Sheets:', error);
-    return false;
+    
+    // Método 3: Usar image beacon (fallback final)
+    try {
+      const params = new URLSearchParams({
+        action: 'saveToken',
+        token: token,
+        device: 'BeaconFallback',
+        url: window.location.href,
+        method: 'beacon'
+      });
+      
+      const beaconUrl = `${WEB_APP_URL}?${params.toString()}`;
+      navigator.sendBeacon(beaconUrl);
+      console.log('📡 Token enviado via Beacon API');
+      return true;
+    } catch (beaconError) {
+      console.warn('❌ Todos os métodos falharam:', beaconError);
+      return false;
+    }
   }
 }
 
