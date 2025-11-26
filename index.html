@@ -18,11 +18,13 @@
         await OneSignal.init({
           appId: "21faf23a-a714-4ad6-9037-7aee086fde9c",
           allowLocalhostAsSecureOrigin: true,
-          safari_web_id: "web.onesignal.auto.1e18b5a3-3c2d-4c5e-9a2a-8a9b6d7e8f9c"
         });
         
-        // Show the prompt if not subscribed
-        OneSignal.showSlidedownPrompt();
+        // Enable automatic prompt
+        OneSignal.Notifications.requestPermission();
+        
+        // Show the bell button
+        OneSignal.Slidedown.promptPush();
       });
     </script>
     
@@ -273,10 +275,7 @@
                 <a href="#contato" class="inline-block px-8 py-3 text-lg font-semibold rounded-full bg-[color:var(--accent-gold)] text-gray-900 shadow-xl hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
                     Visite-nos
                 </a>
-                <button id="subscribe-notifications" class="inline-block px-8 py-3 text-lg font-semibold rounded-full bg-blue-600 text-white shadow-xl hover:bg-blue-700 transition duration-300 transform hover:scale-105">
-                    <i class="fas fa-bell mr-3"></i> Receber Notificações Diárias
-                </button>
-			</div>
+            </div>
         </div>
     </section>
 
@@ -753,15 +752,6 @@
             loadEventsPreview();
             loadBlogPreview();
             startCountdown();
-            
-            // OneSignal subscription button
-            document.getElementById('subscribe-notifications').addEventListener('click', function() {
-                if (window.OneSignal) {
-                    OneSignal.showSlidedownPrompt();
-                } else {
-                    alert('O sistema de notificações está carregando. Tente novamente em alguns segundos.');
-                }
-            });
         });
 
         // Toggle do menu mobile
