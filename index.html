@@ -10,25 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      
-      OneSignalDeferred.push(async function(OneSignal) {
-        // 1. Inicializa o OneSignal
-        await OneSignal.init({
-          appId: "21faf23a-a714-4ad6-9037-7aee086fde9c",
-          allowLocalhostAsSecureOrigin: true,
-          // CHAVE PARA O GITHUB PAGES: Aponta para a pasta onde os Service Workers estão.
-          path: "/Igreja_Batista_nova_alian-a/" 
-        });
-        
-        // 2. Comandos de Prompt (API ATUALIZADA)
-        // Usamos o showSlidedownPrompt() que é o método recomendado no SDK v16
-        OneSignal.Slidedown.showSlidedownPrompt();
-      });
-    </script>
-    
     <style>
         /* Variáveis de Cores (Dark Mode IBNA) */
         :root {
@@ -46,6 +27,7 @@
             background-color: var(--primary-bg);
             color: var(--text-light);
             line-height: 1.6;
+            overflow-x: hidden; /* Evita rolagem horizontal */
         }
 
         .font-montserrat {
@@ -123,7 +105,7 @@
 
         .countdown-unit {
             display: inline-block;
-            min-width: 80px;
+            min-width: 60px; /* Reduzido para mobile */
         }
 
         .loading {
@@ -175,14 +157,79 @@
             margin-top: 0.5rem;
         }
 
-        /* OneSignal Bell Button Styling */
-        #onesignal-bell-container .onesignal-bell-launcher {
-            background-color: var(--accent-gold) !important;
-            border: 2px solid var(--accent-gold) !important;
+        /* Media Queries para responsividade */
+        @media (max-width: 640px) {
+            .hero-section h1 {
+                font-size: 2.5rem !important; /* Reduz tamanho em mobile */
+                line-height: 1.2 !important;
+            }
+            
+            .hero-section p {
+                font-size: 1.1rem !important;
+            }
+            
+            #countdown-timer {
+                padding: 1rem !important;
+                width: 95% !important;
+                margin: 0 auto !important;
+            }
+            
+            .countdown-unit {
+                min-width: 50px !important;
+            }
+            
+            .countdown-unit span:first-child {
+                font-size: 1.5rem !important;
+            }
+            
+            .schedule-card {
+                padding: 1rem !important;
+            }
+            
+            .schedule-day, .schedule-time {
+                font-size: 0.9rem !important;
+            }
+            
+            .invite-message p {
+                font-size: 0.85rem !important;
+            }
+            
+            .modal-content {
+                width: 95% !important;
+                margin: 10% auto !important;
+                padding: 15px !important;
+            }
+            
+            /* Ajustes para botões em mobile */
+            .inline-block {
+                display: block !important;
+                width: 100% !important;
+                text-align: center !important;
+                margin-bottom: 0.5rem !important;
+            }
         }
-        
-        #onesignal-bell-container .onesignal-bell-launcher .onesignal-bell-launcher-button {
-            background-color: var(--accent-gold) !important;
+
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+            
+            .grid-cols-1 {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .grid-cols-2 {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .grid-cols-3 {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .grid-cols-4 {
+                grid-template-columns: 1fr !important;
+            }
         }
     </style>
 </head>
@@ -228,8 +275,8 @@
                 <a href="eventos.html" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Eventos</a>
                 <a href="blog.html" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Blog</a>
                 <a href="#contato" class="text-[color:var(--text-light)] hover:bg-[color:var(--secondary-bg)] block px-3 py-2 rounded-md text-base font-medium">Contato</a>
-                <a href="eventos.html" class="inline-flex items-center w-full justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-black bg-[color:var(--accent-gold)] hover:bg-yellow-600 transition duration-150 mt-4">
-                    <i class="far fa-calendar-alt mr-2"></i> Eventos
+                <a href="calendario.html" class="inline-flex items-center w-full justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-black bg-[color:var(--accent-gold)] hover:bg-yellow-600 transition duration-150 mt-4">
+                    <i class="far fa-calendar-alt mr-2"></i> Calendario IBNA 2026
                 </a>
             </div>
         </div>
@@ -237,43 +284,43 @@
 
     <section id="inicio" class="hero-section text-center py-20 md:py-32">
         <div class="container mx-auto px-4">
-            <h1 class="font-montserrat text-5xl md:text-7xl font-extrabold mb-4 leading-tight text-white shadow-lg">
+            <h1 class="font-montserrat text-4xl md:text-7xl font-extrabold mb-4 leading-tight text-white shadow-lg">
                 Igreja Batista Nova Aliança
             </h1>
-            <p class="text-xl md:text-2xl text-[color:var(--text-light)] mb-8">
+            <p class="text-lg md:text-2xl text-[color:var(--text-light)] mb-8">
                 Crescendo na Graça e no Conhecimento
             </p>
             
-            <div id="countdown-timer" class="p-6 bg-[color:var(--secondary-bg)] inline-block rounded-xl shadow-2xl border-2 border-[color:var(--accent-gold)] max-w-2xl">
-                <p class="text-lg font-semibold text-[color:var(--accent-gold)] mb-2" id="countdown-title">Carregando próximo culto...</p>
-                <p class="text-sm text-[color:var(--text-muted)] mb-4" id="countdown-subtitle"></p>
+            <div id="countdown-timer" class="p-4 md:p-6 bg-[color:var(--secondary-bg)] inline-block rounded-xl shadow-2xl border-2 border-[color:var(--accent-gold)] max-w-2xl w-full">
+                <p class="text-base md:text-lg font-semibold text-[color:var(--accent-gold)] mb-2" id="countdown-title">Carregando próximo culto...</p>
+                <p class="text-xs md:text-sm text-[color:var(--text-muted)] mb-4" id="countdown-subtitle"></p>
                 
-                <div class="flex justify-center space-x-4 md:space-x-6 text-2xl md:text-3xl font-bold">
+                <div class="flex justify-center space-x-2 md:space-x-6 text-xl md:text-3xl font-bold">
                     <div class="countdown-unit text-center">
                         <span id="days" class="block">--</span>
-                        <span class="text-sm font-normal text-[color:var(--text-muted)]">Dias</span>
+                        <span class="text-xs md:text-sm font-normal text-[color:var(--text-muted)]">Dias</span>
                     </div>
                     <div class="countdown-unit text-center">
                         <span id="hours" class="block">--</span>
-                        <span class="text-sm font-normal text-[color:var(--text-muted)]">Horas</span>
+                        <span class="text-xs md:text-sm font-normal text-[color:var(--text-muted)]">Horas</span>
                     </div>
                     <div class="countdown-unit text-center">
                         <span id="minutes" class="block">--</span>
-                        <span class="text-sm font-normal text-[color:var(--text-muted)]">Minutos</span>
+                        <span class="text-xs md:text-sm font-normal text-[color:var(--text-muted)]">Minutos</span>
                     </div>
                     <div class="countdown-unit text-center">
                         <span id="seconds" class="block">--</span>
-                        <span class="text-sm font-normal text-[color:var(--text-muted)]">Segundos</span>
+                        <span class="text-xs md:text-sm font-normal text-[color:var(--text-muted)]">Segundos</span>
                     </div>
                 </div>
                 
                 <div class="mt-4 pt-4 border-t border-[color:var(--primary-bg)]">
-                    <p class="text-sm text-[color:var(--text-muted)]" id="next-service-info"></p>
+                    <p class="text-xs md:text-sm text-[color:var(--text-muted)]" id="next-service-info"></p>
                 </div>
             </div>
 
             <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#contato" class="inline-block px-8 py-3 text-lg font-semibold rounded-full bg-[color:var(--accent-gold)] text-gray-900 shadow-xl hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
+                <a href="#contato" class="inline-block px-6 py-3 md:px-8 md:py-3 text-base md:text-lg font-semibold rounded-full bg-[color:var(--accent-gold)] text-gray-900 shadow-xl hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
                     Visite-nos
                 </a>
             </div>
@@ -282,22 +329,22 @@
 
     <section id="eventos-preview" class="py-16 md:py-24 bg-[color:var(--secondary-bg)]">
         <div class="container mx-auto px-4">
-            <h2 class="font-montserrat text-4xl font-extrabold text-center mb-12 text-[color:var(--accent-gold)]">
+            <h2 class="font-montserrat text-3xl md:text-4xl font-extrabold text-center mb-8 md:mb-12 text-[color:var(--accent-gold)]">
                 Próximos Eventos
             </h2>
-            <p class="text-center text-lg text-[color:var(--text-muted)] mb-10 max-w-3xl mx-auto">
+            <p class="text-center text-base md:text-lg text-[color:var(--text-muted)] mb-8 md:mb-10 max-w-3xl mx-auto">
                 Confira os eventos mais próximos! O calendário completo está disponível na página de Eventos.
             </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="events-preview-container">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8" id="events-preview-container">
                 <div class="loading">
                     <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
                     <p>Carregando eventos...</p>
                 </div>
             </div>
 
-            <div class="text-center mt-12">
-                <a href="eventos.html" class="inline-block px-8 py-3 text-lg font-semibold rounded-full bg-[color:var(--accent-gold)] text-gray-900 shadow-xl hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
+            <div class="text-center mt-8 md:mt-12">
+                <a href="eventos.html" class="inline-block px-6 py-3 md:px-8 md:py-3 text-base md:text-lg font-semibold rounded-full bg-[color:var(--accent-gold)] text-gray-900 shadow-xl hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
                     Ver Eventos Completos <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
@@ -306,81 +353,81 @@
 
     <section id="programacao-semanal" class="py-16 md:py-20 bg-[color:var(--primary-bg)]">
         <div class="container mx-auto px-4">
-            <h2 class="font-montserrat text-4xl font-extrabold text-center mb-4 text-[color:var(--accent-gold)]">
+            <h2 class="font-montserrat text-3xl md:text-4xl font-extrabold text-center mb-4 text-[color:var(--accent-gold)]">
                 Programação Semanal
             </h2>
-            <p class="text-center text-lg text-[color:var(--text-muted)] mb-12 max-w-3xl mx-auto">
+            <p class="text-center text-base md:text-lg text-[color:var(--text-muted)] mb-8 md:mb-12 max-w-3xl mx-auto">
                 Nossos cultos e encontros regulares para edificação e comunhão
             </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="weekly-schedule-container">
-                <div class="schedule-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg">
-                    <div class="flex justify-between items-start mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6" id="weekly-schedule-container">
+                <div class="schedule-card bg-[color:var(--secondary-bg)] p-4 md:p-6 rounded-xl shadow-lg">
+                    <div class="flex justify-between items-start mb-3 md:mb-4">
                         <span class="schedule-day">SEGUNDA</span>
                         <span class="schedule-time text-[color:var(--accent-gold)]">19:30 - 21:00</span>
                     </div>
-                    <h3 class="font-montserrat text-xl font-bold mb-3 text-[color:var(--text-light)]">
+                    <h3 class="font-montserrat text-lg md:text-xl font-bold mb-2 md:mb-3 text-[color:var(--text-light)]">
                         Culto das Mulheres
                     </h3>
                     <div class="invite-message">
-                        <p class="text-sm text-[color:var(--text-light)]">
+                        <p class="text-xs md:text-sm text-[color:var(--text-light)]">
                             <span class="text-lg">🌹</span> <strong>MULHER, ESTE LUGAR É SEU!</strong> Convidamos você a se juntar a nós para um tempo poderoso de comunhão, oração e Palavra. Compartilhe sua jornada e encontre a força e a inspiração necessárias para vencer sua semana. Venha florescer conosco!
                         </p>
                     </div>
                 </div>
 
-                <div class="schedule-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg">
-                    <div class="flex justify-between items-start mb-4">
+                <div class="schedule-card bg-[color:var(--secondary-bg)] p-4 md:p-6 rounded-xl shadow-lg">
+                    <div class="flex justify-between items-start mb-3 md:mb-4">
                         <span class="schedule-day">QUARTA</span>
                         <span class="schedule-time text-[color:var(--accent-gold)]">19:30 - 21:00</span>
                     </div>
-                    <h3 class="font-montserrat text-xl font-bold mb-3 text-[color:var(--text-light)]">
+                    <h3 class="font-montserrat text-lg md:text-xl font-bold mb-2 md:mb-3 text-[color:var(--text-light)]">
                         Culto de Oração e Doutrina
                     </h3>
                     <div class="invite-message">
-                        <p class="text-sm text-[color:var(--text-light)]">
+                        <p class="text-xs md:text-sm text-[color:var(--text-light)]">
                             <span class="text-lg">🙏</span> <strong>Raízes Profundas!</strong> Fortaleça seu espírito em oração e aprofunde-se nos fundamentos da Palavra de Deus (Doutrina). O conhecimento que liberta e a fé que move montanhas. Sua base inabalável para a vida.
                         </p>
                     </div>
                 </div>
 
-                <div class="schedule-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg">
-                    <div class="flex justify-between items-start mb-4">
+                <div class="schedule-card bg-[color:var(--secondary-bg)] p-4 md:p-6 rounded-xl shadow-lg">
+                    <div class="flex justify-between items-start mb-3 md:mb-4">
                         <span class="schedule-day">QUINTA</span>
                         <span class="schedule-time text-[color:var(--accent-gold)]">19:30 - 21:00</span>
                     </div>
-                    <h3 class="font-montserrat text-xl font-bold mb-3 text-[color:var(--text-light)]">
+                    <h3 class="font-montserrat text-lg md:text-xl font-bold mb-2 md:mb-3 text-[color:var(--text-light)]">
                         EB - Escola Bíblica
                     </h3>
                     <div class="invite-message">
-                        <p class="text-sm text-[color:var(--text-light)]">
+                        <p class="text-xs md:text-sm text-[color:var(--text-light)]">
                             <span class="text-lg">🧠</span> <strong>Aprender para Viver!</strong> A Bíblia é o mapa da vida. Venha estudar, debater e aplicar os ensinamentos para o seu dia a dia. Não apenas ouvir, mas entender e praticar! Invista no seu conhecimento de fé.
                         </p>
                     </div>
                 </div>
 
-                <div class="schedule-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-lg">
-                    <div class="flex justify-between items-start mb-4">
+                <div class="schedule-card bg-[color:var(--secondary-bg)] p-4 md:p-6 rounded-xl shadow-lg">
+                    <div class="flex justify-between items-start mb-3 md:mb-4">
                         <span class="schedule-day">DOMINGO</span>
                         <span class="schedule-time text-[color:var(--accent-gold)]">19:00 - 21:00</span>
                     </div>
-                    <h3 class="font-montserrat text-xl font-bold mb-3 text-[color:var(--text-light)]">
+                    <h3 class="font-montserrat text-lg md:text-xl font-bold mb-2 md:mb-3 text-[color:var(--text-light)]">
                         Culto da Família
                     </h3>
                     <div class="invite-message">
-                        <p class="text-sm text-[color:var(--text-light)]">
+                        <p class="text-xs md:text-sm text-[color:var(--text-light)]">
                             <span class="text-lg">👨‍👩‍👧‍👦</span> <strong>Celebração e União!</strong> O ponto alto da nossa semana. Traga sua família para adorarmos juntos. Palavra que restaura, louvor que eleva e a presença que transforma lares. O melhor lugar para estar é na Casa do Pai.
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div class="text-center mt-12">
-                <div class="bg-[color:var(--secondary-bg)] p-6 rounded-xl border-2 border-[color:var(--accent-gold)] max-w-2xl mx-auto">
-                    <h3 class="font-montserrat text-xl font-bold mb-3 text-[color:var(--accent-gold)]">
+            <div class="text-center mt-8 md:mt-12">
+                <div class="bg-[color:var(--secondary-bg)] p-4 md:p-6 rounded-xl border-2 border-[color:var(--accent-gold)] max-w-2xl mx-auto">
+                    <h3 class="font-montserrat text-lg md:text-xl font-bold mb-2 md:mb-3 text-[color:var(--accent-gold)]">
                         📍 Local dos Cultos
                     </h3>
-                    <p class="text-[color:var(--text-light)] mb-2">
+                    <p class="text-[color:var(--text-light)] mb-2 text-sm md:text-base">
                         <i class="fas fa-map-marker-alt text-[color:var(--accent-gold)] mr-2"></i>
                         <strong>Endereço:</strong> 
                         <a href="https://maps.app.goo.gl/2TBskB7vFDQ4kwfL8" target="_blank" class="text-[color:var(--accent-gold)] hover:text-yellow-400 underline transition duration-200">
@@ -388,7 +435,7 @@
                             <i class="fas fa-external-link-alt ml-1 text-sm"></i>
                         </a>
                     </p>
-                    <p class="text-sm text-[color:var(--text-muted)] mt-3">
+                    <p class="text-xs md:text-sm text-[color:var(--text-muted)] mt-3">
                         Estamos te esperando de braços abertos! Venha fazer parte da nossa família.
                     </p>
                     <div class="mt-4">
@@ -403,22 +450,22 @@
 
     <section id="blog-preview" class="py-16 md:py-24 bg-[color:var(--primary-bg)]">
         <div class="container mx-auto px-4">
-            <h2 class="font-montserrat text-4xl font-extrabold text-center mb-12 text-[color:var(--accent-gold)]">
+            <h2 class="font-montserrat text-3xl md:text-4xl font-extrabold text-center mb-8 md:mb-12 text-[color:var(--accent-gold)]">
                 Últimas Notícias e Blog
             </h2>
-            <p class="text-center text-lg text-[color:var(--text-muted)] mb-10 max-w-3xl mx-auto">
+            <p class="text-center text-base md:text-lg text-[color:var(--text-muted)] mb-8 md:mb-10 max-w-3xl mx-auto">
                 Leia nossas mensagens mais recentes, estudos bíblicos e novidades da comunidade.
             </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="blog-preview-container">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8" id="blog-preview-container">
                 <div class="loading">
                     <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
                     <p>Carregando conteúdo do blog...</p>
                 </div>
             </div>
 
-            <div class="text-center mt-12">
-                <a href="blog.html" class="inline-block px-8 py-3 text-lg font-semibold rounded-full bg-[color:var(--accent-gold)] text-gray-900 shadow-xl hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
+            <div class="text-center mt-8 md:mt-12">
+                <a href="blog.html" class="inline-block px-6 py-3 md:px-8 md:py-3 text-base md:text-lg font-semibold rounded-full bg-[color:var(--accent-gold)] text-gray-900 shadow-xl hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
                     Ver Blog Completo
                 </a>
             </div>
@@ -427,13 +474,13 @@
 
     <section id="contato" class="py-16 md:py-24 bg-[color:var(--primary-bg)] text-center">
         <div class="container mx-auto px-4 max-w-4xl">
-            <h2 class="font-montserrat text-4xl font-extrabold text-center mb-12 text-[color:var(--accent-gold)]">
+            <h2 class="font-montserrat text-3xl md:text-4xl font-extrabold text-center mb-8 md:mb-12 text-[color:var(--accent-gold)]">
                 Fale Conosco
             </h2>
-            <p class="text-xl text-[color:var(--text-light)] mb-8">
+            <p class="text-lg md:text-xl text-[color:var(--text-light)] mb-6 md:mb-8">
                 Entre em contato conosco através do nosso Instagram.
             </p>
-            <a href="https://www.instagram.com/ibna_itamaraca?igsh=ZnAwMHlscnV2YXN2" target="_blank" class="inline-flex items-center px-10 py-4 text-xl font-semibold rounded-full bg-pink-600 text-white shadow-xl hover:bg-pink-700 transition duration-300 transform hover:scale-105">
+            <a href="https://www.instagram.com/ibna_itamaraca?igsh=ZnAwMHlscnV2YXN2" target="_blank" class="inline-flex items-center px-6 py-3 md:px-10 md:py-4 text-base md:text-xl font-semibold rounded-full bg-pink-600 text-white shadow-xl hover:bg-pink-700 transition duration-300 transform hover:scale-105">
                 <i class="fab fa-instagram mr-3"></i> Seguir e Chamar no Direct
             </a>
         </div>
@@ -442,9 +489,9 @@
     <div id="blog-modal" class="modal">
         <div class="modal-content">
             <span class="close-button" onclick="closeBlogModal()">×</span>
-            <h2 id="modal-title" class="font-montserrat text-3xl font-bold mb-2 text-[color:var(--accent-gold)]">Título do Artigo</h2>
-            <p id="modal-date" class="text-sm text-[color:var(--text-muted)] mb-4">Data | Fonte</p>
-            <p id="modal-body" class="text-[color:var(--text-light)] text-lg">Conteúdo do artigo...</p>
+            <h2 id="modal-title" class="font-montserrat text-2xl md:text-3xl font-bold mb-2 text-[color:var(--accent-gold)]">Título do Artigo</h2>
+            <p id="modal-date" class="text-xs md:text-sm text-[color:var(--text-muted)] mb-4">Data | Fonte</p>
+            <p id="modal-body" class="text-[color:var(--text-light)] text-base md:text-lg">Conteúdo do artigo...</p>
         </div>
     </div>
 
@@ -516,13 +563,13 @@
                 const resumoDescricao = descricao.substring(0, 100) + (descricao.length > 100 ? '...' : '');
                 
                 html += `
-                    <div class="event-card-main bg-[color:var(--primary-bg)] p-6 rounded-xl shadow-2xl border-l-4 border-l-[color:var(--accent-gold)]">
+                    <div class="event-card-main bg-[color:var(--primary-bg)] p-4 md:p-6 rounded-xl shadow-2xl border-l-4 border-l-[color:var(--accent-gold)]">
                         <div class="flex items-center mb-3">
-                            <i class="fas fa-calendar-alt text-3xl text-[color:var(--accent-gold)] mr-3"></i>
-                            <h3 class="font-montserrat text-xl font-bold text-[color:var(--text-light)]">${titulo}</h3>
+                            <i class="fas fa-calendar-alt text-2xl md:text-3xl text-[color:var(--accent-gold)] mr-3"></i>
+                            <h3 class="font-montserrat text-lg md:text-xl font-bold text-[color:var(--text-light)]">${titulo}</h3>
                         </div>
-                        <p class="text-[color:var(--text-muted)] mb-4">${resumoDescricao}</p>
-                        <div class="text-sm space-y-2">
+                        <p class="text-[color:var(--text-muted)] mb-4 text-sm md:text-base">${resumoDescricao}</p>
+                        <div class="text-xs md:text-sm space-y-2">
                             <p><i class="far fa-calendar-alt mr-2 text-[color:var(--accent-gold)]"></i> ${data}</p>
                             <p><i class="far fa-clock mr-2 text-[color:var(--accent-gold)]"></i> Horário: ${hora}</p>
                             <p><i class="fas fa-map-marker-alt mr-2 text-[color:var(--accent-gold)]"></i> Local: ${local}</p>
@@ -610,11 +657,11 @@
                 const resumo = conteudoResumo.substring(0, 100) + (conteudoResumo.length > 100 ? '...' : '');
                 
                 html += `
-                    <div class="interactive-card bg-[color:var(--secondary-bg)] p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" 
+                    <div class="interactive-card bg-[color:var(--secondary-bg)] p-4 md:p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" 
                         onclick="openBlogModal('${item.tipo.charAt(0).toUpperCase() + item.tipo.slice(1)}', '${item.titulo.replace(/'/g, "\\'")}', '${(item.conteudo || 'Conteúdo não disponível').toString().replace(/'/g, "\\'")}', '${item.data}')">
-                        <i class="${item.icone} text-3xl text-[color:var(--accent-gold)] mb-3"></i>
-                        <h3 class="font-montserrat text-xl font-bold mb-2">${item.titulo}</h3>
-                        <p class="text-[color:var(--text-muted)] text-sm mb-3">${resumo}</p>
+                        <i class="${item.icone} text-2xl md:text-3xl text-[color:var(--accent-gold)] mb-3"></i>
+                        <h3 class="font-montserrat text-lg md:text-xl font-bold mb-2">${item.titulo}</h3>
+                        <p class="text-[color:var(--text-muted)] text-xs md:text-sm mb-3">${resumo}</p>
                         <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${item.data}</span>
                     </div>
                 `;
