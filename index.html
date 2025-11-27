@@ -507,305 +507,364 @@
     </footer>
 
     <script>
-        let countdownInterval;
+        let countdownInterval; 
         
-        // URLs dos arquivos JSON
-        const JSON_URLS = {
-            eventos: 'data/eventos.json',
-            estudos: 'data/estudos.json',
-            noticias: 'data/noticias.json',
-            mensagem: 'data/mensagem.json'
-        };
-
-        // --- FUNÇÕES DE CARREGAMENTO DINÂMICO ---
+        // URLs dos arquivos JSON 
+        const JSON_URLS = { 
+            eventos: 'data/eventos.json', 
+            estudos: 'data/estudos.json', 
+            noticias: 'data/noticias.json', 
+            mensagem: 'data/mensagem.json' 
+        }; 
         
-        // Função para carregar dados JSON
-        async function loadJSON(url) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`Erro ao carregar: ${response.status}`);
-                }
-                return await response.json();
-            } catch (error) {
-                console.error(`Erro ao carregar ${url}:`, error);
-                return null;
-            }
-        }
-
-        // Função para exibir mensagem de erro
-        function showError(container, message) {
-            container.innerHTML = `<div class="error">${message}</div>`;
-        }
-
-        // Função para carregar preview dos eventos
-        async function loadEventsPreview() {
-            const container = document.getElementById('events-preview-container');
-            const eventos = await loadJSON(JSON_URLS.eventos);
+        // --- FUNÇÕES DE CARREGAMENTO DINÂMICO --- 
+        // Função para carregar dados JSON 
+        async function loadJSON(url) { 
+            try { 
+                const response = await fetch(url); 
+                if (!response.ok) { 
+                    throw new Error(`Erro ao carregar: ${response.status}`); 
+                } 
+                return await response.json(); 
+            } catch (error) { 
+                console.error(`Erro ao carregar ${url}:`, error); 
+                return null; 
+            } 
+        } 
+        
+        // Função para exibir mensagem de erro 
+        function showError(container, message) { 
+            container.innerHTML = `<div class="error">${message}</div>`; 
+        } 
+        
+        // Função para carregar preview dos eventos 
+        async function loadEventsPreview() { 
+            const container = document.getElementById('events-preview-container'); 
+            const eventos = await loadJSON(JSON_URLS.eventos); 
+            if (!eventos || !Array.isArray(eventos) || eventos.length === 0) { 
+                showError(container, 'Nenhum evento programado no momento.'); 
+                return; 
+            } 
+        
+            // Pega apenas os 3 primeiros eventos 
+            const eventosPreview = eventos.slice(0, 3); 
+            let html = ''; 
+            eventosPreview.forEach(evento => { 
+                const titulo = evento.titulo || "Título não disponível"; 
+                const descricao = evento.descricao || "Descrição não disponível"; 
+                const data = evento.data || "Data não informada"; 
+                const hora = evento.hora || "Horário não informado"; 
+                const local = evento.local || "Local não informado"; 
+                // Resumo para o card 
+                const resumoDescricao = descricao.substring(0, 100) + (descricao.length > 100 ? '...' : ''); 
+                html += ` 
+                    <div class="event-card-main bg-[color:var(--primary-bg)] p-4 md:p-6 rounded-xl shadow-2xl border-l-4 border-l-[color:var(--accent-gold)]"> 
+                        <div class="flex items-center mb-3"> 
+                            <i class="fas fa-calendar-alt text-2xl md:text-3xl text-[color:var(--accent-gold)] mr-3"></i> 
+                            <h3 class="font-montserrat text-lg md:text-xl font-bold text-[color:var(--text-light)]">${titulo}</h3> 
+                        </div> 
+                        <p class="text-[color:var(--text-muted)] mb-4 text-sm md:text-base">${resumoDescricao}</p> 
+                        <div class="text-xs md:text-sm space-y-2"> 
+                            <p><i class="far fa-calendar-alt mr-2 text-[color:var(--accent-gold)]"></i> ${data}</p> 
+                            <p><i class="far fa-clock mr-2 text-[color:var(--accent-gold)]"></i> Horário: ${hora}</p> 
+                            <p><i class="fas fa-map-marker-alt mr-2 text-[color:var(--accent-gold)]"></i> Local: ${local}</p> 
+                        </div> 
+                    </div> 
+                `; 
+            }); 
+            container.innerHTML = html; 
+        } 
+        
+        // Função para carregar preview do blog 
+        async function loadBlogPreview() { 
+            const container = document.getElementById('blog-preview-container'); 
+            // Carrega estudos e notícias 
+            const [estudos, noticias, mensagem] = await Promise.all([ 
+                loadJSON(JSON_URLS.estudos), 
+                loadJSON(JSON_URLS.noticias), 
+                loadJSON(JSON_URLS.mensagem) 
+            ]); 
+            let allContent = []; 
             
-            if (!eventos || !Array.isArray(eventos) || eventos.length === 0) {
-                showError(container, 'Nenhum evento programado no momento.');
-                return;
-            }
-            
-            // Pega apenas os 3 primeiros eventos
-            const eventosPreview = eventos.slice(0, 3);
-            let html = '';
-            
-            eventosPreview.forEach(evento => {
-                const titulo = evento.titulo || "Título não disponível";
-                const descricao = evento.descricao || "Descrição não disponível";
-                const data = evento.data || "Data não informada";
-                const hora = evento.hora || "Horário não informado";
-                const local = evento.local || "Local não informado";
+            // Adiciona estudos 
+            if (estudos && Array.isArray(estudos)) { 
+                estudos.forEach(estudo => { 
+                    // Adicionado o campo resumo para uso direto no preview
+                    allContent.push({ 
+                        tipo: 'estudo', 
+                        titulo: estudo.titulo, 
+                        resumo: estudo.resumo,
+                        conteudo: estudo.conteudo, 
+                        data: estudo.data, 
+                        icone: 'fas fa-book-open' 
+                    }); 
+                }); 
+            } 
+        
+            // Adiciona notícias 
+            if (noticias && Array.isArray(noticias)) { 
+                noticias.forEach(noticia => { 
+                    // Assumindo que notícias também têm um campo 'resumo'
+                    allContent.push({ 
+                        tipo: 'noticia', 
+                        titulo: noticia.titulo, 
+                        resumo: noticia.resumo || (noticia.conteudo && noticia.conteudo.length > 0 ? noticia.conteudo[0].texto : 'Conteúdo não disponível.'),
+                        conteudo: noticia.conteudo, 
+                        data: noticia.data, 
+                        icone: 'fas fa-newspaper' 
+                    }); 
+                }); 
+            } 
+        
+            // Adiciona mensagem 
+            if (mensagem && mensagem.titulo) { 
+                // Mensagem pode ser um texto simples, não um array de conteúdo
+                allContent.push({ 
+                    tipo: 'mensagem', 
+                    titulo: mensagem.titulo, 
+                    resumo: mensagem.resumo || mensagem.conteudo.substring(0, 200), // Pega o resumo ou os primeiros 200 caracteres
+                    conteudo: mensagem.conteudo, 
+                    data: mensagem.data, 
+                    icone: 'fas fa-church' 
+                }); 
+            } 
+        
+            // Ordena por data (mais recente primeiro) e pega os 3 primeiros 
+            allContent.sort((a, b) => new Date(b.data) - new Date(a.data)); 
+            const previewContent = allContent.slice(0, 3); 
+        
+            if (previewContent.length === 0) { 
+                showError(container, 'Nenhum conteúdo disponível no momento.'); 
+                return; 
+            } 
+        
+            let html = ''; 
+            previewContent.forEach(item => { 
                 
-                // Resumo para o card
-                const resumoDescricao = descricao.substring(0, 100) + (descricao.length > 100 ? '...' : '');
-                
-                html += `
-                    <div class="event-card-main bg-[color:var(--primary-bg)] p-4 md:p-6 rounded-xl shadow-2xl border-l-4 border-l-[color:var(--accent-gold)]">
-                        <div class="flex items-center mb-3">
-                            <i class="fas fa-calendar-alt text-2xl md:text-3xl text-[color:var(--accent-gold)] mr-3"></i>
-                            <h3 class="font-montserrat text-lg md:text-xl font-bold text-[color:var(--text-light)]">${titulo}</h3>
-                        </div>
-                        <p class="text-[color:var(--text-muted)] mb-4 text-sm md:text-base">${resumoDescricao}</p>
-                        <div class="text-xs md:text-sm space-y-2">
-                            <p><i class="far fa-calendar-alt mr-2 text-[color:var(--accent-gold)]"></i> ${data}</p>
-                            <p><i class="far fa-clock mr-2 text-[color:var(--accent-gold)]"></i> Horário: ${hora}</p>
-                            <p><i class="fas fa-map-marker-alt mr-2 text-[color:var(--accent-gold)]"></i> Local: ${local}</p>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-        }
-
-        // Função para carregar preview do blog
-        async function loadBlogPreview() {
-            const container = document.getElementById('blog-preview-container');
-            
-            // Carrega estudos e notícias
-            const [estudos, noticias, mensagem] = await Promise.all([
-                loadJSON(JSON_URLS.estudos),
-                loadJSON(JSON_URLS.noticias),
-                loadJSON(JSON_URLS.mensagem)
-            ]);
-            
-            let allContent = [];
-            
-            // Adiciona estudos
-            if (estudos && Array.isArray(estudos)) {
-                estudos.forEach(estudo => {
-                    allContent.push({
-                        tipo: 'estudo',
-                        titulo: estudo.titulo,
-                        conteudo: estudo.conteudo,
-                        data: estudo.data,
-                        icone: 'fas fa-book-open'
-                    });
-                });
-            }
-            
-            // Adiciona notícias
-            if (noticias && Array.isArray(noticias)) {
-                noticias.forEach(noticia => {
-                    allContent.push({
-                        tipo: 'noticia',
-                        titulo: noticia.titulo,
-                        conteudo: noticia.conteudo,
-                        data: noticia.data,
-                        icone: 'fas fa-newspaper'
-                    });
-                });
-            }
-            
-            // Adiciona mensagem
-            if (mensagem && mensagem.titulo) {
-                allContent.push({
-                    tipo: 'mensagem',
-                    titulo: mensagem.titulo,
-                    conteudo: mensagem.conteudo,
-                    data: mensagem.data,
-                    icone: 'fas fa-church'
-                });
-            }
-            
-            // Ordena por data (mais recente primeiro) e pega os 3 primeiros
-            allContent.sort((a, b) => new Date(b.data) - new Date(a.data));
-            const previewContent = allContent.slice(0, 3);
-            
-            if (previewContent.length === 0) {
-                showError(container, 'Nenhum conteúdo disponível no momento.');
-                return;
-            }
-            
-            let html = '';
-            previewContent.forEach(item => {
-                // Cria resumo do conteúdo
-                let conteudoResumo = '';
-                if (Array.isArray(item.conteudo)) {
-                    if (item.conteudo.length > 0 && item.conteudo[0].texto) {
-                        conteudoResumo = item.conteudo[0].texto;
-                    } else if (item.conteudo.length > 0 && item.conteudo[0].explicacao) {
-                        conteudoResumo = item.conteudo[0].explicacao;
-                    }
-                } else {
-                    conteudoResumo = item.conteudo;
-                }
-                
+                // 1. Usa o resumo (corrigido na lógica acima)
+                let conteudoResumo = item.resumo || 'Conteúdo não disponível.';
                 const resumo = conteudoResumo.substring(0, 100) + (conteudoResumo.length > 100 ? '...' : '');
-                
-                html += `
-                    <div class="interactive-card bg-[color:var(--secondary-bg)] p-4 md:p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" 
-                        onclick="openBlogModal('${item.tipo.charAt(0).toUpperCase() + item.tipo.slice(1)}', '${item.titulo.replace(/'/g, "\\'")}', '${(item.conteudo || 'Conteúdo não disponível').toString().replace(/'/g, "\\'")}', '${item.data}')">
-                        <i class="${item.icone} text-2xl md:text-3xl text-[color:var(--accent-gold)] mb-3"></i>
-                        <h3 class="font-montserrat text-lg md:text-xl font-bold mb-2">${item.titulo}</h3>
-                        <p class="text-[color:var(--text-muted)] text-xs md:text-sm mb-3">${resumo}</p>
-                        <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${item.data}</span>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-        }
-
-        // --- FUNÇÕES DO BLOG MODAL ---
-        function openBlogModal(source, title, body, date) {
-            document.getElementById('modal-title').textContent = title;
-            document.getElementById('modal-date').textContent = date + ' | Fonte: ' + source;
-            document.getElementById('modal-body').textContent = body;
-            document.getElementById('blog-modal').style.display = 'block';
-        }
-
-        function closeBlogModal() {
-            document.getElementById('blog-modal').style.display = 'none';
-        }
-
-        // --- SISTEMA DE CONTAGEM REGRESSIVA SEMANAL ---
         
-        const WEEKLY_SERVICES = [
-            // 0: Domingo (19:00)
-            { day: 0, hour: 19, minute: 0, title: 'Culto da Família', subtitle: 'Celebração e Palavra' }, 
-            // 1: Segunda (19:30)
-            { day: 1, hour: 19, minute: 30, title: 'Culto das Mulheres', subtitle: 'Comunhão e Edificação' }, 
-            // 3: Quarta (19:30)
-            { day: 3, hour: 19, minute: 30, title: 'Culto de Oração e Doutrina', subtitle: 'Fortalecendo as Raízes' },
-            // 4: Quinta (19:30)
-            { day: 4, hour: 19, minute: 30, title: 'EB - Escola Bíblica', subtitle: 'Aprender para Viver' }
-            // Os dias 2 (Terça) e 5 (Sexta) não têm culto noturno.
-        ];
-
-        function startCountdown() {
-            clearInterval(countdownInterval); // Limpa qualquer timer anterior
-
-            const timerElement = document.getElementById('countdown-timer');
-            const titleElement = document.getElementById('countdown-title');
-            const subtitleElement = document.getElementById('countdown-subtitle');
-            const infoElement = document.getElementById('next-service-info');
-
-            const now = new Date();
-            let nextService = null;
-            let targetTime = null;
-
-            // 1. Procurar o próximo culto a partir de agora
-            for (let i = 0; i < 7; i++) {
-                const dayIndex = (now.getDay() + i) % 7;
-                
-                // Filtra os cultos do dia atual (se ainda não passaram) ou dos próximos dias
-                const servicesTodayOrFuture = WEEKLY_SERVICES.filter(service => {
-                    if (service.day === dayIndex) {
-                        const serviceDate = new Date(now);
-                        serviceDate.setDate(now.getDate() + i);
-                        serviceDate.setHours(service.hour, service.minute, 0, 0);
-
-                        // Se for hoje, tem que ser no futuro
-                        if (i === 0) {
-                            return serviceDate.getTime() > now.getTime();
-                        }
-                        // Se for futuro, qualquer horário
-                        return true;
-                    }
-                    return false;
-                }).sort((a, b) => {
-                    // Ordena por hora para o dia
-                    return a.hour * 60 + a.minute - (b.hour * 60 + b.minute);
-                });
-
-                if (servicesTodayOrFuture.length > 0) {
-                    nextService = servicesTodayOrFuture[0];
-
-                    targetTime = new Date(now);
-                    targetTime.setDate(now.getDate() + i);
-                    targetTime.setHours(nextService.hour, nextService.minute, 0, 0);
-                    break; 
-                }
-            }
-
-            if (!nextService) {
-                // Caso não encontre (deve ser o de Domingo de manhã), tenta o próximo Domingo.
-                const nextSundayService = WEEKLY_SERVICES.find(s => s.day === 0);
-                if (nextSundayService) {
-                    nextService = nextSundayService;
-                    targetTime = new Date(now);
-                    targetTime.setDate(now.getDate() + (7 - now.getDay())); // Vai para o próximo domingo
-                    targetTime.setHours(nextService.hour, nextService.minute, 0, 0);
+                // 2. Prepara o conteúdo completo para o modal:
+                // Se for um Array (estudo/noticia), converte para STRING JSON
+                // Se for um texto (mensagem), usa o texto
+                let contentToPass;
+                if (Array.isArray(item.conteudo)) {
+                    // Conversão para String JSON para evitar [object Object]
+                    contentToPass = JSON.stringify(item.conteudo); 
                 } else {
-                    timerElement.innerHTML = `<p class="text-xl text-red-500">Programação da semana não carregada.</p>`;
-                    return;
+                    // Se for texto simples (mensagem), usa o texto original
+                    contentToPass = item.conteudo; 
                 }
+        
+                // 3. Escapa as aspas corretamente para passar no atributo onclick
+                const escapedContent = contentToPass.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        
+        
+                html += ` 
+                    <div class="interactive-card bg-[color:var(--secondary-bg)] p-4 md:p-6 rounded-xl shadow-xl border-t-4 border-t-[color:var(--secondary-bg)] hover:border-t-[color:var(--accent-gold)] transition duration-300 cursor-pointer" onclick="openBlogModal('${item.tipo.charAt(0).toUpperCase() + item.tipo.slice(1)}', '${item.titulo.replace(/'/g, "\\'")}', '${escapedContent}', '${item.data}')"> 
+                        <i class="${item.icone} text-2xl md:text-3xl text-[color:var(--accent-gold)] mb-3"></i> 
+                        <h3 class="font-montserrat text-lg md:text-xl font-bold mb-2">${item.titulo}</h3> 
+                        <p class="text-[color:var(--text-muted)] text-xs md:text-sm mb-3">${resumo}</p> 
+                        <span class="text-xs text-[color:var(--accent-gold)] font-semibold">${item.data}</span> 
+                    </div> 
+                `; 
+            }); 
+            container.innerHTML = html; 
+        } 
+        
+        // --- FUNÇÕES DO BLOG MODAL (CORRIGIDA) --- 
+        function openBlogModal(source, title, bodyString, date) { 
+            document.getElementById('modal-title').textContent = title; 
+            document.getElementById('modal-date').textContent = date + ' | Fonte: ' + source; 
+            
+            const bodyContainer = document.getElementById('modal-body'); 
+            bodyContainer.innerHTML = ''; // Limpa o conteúdo anterior
+        
+            try {
+                let contentArray;
+                let htmlContent = '';
+                
+                // 1. Tenta fazer o parse da string JSON (se for um estudo/notícia)
+                if (bodyString && typeof bodyString === 'string' && bodyString.startsWith('[')) {
+                    contentArray = JSON.parse(bodyString);
+        
+                    // Monta o HTML para cada seção do estudo/artigo
+                    contentArray.forEach(section => {
+                        // Título da Seção
+                        if (section.titulo) {
+                            htmlContent += `<h4 class="font-montserrat font-bold text-lg text-[color:var(--accent-gold)] mt-4 mb-2">${section.titulo}</h4>`;
+                        }
+        
+                        // Versículo ou Citação
+                        if (section.textoVersiculo && section.versiculo) {
+                            htmlContent += `<blockquote class="italic text-[color:var(--text-muted)] border-l-4 border-l-[color:var(--accent-gold)] pl-3 py-1 mb-3">"${section.textoVersiculo}" <span class="block text-right text-sm">(${section.versiculo})</span></blockquote>`;
+                        } else if (section.textoCitacao && section.citacao) {
+                            htmlContent += `<blockquote class="italic text-[color:var(--text-muted)] border-l-4 border-l-[color:var(--accent-gold)] pl-3 py-1 mb-3">"${section.textoCitacao}" <span class="block text-right text-sm">(${section.citacao})</span></blockquote>`;
+                        }
+                        
+                        // Explicação
+                        if (section.explicacao) {
+                            htmlContent += `<p class="mb-3">${section.explicacao}</p>`;
+                        }
+                        
+                        // Texto Principal (se não houver explicação)
+                        if (section.texto) {
+                            htmlContent += `<p class="mb-3">${section.texto}</p>`;
+                        }
+        
+                        // Aplicação
+                        if (section.aplicacao) {
+                            htmlContent += `<p class="text-sm bg-[color:var(--primary-bg)] p-3 rounded-md border-l-4 border-l-[color:var(--accent-gold)] mt-2 mb-3">**Aplicação:** ${section.aplicacao}</p>`;
+                        }
+                        
+                        // Lista de Práticas
+                        if (section.praticas && Array.isArray(section.praticas)) {
+                            htmlContent += `<p class="font-semibold text-[color:var(--text-light)] mt-3">Práticas:</p><ul>`;
+                            section.praticas.forEach(pratica => {
+                                 htmlContent += `<li class="ml-5 list-disc text-sm text-[color:var(--text-muted)]">${pratica}</li>`;
+                            });
+                            htmlContent += `</ul>`;
+                        }
+                        
+                    });
+                    
+                    bodyContainer.innerHTML = htmlContent;
+        
+                } else {
+                    // 2. Se for texto simples (caso da 'mensagem'), exibe o texto puro
+                    bodyContainer.textContent = bodyString;
+                }
+        
+        
+            } catch (e) {
+                console.error("Erro ao processar o conteúdo do modal:", e);
+                bodyContainer.innerHTML = '<div class="error">Erro ao carregar o conteúdo do artigo. Verifique o console para detalhes.</div>';
             }
-
-            // Formata o nome do dia da semana
-            const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-            const formattedDay = nextService.day === now.getDay() ? 'HOJE' : dayNames[nextService.day];
-            const dateInfo = targetTime.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' });
-
-            titleElement.textContent = `Próximo Culto: ${nextService.title}`;
-            subtitleElement.textContent = nextService.subtitle;
-            infoElement.innerHTML = `<i class="far fa-calendar-alt mr-1"></i> ${formattedDay}, ${dateInfo} às ${nextService.hour.toString().padStart(2, '0')}:${nextService.minute.toString().padStart(2, '0')}h`;
-
-            // 2. Função de atualização do contador
-            const updateCountdown = () => {
-                const now = new Date().getTime();
-                const distance = targetTime.getTime() - now;
-
-                if (distance < 0) {
-                    // Já passou, reinicia a contagem para o próximo
-                    startCountdown();
-                    return;
-                }
-
-                // Cálculo das unidades de tempo
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                // Atualiza o DOM
-                document.getElementById('days').textContent = days.toString().padStart(2, '0');
-                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-            };
-
-            // 3. Inicializa e define o intervalo
-            updateCountdown();
-            countdownInterval = setInterval(updateCountdown, 1000);
-        }
-
-        // --- FUNÇÕES DE INICIALIZAÇÃO ---
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadEventsPreview();
-            loadBlogPreview();
-            startCountdown();
-        });
-
-        // Toggle do menu mobile
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            var menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+        
+            document.getElementById('blog-modal').style.display = 'block'; 
+        } 
+        
+        function closeBlogModal() { 
+            document.getElementById('blog-modal').style.display = 'none'; 
+        } 
+        
+        // --- SISTEMA DE CONTAGEM REGRESSIVA SEMANAL --- 
+        const WEEKLY_SERVICES = [ 
+            // 0: Domingo (19:00) 
+            { day: 0, hour: 19, minute: 0, title: 'Culto da Família', subtitle: 'Celebração e Palavra' }, 
+            // 1: Segunda (19:30) 
+            { day: 1, hour: 19, minute: 30, title: 'Culto das Mulheres', subtitle: 'Comunhão e Edificação' }, 
+            // 3: Quarta (19:30) 
+            { day: 3, hour: 19, minute: 30, title: 'Culto de Oração e Doutrina', subtitle: 'Fortalecendo as Raízes' }, 
+            // 4: Quinta (19:30) 
+            { day: 4, hour: 19, minute: 30, title: 'EB - Escola Bíblica', subtitle: 'Aprender para Viver' } 
+            // Os dias 2 (Terça) e 5 (Sexta) não têm culto noturno. 
+        ]; 
+        
+        function startCountdown() { 
+            clearInterval(countdownInterval); // Limpa qualquer timer anterior 
+            const timerElement = document.getElementById('countdown-timer'); 
+            const titleElement = document.getElementById('countdown-title'); 
+            const subtitleElement = document.getElementById('countdown-subtitle'); 
+            const infoElement = document.getElementById('next-service-info'); 
+            const now = new Date(); 
+            let nextService = null; 
+            let targetTime = null; 
+        
+            // 1. Procurar o próximo culto a partir de agora 
+            for (let i = 0; i < 7; i++) { 
+                const dayIndex = (now.getDay() + i) % 7; // Filtra os cultos do dia atual (se ainda não passaram) ou dos próximos dias 
+                const servicesTodayOrFuture = WEEKLY_SERVICES.filter(service => { 
+                    if (service.day === dayIndex) { 
+                        const serviceDate = new Date(now); 
+                        serviceDate.setDate(now.getDate() + i); 
+                        serviceDate.setHours(service.hour, service.minute, 0, 0); 
+                        // Se for hoje, tem que ser no futuro 
+                        if (i === 0) { 
+                            return serviceDate.getTime() > now.getTime(); 
+                        } 
+                        // Se for futuro, qualquer horário 
+                        return true; 
+                    } 
+                    return false; 
+                }).sort((a, b) => { 
+                    // Ordena por hora para o dia 
+                    return a.hour * 60 + a.minute - (b.hour * 60 + b.minute); 
+                }); 
+                
+                if (servicesTodayOrFuture.length > 0) { 
+                    nextService = servicesTodayOrFuture[0]; 
+                    targetTime = new Date(now); 
+                    targetTime.setDate(now.getDate() + i); 
+                    targetTime.setHours(nextService.hour, nextService.minute, 0, 0); 
+                    break; 
+                } 
+            } 
+        
+            if (!nextService) { 
+                // Caso não encontre (deve ser o de Domingo de manhã), tenta o próximo Domingo. 
+                const nextSundayService = WEEKLY_SERVICES.find(s => s.day === 0); 
+                if (nextSundayService) { 
+                    nextService = nextSundayService; 
+                    targetTime = new Date(now); 
+                    targetTime.setDate(now.getDate() + (7 - now.getDay())); // Vai para o próximo domingo 
+                    targetTime.setHours(nextService.hour, nextService.minute, 0, 0); 
+                } else { 
+                    timerElement.innerHTML = `<p class="text-xl text-red-500">Programação da semana não carregada.</p>`; 
+                    return; 
+                } 
+            } 
+        
+            // Formata o nome do dia da semana 
+            const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']; 
+            const formattedDay = nextService.day === now.getDay() ? 'HOJE' : dayNames[nextService.day]; 
+            const dateInfo = targetTime.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' }); 
+            
+            titleElement.textContent = `Próximo Culto: ${nextService.title}`; 
+            subtitleElement.textContent = nextService.subtitle; 
+            infoElement.innerHTML = `<i class="far fa-calendar-alt mr-1"></i> ${formattedDay}, ${dateInfo} às ${nextService.hour.toString().padStart(2, '0')}:${nextService.minute.toString().padStart(2, '0')}h`; 
+        
+            // 2. Função de atualização do contador 
+            const updateCountdown = () => { 
+                const now = new Date().getTime(); 
+                const distance = targetTime.getTime() - now; 
+                
+                if (distance < 0) { 
+                    // Já passou, reinicia a contagem para o próximo 
+                    startCountdown(); 
+                    return; 
+                } 
+        
+                // Cálculo das unidades de tempo 
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24)); 
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); 
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)); 
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000); 
+        
+                // Atualiza o DOM 
+                document.getElementById('days').textContent = days.toString().padStart(2, '0'); 
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0'); 
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0'); 
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0'); 
+            }; 
+        
+            // 3. Inicializa e define o intervalo 
+            updateCountdown(); 
+            countdownInterval = setInterval(updateCountdown, 1000); 
+        } 
+        
+        // --- FUNÇÕES DE INICIALIZAÇÃO --- 
+        document.addEventListener('DOMContentLoaded', () => { 
+            loadEventsPreview(); 
+            loadBlogPreview(); 
+            startCountdown(); 
+        }); 
+        
+        // Toggle do menu mobile 
+        document.getElementById('mobile-menu-button').addEventListener('click', function() { 
+            var menu = document.getElementById('mobile-menu'); 
+            menu.classList.toggle('hidden'); 
         });
     </script>
 
