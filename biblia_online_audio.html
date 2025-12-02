@@ -619,30 +619,24 @@
         function saveToCloud(book, time) {
             fetch(SHEET_URL, {
                 method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                mode: "no-cors",
                 body: JSON.stringify({
                     navegador_id: navegador_id,
                     livro: book,
                     tempo: time
                 })
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Erro HTTP: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log("Salvo na nuvem:", data);
+            .then(() => {
+                console.log("Sincronizado com a nuvem (no-cors).");
             })
             .catch(error => {
                 console.error("Erro ao salvar na nuvem:", error);
                 const syncStatus = document.getElementById('syncStatus');
-                syncStatus.innerHTML = '<i class="fas fa-exclamation-triangle mr-2 text-red-500"></i> Erro de Sincronização (Verifique CORS)';
+                syncStatus.innerHTML =
+                    '<i class="fas fa-exclamation-triangle mr-2 text-red-500"></i> Erro de Sincronização';
             });
         }
+
 
         function forceSync() {
             const syncStatus = document.getElementById('syncStatus');
@@ -670,3 +664,4 @@
 </body>
 
 </html>
+
