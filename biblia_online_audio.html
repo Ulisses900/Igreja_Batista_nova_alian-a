@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bíblia Online em Áudio | IBNA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-bg: #0f172a;
+            --accent-gold: #d4af37;
+            --secondary-bg: #1e293b;
+            --text-light: #e2e8f0;
+            --text-muted: #94a3b8;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .bible-select {
+            background-color: var(--secondary-bg);
+            border: 2px solid var(--accent-gold);
+            color: var(--text-light);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="%23d4af37"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>');
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .bible-select:hover {
+            border-color: #fbbf24;
+        }
+
+        .bible-select:focus {
+            outline: none;
+            ring: 2px;
+            ring-color: var(--accent-gold);
+        }
+
+        .player-container {
+            background: linear-gradient(135deg, var(--secondary-bg) 0%, #0f172a 100%);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .continue-btn {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #fbbf24 100%);
+            color: #000;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-gold);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* CSS para REPRODUTOR SOMENTE ÁUDIO (Oculto) */
+        #player {
+            opacity: 0;
+            pointer-events: none; 
+            position: fixed; 
+            top: 0;
+            left: 0;
+            overflow: hidden; 
+            z-index: -1; 
+        }
+
+        #player iframe {
+            border: none !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-200">
+
+    <nav class="sticky top-0 z-50 bg-slate-900 shadow-xl border-b border-slate-700">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <img src="img/logo.png" 
+                         alt="Logo IBNA" 
+                         class="h-10 w-10 rounded-lg">
+                    <span class="font-montserrat text-2xl font-black text-yellow-500">
+                        IBNA
+                    </span>
+                </div>
+                
+                <div class="hidden md:flex space-x-6">
+                    <a href="index.html" class="text-slate-300 hover:text-yellow-500 transition-colors">Início</a>
+                    <a href="#" class="text-slate-300 hover:text-yellow-500 transition-colors">Eventos</a>
+                    <a href="#" class="text-slate-300 hover:text-yellow-500 transition-colors">Blog</a>
+                    <a href="#" class="text-black bg-yellow-500 px-4 py-2 rounded-lg font-semibold">Bíblia Áudio</a>
+                    <a href="#" class="text-slate-300 hover:text-yellow-500 transition-colors">Contato</a>
+                </div>
+                
+                <button class="md:hidden text-slate-300">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 max-w-6xl">
+        <header class="text-center mb-12">
+            <h1 class="font-montserrat text-4xl md:text-5xl font-bold text-yellow-500 mb-4">
+                Bíblia Online em Áudio
+            </h1>
+            <p class="text-slate-300 text-lg max-w-2xl mx-auto">
+                Ouça a Palavra de Deus narrada livro por livro. Seu progresso é salvo automaticamente.
+            </p>
+        </header>
+
+        <div class="bg-slate-800 rounded-xl p-6 mb-8 shadow-lg">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <label class="block text-slate-300 mb-2 font-semibold">
+                        <i class="fas fa-book mr-2 text-yellow-500"></i>
+                        Selecione o Livro
+                    </label>
+                    <select id="bookSelect" class="bible-select">
+                        <option value="">Escolha um livro da Bíblia</option>
+                        </select>
+                </div>
+                
+                <div id="continueButton" class="hidden">
+                    <button onclick="continueFromLastPosition()" class="continue-btn">
+                        <i class="fas fa-play-circle mr-2"></i>
+                        Continuar de onde parei
+                    </button>
+                </div>
+            </div>
+            
+            <div id="progressContainer" class="mt-6 hidden">
+                <div class="flex justify-between text-sm text-slate-400 mb-2">
+                    <span>Progresso salvo</span>
+                    <span id="progressTime">0:00</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="player-container p-6 mb-8">
+            <h2 class="font-montserrat text-2xl font-bold text-yellow-500 mb-4 flex items-center">
+                <i class="fas fa-play-circle mr-3"></i>
+                <span id="currentBookTitle">Selecione um livro para começar</span>
+            </h2>
+
+            <div id="audioControls" class="flex items-center space-x-4 bg-slate-900 p-4 rounded-lg mt-4 shadow-inner">
+                
+                <button id="playPauseBtn" 
+                        onclick="togglePlayPause()" 
+                        class="p-4 bg-yellow-500 text-black rounded-full shadow-lg hover:bg-yellow-400 transition-transform transform hover:scale-105">
+                    <i id="playPauseIcon" class="fas fa-play text-xl"></i>
+                </button>
+                
+                <div class="flex-1 min-w-0">
+                    <div class="flex justify-between text-sm font-semibold text-slate-300">
+                        <span id="currentTimeDisplay">0:00</span>
+                        <span id="durationDisplay">0:00</span>
+                    </div>
+                    <div id="seekbar" class="w-full h-2 bg-slate-700 rounded-full mt-1 cursor-pointer overflow-hidden">
+                        <div id="progressFillBar" class="h-full bg-yellow-500" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="player">
+                </div>
+            
+            <div id="bookInfo" class="mt-6 hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-900/50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-yellow-500 mb-2">
+                            <i class="fas fa-history mr-2"></i>Última Posição
+                        </h4>
+                        <p id="lastPosition" class="text-slate-300">Não há progresso salvo</p>
+                    </div>
+                    <div class="bg-slate-900/50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-yellow-500 mb-2">
+                            <i class="fas fa-save mr-2"></i>Salvamento Automático
+                        </h4>
+                        <p class="text-slate-300">A cada 3 segundos</p>
+                    </div>
+                    <div class="bg-slate-900/50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-yellow-500 mb-2">
+                            <i class="fas fa-sync-alt mr-2"></i>Sincronização
+                        </h4>
+                        <p class="text-slate-300">Navegador + Nuvem</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-yellow-900/20 border border-yellow-500 p-4 rounded-lg mb-8">
+            <h3 class="font-montserrat text-lg font-bold text-yellow-500 mb-2">
+                <i class="fas fa-exclamation-triangle mr-2"></i>Aviso - Fase de Testes
+            </h3>
+            <ul class="list-disc list-inside text-slate-300 space-y-1 ml-4">
+                <li>Por enquanto, só é possível selecionar o **livro completo**, sem navegação por capítulos.</li>
+                <li>A função de **pausar e retomar** o áudio pode falhar em alguns dispositivos ou navegadores devido a restrições de reprodução automática.</li>
+            </ul>
+        </div>
+
+
+        <div class="bg-slate-800/50 rounded-xl p-6 mb-8">
+            <h3 class="font-montserrat text-xl font-bold text-yellow-500 mb-4">
+                <i class="fas fa-cloud mr-2"></i>Sincronização na Nuvem
+            </h3>
+            <p class="text-slate-300 mb-4">
+                Seu progresso é salvo localmente e sincronizado com o Google Sheets para acesso em qualquer dispositivo.
+            </p>
+            <div class="flex items-center space-x-4">
+                <div class="flex-1 bg-slate-900 rounded-lg p-4">
+                    <div class="flex items-center">
+                        <div class="h-3 w-3 rounded-full bg-green-500 mr-3"></div>
+                        <span id="syncStatus" class="text-slate-300">Pronto para sincronizar</span>
+                    </div>
+                </div>
+                <button onclick="forceSync()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors">
+                    <i class="fas fa-sync-alt mr-2"></i>Sincronizar
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 border-t border-slate-800 py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <p class="font-montserrat text-lg font-bold text-yellow-500 mb-2">
+                    IGREJA BATISTA NOVA ALIANÇA
+                </p>
+                <p class="text-slate-400 text-sm mb-2">
+                    Desenvolvido com Fé e Tecnologia | © 2026
+                </p>
+                <p class="text-slate-500 text-xs">
+                    Áudios fornecidos pelo canal do YouTube: **Bíblia Sagrada 24h**.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    
+    <script>
+        // Variáveis globais
+        let player;
+        let currentBook = "";
+        let navegador_id;
+        let saveInterval;
+        let seekBarInterval; 
+        
+        // Variável para lidar com a seleção antes do player estar pronto
+        let selectedBookOnLoad = ""; 
+
+        // Elementos dos Controles
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playPauseIcon = document.getElementById('playPauseIcon');
+        const currentTimeDisplay = document.getElementById('currentTimeDisplay');
+        const durationDisplay = document.getElementById('durationDisplay');
+        const seekbar = document.getElementById('seekbar');
+        const progressFillBar = document.getElementById('progressFillBar');
+
+        const SHEET_URL = "https://script.google.com/macros/s/AKfycbxrErYUy9HP8WisLQfnR7iAZHEGgb512gpZu9gCeGATfhKPZh-zLGl4YIdt7r497nqB/exec";
+
+        // **********************************************
+        // LISTA DE LIVROS COMPLETA (66 livros)
+        // ** IDs de Gênesis e Êxodo atualizados conforme o pedido **
+        // **********************************************
+        const DUMMY_ID = "dQw4w9WgXcQ"; // ID Rick Roll - DEVE SER SUBSTITUÍDO!
+        const CORRECT_ID = "COUuraIvmRY"; // ID fornecido pelo usuário para Gênesis e Êxodo
+        
+        const livros = [
+            // Antigo Testamento
+            { nome: "Gênesis", video: "COUuraIvmRY" },
+            { nome: "Êxodo", video: "aNJKh1CUvm4" },
+            { nome: "Levítico", video: "SSDprmPtCmU" },
+            { nome: "Números", video: "n3F3IGscsX8" },
+            { nome: "Deuteronômio", video: "9ckWCk_aV-0" },
+            { nome: "Josué", video: "H1HwEru8lU8" },
+            { nome: "Juízes", video: "AfDZgLrwBzI" },
+            { nome: "Rute", video: "cpVLTdoFjrs" },
+            { nome: "1 Samuel", video: "5K2futaTZsI" },
+            { nome: "2 Samuel", video: "9OOhYkH5eKs" },
+            { nome: "1 Reis", video: "AlY8HK1NQjw" },
+            { nome: "2 Reis", video: "exe8DLkFr0s" },
+            { nome: "1 Crônicas", video: "2Pbl6jtC320" },
+            { nome: "2 Crônicas", video: "Kjw6jbK1mSM" },
+            { nome: "Esdras", video: DUMMY_ID },
+            { nome: "Neemias", video: DUMMY_ID },
+            { nome: "Ester", video: DUMMY_ID },
+            { nome: "Jó", video: DUMMY_ID },
+            { nome: "Salmos", video: DUMMY_ID },
+            { nome: "Provérbios", video: DUMMY_ID },
+            { nome: "Eclesiastes", video: DUMMY_ID },
+            { nome: "Cantares de Salomão", video: DUMMY_ID },
+            { nome: "Isaías", video: DUMMY_ID },
+            { nome: "Jeremias", video: DUMMY_ID },
+            { nome: "Lamentações", video: DUMMY_ID },
+            { nome: "Ezequiel", video: DUMMY_ID },
+            { nome: "Daniel", video: DUMMY_ID },
+            { nome: "Oséias", video: DUMMY_ID },
+            { nome: "Joel", video: DUMMY_ID },
+            { nome: "Amós", video: DUMMY_ID },
+            { nome: "Obadias", video: DUMMY_ID },
+            { nome: "Jonas", video: DUMMY_ID },
+            { nome: "Miquéias", video: DUMMY_ID },
+            { nome: "Naum", video: DUMMY_ID },
+            { nome: "Habacuque", video: DUMMY_ID },
+            { nome: "Sofonias", video: DUMMY_ID },
+            { nome: "Ageu", video: DUMMY_ID },
+            { nome: "Zacarias", video: DUMMY_ID },
+            { nome: "Malaquias", video: DUMMY_ID },
+            // Novo Testamento
+            { nome: "Mateus", video: DUMMY_ID },
+            { nome: "Marcos", video: DUMMY_ID },
+            { nome: "Lucas", video: DUMMY_ID },
+            { nome: "João", video: DUMMY_ID },
+            { nome: "Atos dos Apóstolos", video: DUMMY_ID },
+            { nome: "Romanos", video: DUMMY_ID },
+            { nome: "1 Coríntios", video: DUMMY_ID },
+            { nome: "2 Coríntios", video: DUMMY_ID },
+            { nome: "Gálatas", video: DUMMY_ID },
+            { nome: "Efésios", video: DUMMY_ID },
+            { nome: "Filipenses", video: DUMMY_ID },
+            { nome: "Colossenses", video: DUMMY_ID },
+            { nome: "1 Tessalonicenses", video: DUMMY_ID },
+            { nome: "2 Tessalonicenses", video: DUMMY_ID },
+            { nome: "1 Timóteo", video: DUMMY_ID },
+            { nome: "2 Timóteo", video: DUMMY_ID },
+            { nome: "Tito", video: DUMMY_ID },
+            { nome: "Filemom", video: DUMMY_ID },
+            { nome: "Hebreus", video: DUMMY_ID },
+            { nome: "Tiago", video: DUMMY_ID },
+            { nome: "1 Pedro", video: DUMMY_ID },
+            { nome: "2 Pedro", video: DUMMY_ID },
+            { nome: "1 João", video: DUMMY_ID },
+            { nome: "2 João", video: DUMMY_ID },
+            { nome: "3 João", video: DUMMY_ID },
+            { nome: "Judas", video: DUMMY_ID },
+            { nome: "Apocalipse", video: DUMMY_ID }
+        ];
+        // **********************************************
+
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem("browser_id")) {
+                localStorage.setItem("browser_id", crypto.randomUUID());
+            }
+            navegador_id = localStorage.getItem("browser_id");
+            
+            // Preencher dropdown
+            const bookSelect = document.getElementById('bookSelect');
+            livros.forEach(livro => {
+                const option = document.createElement('option');
+                option.value = livro.nome;
+                option.textContent = livro.nome;
+                bookSelect.appendChild(option);
+            });
+            
+            // Configurar evento de mudança no select
+            bookSelect.addEventListener('change', function() {
+                if (this.value) {
+                    currentBook = this.value; 
+                    selectedBookOnLoad = this.value;
+                    loadBook(this.value, false); 
+                }
+            });
+        });
+
+        // Player YouTube API
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player("player", {
+                height: "180", 
+                width: "320",
+                videoId: "",
+                playerVars: {
+                    autoplay: 0,
+                    controls: 1, 
+                    rel: 0,
+                    modestbranding: 1,
+                    fs: 0,
+                    playsinline: 1
+                },
+                events: {
+                    onReady: onPlayerReady,
+                    onStateChange: onPlayerStateChange
+                }
+            });
+        }
+
+        // CORREÇÃO: onPlayerReady checa se há um livro pendente para carregar
+        function onPlayerReady(event) {
+            console.log('Player do YouTube pronto (oculto). Conectando controles...');
+            
+            // Adiciona listener para a barra de busca (Só agora o elemento é seguro de usar)
+            if (seekbar) {
+                seekbar.addEventListener('click', seekToPosition);
+            }
+
+            if (selectedBookOnLoad || currentBook) {
+                const bookToLoad = selectedBookOnLoad || currentBook;
+                
+                selectedBookOnLoad = ""; 
+                
+                loadBook(bookToLoad, false); 
+                
+                document.getElementById('bookSelect').value = bookToLoad;
+            }
+        }
+
+        function onPlayerStateChange(event) {
+            const state = event.data;
+            
+            if (state === YT.PlayerState.PLAYING) {
+                playPauseIcon.classList.remove('fa-play');
+                playPauseIcon.classList.add('fa-pause');
+                startSaveInterval();
+                startSeekBarInterval();
+            } else {
+                playPauseIcon.classList.remove('fa-pause');
+                playPauseIcon.classList.add('fa-play');
+                clearInterval(saveInterval);
+                clearInterval(seekBarInterval);
+            }
+
+            if (state !== -1 && player && player.getDuration() > 0) {
+                durationDisplay.textContent = formatTime(player.getDuration());
+            }
+            
+            if (state === YT.PlayerState.ENDED) {
+                updateSeekBar();
+            }
+        }
+
+        // CONECTADO: Alterna Play e Pause (Chamado pelo botão amarelo)
+        function togglePlayPause() {
+            if (!player || typeof player.getPlayerState !== 'function') return;
+            
+            const state = player.getPlayerState();
+            
+            if (state === YT.PlayerState.PLAYING) {
+                player.pauseVideo();
+            } else {
+                player.playVideo(); 
+            }
+        }
+        
+        // CONECTADO: Busca por posição na barra (Seek)
+        function seekToPosition(event) {
+            if (!player || player.getDuration() === 0) return;
+            
+            const rect = seekbar.getBoundingClientRect();
+            const clickX = event.clientX - rect.left; 
+            const percentage = clickX / rect.width;
+            
+            const duration = player.getDuration();
+            const newTime = duration * percentage;
+            
+            player.seekTo(newTime, true);
+        }
+
+        // FUNÇÃO DE ATUALIZAÇÃO VISUAL
+        function startSeekBarInterval() {
+            clearInterval(seekBarInterval);
+            seekBarInterval = setInterval(updateSeekBar, 250); 
+        }
+
+        function updateSeekBar() {
+            if (!player || typeof player.getCurrentTime !== 'function') return;
+            
+            const currentTime = player.getCurrentTime();
+            const duration = player.getDuration();
+            
+            if (duration > 0) {
+                const percentage = (currentTime / duration) * 100;
+                progressFillBar.style.width = percentage + '%';
+                currentTimeDisplay.textContent = formatTime(currentTime);
+            }
+        }
+
+        // loadBook agora verifica se o player está pronto
+        function loadBook(bookName, autoPlay = true) {
+            const livro = livros.find(l => l.nome === bookName);
+            if (!livro) return;
+            
+            currentBook = bookName;
+            
+            document.getElementById('currentBookTitle').textContent = `Áudio: ${bookName}`;
+            
+            if (player && typeof player.loadVideoById === 'function') {
+                player.loadVideoById(livro.video);
+                
+                progressFillBar.style.width = '0%';
+                currentTimeDisplay.textContent = '0:00';
+                durationDisplay.textContent = '0:00';
+                
+                if (autoPlay) {
+                    player.playVideo(); 
+                } else {
+                    playPauseIcon.classList.remove('fa-pause');
+                    playPauseIcon.classList.add('fa-play');
+                }
+            } else {
+                 console.warn('Player não está pronto. Carregamento agendado para onPlayerReady.');
+                 selectedBookOnLoad = bookName; 
+                 document.getElementById('bookInfo').classList.add('hidden');
+            }
+            
+            if (player) {
+               document.getElementById('bookInfo').classList.remove('hidden');
+               checkSavedProgress(bookName);
+            }
+        }
+
+        function checkSavedProgress(bookName) {
+            const savedTime = localStorage.getItem("biblia_audio_" + bookName);
+            const continueBtn = document.getElementById('continueButton');
+            const progressContainer = document.getElementById('progressContainer');
+            
+            if (savedTime && parseInt(savedTime) > 0) {
+                const minutes = Math.floor(savedTime / 60);
+                const seconds = Math.floor(savedTime % 60);
+                
+                document.getElementById('lastPosition').textContent = 
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                document.getElementById('progressTime').textContent = 
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                const percentage = Math.min((savedTime / 3600) * 100, 100); 
+                document.getElementById('progressFill').style.width = percentage + '%';
+                
+                continueBtn.classList.remove('hidden');
+                progressContainer.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    if (confirm(`Você tem progresso salvo em ${bookName} (${minutes}:${seconds.toString().padStart(2, '0')}). Deseja continuar de onde parou?`)) {
+                        continueFromLastPosition();
+                    }
+                }, 1000);
+            } else {
+                document.getElementById('lastPosition').textContent = "Não há progresso salvo";
+                continueBtn.classList.add('hidden');
+                progressContainer.classList.add('hidden');
+            }
+        }
+
+        function continueFromLastPosition() {
+            if (!currentBook) return;
+            
+            const savedTime = localStorage.getItem("biblia_audio_" + currentBook);
+            if (savedTime && player) {
+                player.seekTo(parseInt(savedTime), true);
+                player.playVideo(); 
+            }
+        }
+
+        // CONECTADO: Salvamento automático
+        function startSaveInterval() {
+            clearInterval(saveInterval);
+            saveInterval = setInterval(saveProgress, 3000);
+        }
+
+        function saveProgress() {
+            if (!currentBook || !player || typeof player.getCurrentTime !== 'function') return;
+            
+            const currentTime = Math.floor(player.getCurrentTime());
+            
+            localStorage.setItem("biblia_audio_" + currentBook, currentTime);
+            
+            const minutes = Math.floor(currentTime / 60);
+            const seconds = Math.floor(currentTime % 60);
+            document.getElementById('lastPosition').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            saveToCloud(currentBook, currentTime); 
+        }
+
+        function saveToCloud(book, time) {
+            fetch(SHEET_URL, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    navegador_id: navegador_id,
+                    livro: book,
+                    tempo: time
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Salvo na nuvem:", data);
+            })
+            .catch(error => {
+                console.error("Erro ao salvar na nuvem:", error);
+                const syncStatus = document.getElementById('syncStatus');
+                syncStatus.innerHTML = '<i class="fas fa-exclamation-triangle mr-2 text-red-500"></i> Erro de Sincronização (Verifique CORS)';
+            });
+        }
+
+        function forceSync() {
+            const syncStatus = document.getElementById('syncStatus');
+            syncStatus.innerHTML = '<i class="fas fa-sync fa-spin mr-2"></i>Sincronizando...';
+            
+            saveProgress(); 
+
+            setTimeout(() => {
+                if (syncStatus.innerHTML.includes('Erro')) {
+                    return; 
+                }
+                syncStatus.innerHTML = '<i class="fas fa-check-circle mr-2 text-green-500"></i>Sincronizado (Tentativa enviada)';
+                setTimeout(() => {
+                    syncStatus.textContent = "Pronto para sincronizar";
+                }, 3000);
+            }, 1500);
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+    </script>
+</body>
+</html>
